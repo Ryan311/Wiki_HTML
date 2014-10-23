@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>内核模式下文件操作</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h2 id="toc_0.1">file operation in kernal mode</h2>
+<ul>
+<li>
+  <strong>Open file</strong>
+<pre class="brush: c">
+            //Read PID/VID List file
+            RtlInitUnicodeString(&amp;PidVidListFile, L"\\SystemRoot\\PidVid_List.txt");
+            RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("Test Code, read pid vid list file"));
+
+            //
+            // Open file and get the handle
+            //
+            InitializeObjectAttributes(    
+                &amp;obj_attrib,
+                &amp;PidVidListFile,
+                OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE,
+                NULL,
+                NULL);
+
+            status = ZwCreateFile(&amp;hSrcFile,
+                GENERIC_READ,
+                &amp;obj_attrib,
+                &amp;Io_Status_Block,
+                NULL,
+                FILE_ATTRIBUTE_NORMAL,
+                FILE_SHARE_READ,
+                FILE_OPEN,
+                FILE_NON_DIRECTORY_FILE | FILE_SYNCHRONOUS_IO_NONALERT,
+                NULL,
+                0 );
+            if (!NT_SUCCESS(status))
+            {
+                RT_DEBUG(TRACE_LEVEL_ERROR,RTK_INIT,("PATCH:  ZwCreateFile fail with status (0x%x)\n", status));
+            }
+</pre>
+
+</ul>
+
+
+<ul>
+<li>
+  <strong>Get file length</strong>
+<pre class = "brush: c">
+                FILE_STANDARD_INFORMATION fsi;
+        		UCHAR* pPidVidListBuf = NULL;
+                RT_U32 FileLen = 0;
+                //read file size
+                status = ZwQueryInformationFile(hSrcFile,
+                          &amp;Io_Status_Block,
+                          &amp;fsi,
+                          sizeof(FILE_STANDARD_INFORMATION),
+                          FileStandardInformation);
+                if (NT_SUCCESS(status))
+                {
+                    RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("file length:%d\n",(RT_U32)fsi.EndOfFile.QuadPart)); 
+                    FileLen = (RT_U32)fsi.EndOfFile.QuadPart;
+                    pPidVidListBuf = ExAllocatePoolWithTag(NonPagedPool, FileLen, RSTAG);
+                    if(!pPidVidListBuf)
+                    {
+                        RT_DEBUG(TRACE_LEVEL_ERROR,RTK_INIT,("PATCH:  ExAllocatePoolWithTag pidvid list fail"));
+                    }                    
+                    ....
+                }
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <strong>Read from file</strong>
+<pre class = "brush: c">
+                status = ZwReadFile(hSrcFile,
+                                        NULL,
+                                        NULL,
+                                        NULL,
+                                        &amp;Io_Status_Block,
+                                        pPidVidListBuf,
+                                        FileLen,
+                                        NULL,
+                                        NULL);
+                if(NT_SUCCESS(status))
+                {
+                        RT_U32 i;
+                        CHIP_PIDVID_NODE* pPidVidList = (CHIP_PIDVID_NODE*)pPidVidListBuf;
+                        RT_U32 PidVidListLen = FileLen/sizeof(CHIP_PIDVID_NODE);
+                          
+                        RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("PATCH:  Bytes read from file is %d, PidVidListLen %d", (RT_U32)(Io_Status_Block.Information), PidVidListLen));
+                        ///TODO: Check device name
+                        RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("********************************************************************************"));                             
+                        for(i = 0; i &lt; PidVidListLen; i++)
+                        {
+                            RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("###Index(%d), ChipName(%d), HW ID:%ls\n", i, pPidVidList[i].ChipName, pPidVidList[i].VIDPID)); 
+                        }
+                        RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("********************************************************************************"));                             
+                        for(i = 0; i &lt; PidVidListLen; i++)
+                        {
+                            if(wcsstr(HardwareID, pPidVidList[i].VIDPID))
+                            {
+                                RT_DEBUG(TRACE_LEVEL_WARNING,RTK_INIT,("PATCH:  Find the right PID/VID, Index is %d, Device Name is %s",i,ChipNameStr[pPidVidList[i].ChipName]));
+                                bDownloadPatchCode = TRUE;
+                                DeviceVersion = pPidVidList[i].ChipName;    ///&lt; hr add
+                                break;
+                            }
+                        }
+                }
+                else
+                {
+                    RT_DEBUG(TRACE_LEVEL_ERROR,RTK_INIT,("PATCH:  ZwReadFile fail with status (0x%x)\n", status));
+                }
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <strong>Write to file</strong>
+<pre class = "brush: c">
+
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <strong>Close file handle</strong>
+<pre class = "brush: c">
+    ZwClose(hfile);
+</pre>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Eclipse</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Eclipse</a>
+<li><a href="#toc_0.2">Shortcut</a>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">Eclipse</h2>
+<ul>
+<li>
+  Plugins
+
+<ul>
+<li>
+  CDT for C/C++ project
+
+<li>
+  Pydev for python project
+
+<li>
+  Erlide for Erlang project
+
+<li>
+  vrapper for Vimer in eclipse
+
+</ul>
+<li>
+  Show eclipse icon in the Unity launcher
+    <br><strong>sudo cp ~/Persnail_WorkSpace/eclipse/icon.xpm /usr/share/pixmaps/eclispe.xpm</strong>
+
+</ul>
+
+<h2 id="toc_0.2">Shortcut</h2>
+<ul>
+<li>
+  Bind Keys:  Window -&gt; Preferences -&gt; General -&gt; Keys
+
+<ul>
+<li>
+  Command：命令的名称
+
+<li>
+  Binding：命令绑定的快捷键
+
+<li>
+  When：   快捷键执行命令的条件
+
+<li>
+  Category：命令的类型
+
+</ul>
+<li>
+  Useful Keys
+<pre>
+        Ctrl+1              快速修复(最经典的快捷键)
+        Ctrl+D              删除当前行
+        Ctrl+Q              定位到最后编辑的地方
+        Ctrl+L              定位在某行 (对于程序超过100的人就有福音了)
+        Ctrl+M              最大化当前的Edit或View (再按则反之)
+        Ctrl+/              注释当前行,再按则取消注释
+        Ctrl+O              快速显示 OutLine, 比如一个类，列出其方法和成员变量
+        Ctrl+T              快速显示当前类的继承结构
+        Ctrl+W              关闭当前Editer
+        Ctrl+K              参照选中的Word快速定位到下一个
+        Ctrl+E              快速显示当前Editer的下拉列表(如果当前页面没有显示的用黑体表示)
+        Ctrl+J              正向增量查找(按下Ctrl+J后,你所输入的每个字母编辑器都提供快速匹配定位到某个单词,如果没有,则在stutes line中显示没有找到了,查一个单词时,特别实用,这
+        个功能Idea两年前就有了)
+        CTrl+左键 or F3     跳到光标所在标识符的定义代码，用于查看变量、方法、类的定义
+        Ctrl+Shift+G        在工作空间中查找引用了光标所在标识符的位置（查找所有引用）
+        Ctrl+Shift+L        显示快捷键列表
+</pre>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

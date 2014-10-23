@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Distribute and Install package</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Lib: distutils</a>
+<ul>
+<li><a href="#toc_0.1.1">Distribution</a>
+<li><a href="#toc_0.1.2">Install Package</a>
+</ul>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">Lib: distutils</h2>
+<h3 id="toc_0.1.1">Distribution</h3>
+<ul>
+<li>
+  Pure Python distribution (by module)
+
+</ul>
+<p>
+如果只是想发布几个modules，并不在同一个package中，可以分别把他们指定在
+py_modules选项中
+</p>
+<pre>
+    &lt;root&gt;/
+        setup.py
+        foo.py
+        bar.py
+</pre>
+<blockquote>
+<strong>the setup script might be</strong>
+</blockquote>
+<pre class = "brush: python">
+from distutils.core import setup
+setup(name = 'foobar',
+      version = '1.0',
+      py_modules = ['foo', 'bar'],
+      )
+</pre>
+
+
+<ul>
+<li>
+  Pure Python distribution (by package)
+
+</ul>
+<p>
+如果想发布多个module，尤其是在同多个package中，指定整个package比指定多个module更简单
+上面的例子可以写成
+</p>
+<pre class = "brush: python">
+from distutils.core import setup
+setup(name = 'foobar',
+    verson = '1.0',
+    packages = ['']
+    #the empty string stands for root
+</pre>
+
+<p>
+*如果是将两个文件放在一个子目录下，该子目录仍在root packet中*
+</p>
+<pre>
+&lt;root&gt;/
+    setup.py
+    src/    foo.py
+            bar.py
+</pre>
+
+<p>
+仍然要指明root package===&gt;
+</p>
+
+<pre class = "brush: python">
+from distutils.core import setup
+setup(name = 'foobar',
+    version = '1.0',
+    package_dir = {'':'src'},
+    packages = [''],
+    )
+</pre>
+
+<ul>
+<li>
+  make the installation tarball
+       <br> python setup.py sdist
+
+</ul>
+
+<dl>
+<dt>References</dt>
+</dl>
+<p>
+<a href="http://docs.python.org/2/distutils/examples.html">http://docs.python.org/2/distutils/examples.html</a>
+<br><a href="https://learn-python-the-hard-way-zh_cn-translation.readthedocs.org/en/latest/ex46.html">https://learn-python-the-hard-way-zh_cn-translation.readthedocs.org/en/latest/ex46.html</a>
+</p>
+
+
+<h3 id="toc_0.1.2">Install Package</h3>
+<p>
+python setup.py install
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

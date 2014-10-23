@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>DataBase</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">SQL</a>
+<ul>
+<li><a href="#toc_1.1">SQLite</a>
+<ul>
+<li><a href="#toc_1.1.1">Install on Ubuntu</a>
+<li><a href="#toc_1.1.2">C</a>
+<li><a href="#toc_1.1.3">R</a>
+<li><a href="#toc_1.1.4">D</a>
+<li><a href="#toc_1.1.5">U</a>
+<li><a href="#toc_1.1.6">Destroying and Altering Tables</a>
+<li><a href="#toc_1.1.7">Transactions</a>
+<li><a href="#toc_1.1.8">Exporting Data from CIP</a>
+<li><a href="#toc_1.1.9">Importing Data from outside file</a>
+<li><a href="#toc_1.1.10">Index</a>
+<li><a href="#toc_1.1.11">View</a>
+<li><a href="#toc_1.1.12">Triggers</a>
+<li><a href="#toc_1.1.13">patterm match</a>
+<li><a href="#toc_1.1.14">Limiting and Ordering</a>
+<li><a href="#toc_1.1.15">Grouping</a>
+<li><a href="#toc_1.1.16">Joining Tables</a>
+<li><a href="#toc_1.1.17">Getting Database information</a>
+<li><a href="#toc_1.1.18">Python Lib: sqlite3 DB API 2.0 Interface for SQLite</a>
+<li><a href="#toc_1.1.19">VDBE</a>
+</ul>
+</ul>
+<li><a href="#toc_2">NoSQL</a>
+<ul>
+<li><a href="#toc_2.1">CouchDB(Erlang)</a>
+<li><a href="#toc_2.2">MongoDB(C++)</a>
+<li><a href="#toc_2.3">CodernityDB(Python)</a>
+</ul>
+</ul>
+</div>
+<h1 id="toc_1">SQL</h1>
+<p>
+All SQL operations are then one of four general things(<strong>CRUD</strong>) you do to tables:
+<dl>
+<dt>Create</dt>
+</p>
+</dl>
+<blockquote>
+Putting data into tables.
+</blockquote>
+<dl>
+<dt>Read</dt>
+</dl>
+<blockquote>
+Query data out of a table.
+</blockquote>
+<dl>
+<dt>Update</dt>
+</dl>
+<blockquote>
+Change data already in a table.
+</blockquote>
+<dl>
+<dt>Delete</dt>
+</dl>
+<blockquote>
+Remove data from the table.
+</blockquote>
+
+
+<h2 id="toc_1.1"><a href="SQLite.html">SQLite</a></h2>
+<p>
+SQLite is an embedded database. Rather than running independently as a 
+<br>stand-alone process, it symbiotically coexists inside the application
+<br>it serves-within its process space.
+</p>
+
+<pre>
+Whereas large-scale dedicated relational databases are designed for thousands of users, SQLite is
+designed for thousands of uses. It is more than a database. Although a tool in its own right, it is a tool for
+making tools as well. It is a true utility, engineered to enable you—the developer, user, or
+administrator—to quickly and easily shape those disparate piles of data into order, and manipulate
+them to your liking with minimal effort.
+
+</pre>
+<h3 id="toc_1.1.1">Install on Ubuntu</h3>
+<blockquote>
+<strong>&gt;sudo apt-get install sqlite3</strong>
+</blockquote>
+    
+<ul>
+<li>
+  CLP
+<pre>
+$ sqlite3 
+sqlite&gt;.help
+sqlite&gt;.exit
+sqlite&gt;.mode column
+sqlite&gt;.headers on
+sqlite&gt;select * from test;
+sqlite&gt;.tables              list all tables
+sqlite&gt;create index test_idx on test (value);   create an index
+sqlite&gt;.indices test        view index of a table
+sqlite&gt;.schema test         the SQL definition of all database objects
+sqlite&gt;create view schema as select * from sqlite_master;   create view
+sqlite&gt;select type,name,tbl_name, sql from sqlite_master order by type;
+sqlite&gt;create table test2 as select * from test;    backup db
+sqlite&gt;select max(id) from foods;
+sqlite&gt;select rowid,x,typeof(x) from domain
+</pre>
+
+</ul>
+
+
+<h3 id="toc_1.1.2">C</h3>
+<ul>
+<li>
+  Create One Table
+<pre>
+ex1.sql:
+/* A primary key column has the ability to automatically
+generate values by default.
+CREATE TABLE person(
+    id INTEGER PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    age INTEGER
+    );
+    
+$ sqlite3 ex1.db &lt; ex1.sql
+$ ls
+ex1.db  ex1.sql
+</pre>
+
+</ul>
+
+
+<ul>
+<li>
+  Creating A Multi-Table Database
+<pre>
+ex2.sql
+CREATE TABLE person (
+    id INTEGER PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    age INTEGER
+    );
+
+CREATE TABLE pet (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    breed TEXT,
+    age INTEGER,
+    dead INTEGER
+    );
+
+CREATE TABLE person_pet (
+    person_id INTEGER,
+    pet_id INTEGER
+    );
+    
+$sqlite3 ex2.db &lt; ex2.sql
+$sqlite3 ex2.db
+sqlite&gt;.schema
+....dump the create operation
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Inserting Data
+<pre ex3.sql>
+INSERT INTO persion(id, first_name, last_name,age)
+    VALUES(0, "Zed", "Shaw", 37);
+INSERT INTO pet(id, name, breed, age, dead)
+    VALUES(0, "Fluffy", "Unicorn", 1000, 0);
+INSERT INTO pet VALUES(1, "Ginantor, "Robot", 1, 1);
+INSERT INTO persion(,first_name, last_name, age)
+    VALUES(, "hr", "rui", 30);
+INSERT INTO person_pet (person_id, pet_id) VALUES(0,0);
+INSERT INTO person_pet VALUES(0,1);
+
+$sqlite3 ex3.db &lt; ex2.sql
+$sqlite3 -echo ex3.db &lt; ex3.sql
+....
+</pre>
+
+</ul>
+<p>
+There are two different forms of the INSERT command: explicit and implicit
+</p>
+
+<h3 id="toc_1.1.3">R</h3>
+<ul>
+<li>
+  Selecting Data
+<pre>
+ex4.sql
+SELECT * FROM person;
+SELECT name, age FROM pet;
+SELECT name, age FROM pet WHERE dead = 0;
+SELECT * FROM person WHERE first_name != "Zed";
+
+ex5.sql:1
+    This says "select all columns from person and return all rows." 
+    The format for SELECT is SELECT what FROM tables(s) WHERE (tests) 
+    and the WHERE clause is optional. The '*' (asterisk) character is 
+    what says you want all columns.
+ex5.sql:3
+    In this one I'm only asking for two columns name and age from the 
+    pet table. It will return all rows.
+ex5.sql:5
+    Now I'm looking for the same columns from the pet table but I'm 
+    asking for only the rows where dead = 0. This gives me all the 
+    pets that are alive.
+ex5.sql:7
+    Finally I'm selecting all columns from person just like in the 
+    first line, but now I'm saying only if they do not equal "Zed". 
+    That WHERE clause is what determines which rows to return or not.
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Select Across Many Tables
+
+</ul>
+<p>
+SQL Only Knows Tables
+</p>
+<pre>
+ex5.sql
+What pets Zed owns::
+SELERT pet.id, pet.name, pet.age, pet.dead
+    FROM pet, person_pet, person
+    WHERE
+    pet.id = person_pet.pet_id AND
+    person_pet.person_id = person.id AND
+    person.first_name="Zed";
+    
+ex6.sql:1
+    I only want some columns from pet so I specify them in the select. 
+    In the last exercise you used '*' to say "every column" but that's
+    going to be a bad idea here. Instead, you want to be explicit and 
+    say what column from each table you want, and you do that by using 
+    table.column as in pet.name.
+ex6.sql:2
+    To connect pet to person I need to go through the person_pet relation
+    table. In SQL that means I need to list all three tables after the FROM.
+ex6.sql:3
+    Start the WHERE clause.
+ex6.sql:4
+    First I connect pet to person_pet by the related id columns pet.id and person_pet.id.
+ex6.sql:5
+    AND I need to connect person to person_pet in the same way. Now the 
+    database can search for only the rows where the id columns all match 
+    up, and those are the ones that are connected.
+ex6.sql:6
+    AND I finally ask for only the pets that I own by adding a person.first_name
+    test for my first name.
+
+
+$sqlite3 -column -header ex3.db &lt; ex6.sql
+......
+</pre>
+
+<h3 id="toc_1.1.4">D</h3>
+<ul>
+<li>
+  Deleting Data
+<pre>
+ex6.sql
+
+/* make sure there's dead pets */
+SELECT name, age FROM pet WHERE dead = 1;
+/* aww poor robot */
+DELETE FROM pet WHERE dead = 1;
+/* make sure the robot is gone */
+SELECT * FROM pet;
+/* let's resurrect the robot */
+INSERT INTO pet VALUES (1, "Gigantor", "Robot", 1, 0);
+/* the robot LIVES! */
+SELECT * FROM pet;
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Deleting Using Other Tables
+<pre>
+ex7.sql::
+DELETE FROM pet WHERE id IN (
+    SELECT pet.id
+    FROM pet, person_pet, person
+    WHERE
+    person.id = person_pet.person_id AND
+    pet.id = person_pet.pet_id AND
+    person.first_name = "Zed"
+);
+
+SELECT * FROM pet;
+SELECT * FROM person_pet;
+
+DELETE FROM person_pet
+    WHERE pet_id NOT IN (
+        SELECT id FROM pet
+    );
+
+SELECT * FROM person_pet;
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.5">U</h3>
+<ul>
+<li>
+Updating Data
+<pre>
+ex8.sql
+UPDATE person SET first_name = "Hilarious Guy"
+    WHERE first_name = "Zed";
+
+UPDATE pet SET name = "Fancy Pants"
+    WHERE id=0;
+
+SELECT * FROM person;
+SELECT * FROM pet;
+
+$ sqlite3 mydata.db &lt; code.sql
+# ... output cut ...
+# $
+# $ sqlite3 -header -column -echo mydata.db &lt; ex9.sql
+......
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Updating complex data
+<pre>
+ex9.sql
+/*update one table based on information from another table*/
+SELECT * FROM pet;
+UPDATE pet SET name = "Zed's Pet" WHERE id IN (
+    SELECT pet.id
+    FROM pet, person_pet, person
+    WHERE
+    person.id = person_pet.person_id AND
+    pet.id = person_pet.pet_id AND
+    person.first_name = "Zed"
+    );
+SELECT * FROM pet;
+
+$ sqlite3 mydata.db &lt; code.sql
+# ... output cut ...
+# $ sqlite3 -header -column -echo mydata.db &lt; ex10.sql
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Replacing Data
+<pre>
+ex10.sql
+/* This should fail because 0 is already taken. */
+INSERT INTO person (id, first_name, last_name, age)
+    VALUES (0, 'Frank', 'Smith', 100);
+
+/* We can force it by doing an INSERT OR REPLACE. */
+INSERT OR REPLACE INTO person (id, first_name, last_name, age)
+    VALUES (0, 'Frank', 'Smith', 100);
+
+SELECT * FROM person;
+
+/* And shorthand for that is just REPLACE. */
+REPLACE INTO person (id, first_name, last_name, age)
+    VALUES (0, 'Zed', 'Shaw', 37);
+
+/* Now you can see I'm back. */
+SELECT * FROM person;
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.6">Destroying and Altering Tables</h3>
+<pre>
+ex11.sql
+/* Only drop table if it exists. */
+DROP TABLE IF EXISTS person;
+
+/* Create again to work with it. */
+CREATE TABLE person (
+    id INTEGER PRIMARY KEY,
+    first_name TEXT,
+    last_name TEXT,
+    age INTEGER
+    );
+
+/* Rename the table to peoples. */
+ALTER TABLE person RENAME TO peoples;
+
+/* Add a hatred column to peoples. */
+ALTER TABLE peoples ADD COLUMN hatred INTEGER;
+
+/* Rename peoples back to person. */
+ALTER TABLE peoples RENAME TO person;
+
+.schema person
+
+/* We don't need that. */
+DROP TABLE person;
+</pre>
+
+<h3 id="toc_1.1.7">Transactions</h3>
+<p>
+Transactions are issued with three commands: <strong>begin</strong>, <strong>commit</strong>, and <strong>rollback</strong>
+</p>
+<pre>
+What you need to make your script safer is the BEGIN, COMMIT, and ROLLBACK
+commands. These start a transaction, which creates a "boundary" around a
+group of SQL statements so you can abort them if they have an error. You
+start the transaction with BEGIN, do your SQL, and then when everything's
+good end the transaction with COMMIT. If you have an error then you just
+issue ROLLBACK to abort what you did.
+
+Transactions can be started manually using the BEGIN command. Such
+transactions usually persist until the next COMMIT or ROLLBACK command. But
+a transaction will also ROLLBACK if the database is closed or if an error
+occurs and the ROLLBACK conflict resolution algorithm is specified. See the
+documentation on the ON CONFLICT clause for additional information about 
+the ROLLBACK conflict resolution algorithm.
+END TRANSACTION is an alias for COMMIT.
+</pre>
+
+<h3 id="toc_1.1.8">Exporting Data from CIP</h3>
+<p>
+Export database objects to SQL format using the .dump command
+</p>
+<pre>
+sqlite&gt; .output file.sql            Redirect all output to the file
+sqlite&gt; .dump                       Export objects
+sqlite&gt; .output stdout              redirect back to screen,default
+</pre>
+
+<h3 id="toc_1.1.9">Importing Data from outside file</h3>
+<pre>
+sqlite&gt; drop table test;
+sqlite&gt; drop view schema;
+sqlite&gt; .read file.sql
+
+sqlite&gt; .import [file][table]   file that is not sql
+</pre>
+<h3 id="toc_1.1.10">Index</h3>
+<ul>
+<li>
+  Indexes are a construct designed to speed up queries under certain conditions. Using B-tree indexes, but also increase the size of the database.
+<pre>
+    create index [unique] index_name on table_name (columns)
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.11">View</h3>
+<ul>
+<li>
+  <strong>Views are virtual tables</strong>, their contents are derived from the results of queries on other tables.
+<pre>
+    create view name as select-stmt
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.12">Triggers</h3>
+<p>
+Triggers execute specific SQL commands when specific database events transpire on specific tables
+</p>
+<pre>
+trigger.sql
+create temp table log(x);
+create temp trigger foods_update_log update of name on foods
+begin
+    insert into log values('updated foods: new name=' || new.name);
+end;
+
+begin;
+update foods set name='JUJYFRUIT' where name='JujyFruit';
+select * from log;
+rollback;
+
+#sqlite3 foods.db &lt; trigger.sql
+</pre>
+
+
+<ul>
+<li>
+  <strong>Getting Database File Information</strong>
+<pre>
+The sqlite_master view, which provides detailed information about all
+objects contained in a given database
+
+Other tools:
+    sqlite3_analyzer
+    SQLite Database Browser
+    SQLiteman
+    Navicat
+    
+    &gt; sudo apt-get install sqlitebrowser
+    &gt; sudo apt-get install sqliteman
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.13">patterm match</h3>
+<ul>
+<li>
+  like    used for matching string values against patterns
+
+<li>
+  %   matches any sequence of zero or more characters in the string
+
+<li>
+  _   matches any single character in the string
+<pre>
+sqlite&gt; select id, name from foods where name like %ac%P%';
+id  name
+--  -----
+127 Guacamole Dip
+168 Peach
+...
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.14">Limiting and Ordering</h3>
+<ul>
+<li>
+  limit  specifies the maximum number of records to return
+
+<li>
+  offset specifies the number of records to skip
+<pre>
+sqlite&gt; select * from foods where name like 'B%'
+order by type_id desc, name limit 10;
+</pre>
+
+</ul>
+
+<h3 id="toc_1.1.15">Grouping</h3>
+<pre>
+/* 用于统计 */
+sqlite&gt; select type_id from foods group by type_id;
+</pre>
+
+<h3 id="toc_1.1.16">Joining Tables</h3>
+<pre>
+sqlite&gt; select foods.name, food_types.name
+            from foods, food_types
+            where foods.type_id=food_types.id limit 10;
+</pre>
+<ul>
+<li>
+  Inner Joins     求交集
+
+<li>
+  Cross Joins     简单组合两个Table，没有任何联系的
+
+<li>
+  Outer Joins    
+
+<li>
+  Natural Joins
+
+</ul>
+
+<h3 id="toc_1.1.17">Getting Database information</h3>
+<p>
+You can obtain database information using the database schema pragmas, defined as follows:
+</p>
+<ul>
+<li>
+  database_list: Lists information about all attached databases.
+
+<li>
+  index_info: Lists information about the columns within an index. It takes an index name as an argument.
+
+<li>
+  index_list: Lists information about the indexes in a table. It takes a table name as an argument.
+
+<li>
+  table_info: Lists information about all columns in a table.
+<pre>
+sqlite&gt; pragma database_list;
+sqlite&gt; create index foods_name_type_idx on foods(name,type_id);
+sqlite&gt; pragma index_info(foods_name_type_idx);
+sqlite&gt; pragma index_list(foods);
+sqlite&gt; pragma table_info(foods);
+</pre>
+
+</ul>
+
+
+<h3 id="toc_1.1.18"><a href="http://docs.python.org/2/library/sqlite3.html">Python Lib: sqlite3 DB API 2.0 Interface for SQLite</a></h3>
+<ul>
+<li>
+  Module functions and constants
+
+<ul>
+<li>
+  sqlite3
+
+<li>
+  connection
+
+<li>
+  cursor
+
+</ul>
+</ul>
+
+<pre class = "brush: python">
+# A minimal SQLite shell for experiments
+ import sqlite3
+ con = sqlite3.connect(":memory:")
+ con.isolation_level = None
+ cur = con.cursor()
+
+ buffer = ""
+ print "Enter your SQL commands to execute in sqlite3."
+ print "Enter a blank line to exit."
+
+ while True:
+     line = raw_input()
+     if line == "":
+         break
+     buffer += line
+     # return true if the string sql contains one or more complete SQL statements
+     if sqlite3.complete_statement(buffer):
+         try:
+             buffer = buffer.strip()
+             cur.execute(buffer)
+             if buffer.lstrip().upper().startswith("SELECT"):
+                 print cur.fetchall()
+         except sqlite3.Error as e:
+             print "An error occurred:", e.args[0]
+         buffer = ""
+     con.close()
+</pre>
+
+<h3 id="toc_1.1.19">VDBE</h3>
+<pre>
+$ sqlite3 test_database_1
+sqlite&gt; CREATE TABLE examp(one text, two int);
+sqlite&gt; .explain
+sqlite&gt; EXPLAIN INSERT INTO examp VALUES('Hello, World!',99);
+......
+</pre>
+
+<hr />
+<h1 id="toc_2">NoSQL</h1>
+<p>
+Most of the nosql databases have python clients which are actively supported. 
+<br>To name a few:
+<br>Cassandra: <a href="https://github.com/datastax/python-driver">https://github.com/datastax/python-driver</a>
+<br>Riak: <a href="https://github.com/basho/riak-python-client">https://github.com/basho/riak-python-client</a>
+<br>MongoDB: <a href="http://api.mongodb.org/python/current/">http://api.mongodb.org/python/current/</a>
+<br>CouchDB: <a href="http://wiki.apache.org/couchdb/Getting_started_with_Python">http://wiki.apache.org/couchdb/Getting_started_with_Python</a>
+<br>Redis: <a href="https://github.com/andymccurdy/redis-py">https://github.com/andymccurdy/redis-py</a>
+</p>
+
+<h2 id="toc_2.1"><a href="http://couchdb.apache.org/">CouchDB(Erlang)</a></h2>
+
+<h2 id="toc_2.2"><a href="http://www.mongodb.org/">MongoDB(C++)</a></h2>
+<ul>
+<li>
+  Install:    &gt;sudo apt-get install mongodb
+
+<ul>
+<li>
+  mongod daemon will start automatically on Ubuntu, port 27017
+
+<li>
+  &gt;mongo      start MongoDB admin console
+
+<li>
+  &gt;source ~/workspace/env_test/bin/activate   Test in Python virsual enviroment
+
+<li>
+  pip install pymongo 
+
+<li>
+  Comparison
+
+<li>
+  SQL: row  &lt;-- a single entry --&gt; MongoDB: document
+
+<li>
+  SQL: table  &lt;-- entries --&gt; MongoDB: collection
+
+</ul>
+</ul>
+
+<p>
+== <a href="http://redis.io/">Redis</a>
+</p>
+
+<h2 id="toc_2.3"><a href="http://labs.codernity.com/codernitydb/index.html">CodernityDB(Python)</a></h2>
+<ul>
+<li>
+  <a href="CodernityDB Code Analyze.html">CodernityDB Code Analyze</a>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

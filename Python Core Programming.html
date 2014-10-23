@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Python Core Programming</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<p>
+我们在小节 15.2 中使用的一个匹配电话号码的正则表达式,其中电话号码允许包含可选的区号
+前缀 : \d{3}-\d{3}-\d{4}. 请在练习 15–28 和 15–29 中, 修改这个正则表达式,使它满足:
+</p>
+
+<p>
+15–28.区号(第一组的三个数字和它后面的连字符)是可选的,即,你写的正则表达式对
+800-555-1212 和 555-1212 都可以匹配。
+</p>
+<pre class = "brush: python">
+&gt;&gt;&gt; str1 = '800-500-1212'
+&gt;&gt;&gt; str2 = '555-1212'
+&gt;&gt;&gt; str3 = '(800)555-1212'
+&gt;&gt;&gt; prog = re.compile(r'(\d{3}-)+\d{4}')
+&gt;&gt;&gt; m = prog.search(str1)
+&gt;&gt;&gt; m.group()
+</pre>
+
+<p>
+15–29.区号中可以包含圆括号或是连字符,而且它们是可选的,就是说你写的正则表达式可以
+匹配 800-555-1212, 或 555-1212, 或(800) 555-1212.
+</p>
+<pre class = "brush: python">
+&gt;&gt;&gt; str1 = '800-500-1212'
+&gt;&gt;&gt; str2 = '555-1212'
+&gt;&gt;&gt; str3 = '(800)555-1212'
+&gt;&gt;&gt; prog2 = re.compile(r'((\(\d{3}\))|(\d{3}-)?)\d{3}-\d{4}')
+&gt;&gt;&gt; m = prog2.search(str2)
+&gt;&gt;&gt; m.group()
+'555-1212'
+&gt;&gt;&gt; m = prog2.search(str3)
+&gt;&gt;&gt; m.group()
+'(800)555-1212'
+&gt;&gt;&gt; m = prog2.search(str1)
+&gt;&gt;&gt; m.group()
+'800-500-1212'
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

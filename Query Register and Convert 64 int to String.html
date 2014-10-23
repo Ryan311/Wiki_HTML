@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Query Register and Convert 64 int to String</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Test Project</a>
+</ul>
+</div>
+<h1 id="toc_1">Test Project</h1>
+
+<p>
+该测试程序是为了测试在Register中读取BtWorkMode值，为GattExport的代码做测试。
+<br>BtWorkMode由filter driver来写入，le dll可以访问它来决定LE Profile是使用
+LE Link连接还是BR/EDR连接。
+</p>
+
+
+<p>
+<strong>要点</strong>
+</p>
+<ul>
+<li>
+  安全字符串操作   
+    <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647527(v=vs.85).aspx">StringCchCopy</a>
+    <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647518(v=vs.85).aspx">StringCchCat</a>
+
+<li>
+  将64位整数转换为字符串
+    <a href="http://msdn.microsoft.com/zh-cn/library/ce3zzk1k(v=vs.80).aspx">sprintf_s</a>
+
+<li>
+  注册表操作
+    <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724897(v=vs.85).aspx">RegOpenKeyEx</a>
+    <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms724911(v=vs.85).aspx">RegQueryValueEx</a>
+
+</ul>
+
+<p>
+<strong>Code</strong> 
+</p>
+<pre class="brush: c++">
+#include "stdafx.h"
+#include &lt;windows.h&gt;
+#include &lt;malloc.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;Strsafe.h&gt;
+
+#define TOTALBYTES    8192
+#define BYTEINCREMENT 4096
+
+void main()
+{
+	HKEY hKey; 
+	DWORD dwType = REG_SZ; 
+	DWORD dwSize; 
+	DWORD Value;
+	long ret;
+	long long  RemoteBtAddr = 0x116701177d;
+	TCHAR	swPath[256];
+	char	Address[16] = {};
+	TCHAR	AddressW[32]={};
+
+	#define	LEDATABASE_REG	TEXT("SYSTEM\\CurrentControlSet\\services\\RtkBtFilter\\LeDatabase\\")
+	StringCchCopy (swPath, 256, LEDATABASE_REG);
+
+	sprintf_s(Address, 16, "%I64x", RemoteBtAddr);
+	printf("%s\n",Address);
+	size_t cn = 0;
+	if (!mbstowcs_s(&amp;cn, AddressW, 32, Address, strlen(Address)))
+		printf("Convert OK\n");
+	else
+		printf("Conver Error\n");
+
+	StringCchCat(swPath,256, AddressW);
+	printf("%ws, %d\n",swPath, sizeof(swPath));
+
+	ret = RegOpenKeyEx(HKEY_LOCAL_MACHINE, swPath, 0, KEY_QUERY_VALUE, &amp;hKey);
+	if(ret!=ERROR_SUCCESS) 
+	{ 
+		printf("Query Value Error, %x\n", ret);
+		return;
+	} 
+	ret = RegQueryValueEx(hKey,(LPCTSTR)TEXT("BtWorkMode"),
+		NULL, 
+		NULL, 
+		(BYTE*)&amp;Value, 
+		&amp;dwSize);
+
+	if(ret!=ERROR_SUCCESS) 
+	{ 
+		printf("Query Value Error");
+		RegCloseKey(hKey);
+	} 
+
+	printf("\n BtWorkMode is %d, dwSize(%d), ret(%x), lasterror(%x)\n",Value,dwSize, ret, GetLastError());
+}
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

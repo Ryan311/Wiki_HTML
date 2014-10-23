@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>SymStore</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<ul>
+<li>
+  <strong>Symbol Tool</strong>
+    <br><em>symstore.exe</em>  in WinDDK\7600...\Debuggers
+    <br>_<em>symsrv.dll</em>
+    <br><em>symsrv.yes</em>
+
+</ul>
+
+
+<ul>
+<li>
+  <strong>Add Symbol to Symbol Store</strong>
+<pre class = "brush: python">
+import os
+
+symstoreAdd = 'symstore add /r '
+symstoreDel = 'symstore del '
+
+symStorePath = r'"G:\LocalSymbols"'
+symStoreSrcDir = r'"E:\BTSW\trunk\HostSW\win7-inbox-driver\bin\RtkFilter\driver_win7_x86\*.pdb"'
+
+cmdlist = symstoreAdd + "/f " + symStoreSrcDir + " /s " + symStorePath + " /t " + '"HRSymbleStore"' + " /v " + '"0.0.636.0."' + " /c " + '"filter driver version"'
+print cmdlist
+os.system(cmdlist)
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <strong>Del Symbol from Symbol Store</strong>
+<pre class = "brush: python">
+import os
+
+symstoreAdd = 'symstore add /r '
+symstoreDel = 'symstore del '
+
+symStorePath = r'"F:\WinSymbols\LocalSymbol"'
+
+cmdlist = symstoreDel + " /i 0000000001 " + " /s " + symStorePath
+print cmdlist
+os.system(cmdlist)
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <strong>Add Symbol Path to Enviroment</strong>
+
+</ul>
+<p>
+_NT_SYMBOL_PATH = srv*c:\mss*<a href="http://msdl.microsoft.com/download/symbols;">http://msdl.microsoft.com/download/symbols;</a> G:\LocalSymbols
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

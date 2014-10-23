@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Python</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Python</a>
+<li><a href="#toc_0.2">Tools</a>
+<li><a href="#toc_0.3">Books &amp; Docs</a>
+<ul>
+<li><a href="#toc_0.3.1">Tools make live easier</a>
+</ul>
+<li><a href="#toc_0.4">Python3</a>
+<ul>
+<li><a href="#toc_0.4.1">Web Framework for Python</a>
+<ul>
+<li><a href="#toc_0.4.1.1">Web.py</a>
+<li><a href="#toc_0.4.1.2">Django</a>
+</ul>
+<li><a href="#toc_0.4.2">IPython</a>
+<ul>
+<li><a href="#toc_0.4.2.1">IPython-notebook</a>
+</ul>
+<li><a href="#toc_0.4.3">Scipy</a>
+<li><a href="#toc_0.4.4">PyPy</a>
+</ul>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">Python</h2>
+<ul>
+<li>
+  Author: <strong>Guido van Rossum</strong>      1991
+
+<li>
+  编程范型： 命令式编程、多范型、面向对象、函数式编程、面向切面编程
+
+<li>
+  型态系统： [[强类型]]、[[动态类型]]、[[duck typing]]
+
+<li>
+  <a href="Basic.html">Basic</a>
+
+<li>
+  <a href="Library.html">Library</a>
+
+<li>
+  <a href="Distribute and Install package.html">Distribute and Install package</a>
+
+<li>
+  <a href="http://www.ibm.com/developerworks/cn/linux/l-cn-pythondebugger/">Debug</a>
+
+<li>
+  <a href="PythonVirtualEnviroment.html">PythonVirtualEnviroment</a>
+
+<li>
+  <a href="Useful Library.html">Useful Library</a>
+
+<li>
+  Books &amp; Docs
+
+<ul>
+<li>
+  <a href="Python Cook Book.html">Python Cook Book</a>
+
+<li>
+  <a href="http://www.tummy.com/presentations/vimpython-20070225/">python&amp;vim</a>
+
+<li>
+  <a href="Python Core Programming.html">Python Core Programming</a>
+
+</ul>
+<li>
+  <a href="https://github.com/philipbjorge/EditREPL">EditREPL use vim in python interacive shell</a>
+
+<li>
+  <a href="Python Coding Style.html">Python Coding Style</a>
+
+<li>
+  <a href="http://www.cnblogs.com/moinmoin/archive/2011/03/10/lsit-comprehensions-generators.html">python列表解析和生成表达式</a>
+
+<li>
+  <a href="Iterator and Generator.html">Iterator and Generator</a> <a href="http://www.dabeaz.com/generators-uk/">Generator Tricks</a> <a href="file://F:/Wiki/wiki2_html/GeneratorsUK.pdf">Generator!!!</a>
+
+<li>
+  <strong>Linux System Mining with Python</strong> <a href="http://amitsaha.github.io/site/notes/articles/python_linux/article.html">English</a> <a href="http://www.linuxeden.com/html/news/20130802/141990.html">Chinese</a>
+
+<li>
+  <a href="Parse cmd line argument.html">Parse cmd line argument</a>
+
+<li>
+  [[遍历文件夹下的文件]]
+
+<li>
+  <a href="Decorator.html">Decorator</a>
+
+<li>
+  <a href="Closure.html">Closure</a>
+
+<li>
+  <a href="Python Tricky.html">Python Tricky</a>
+
+<li>
+  <a href="Python Challenge.html">Python Challenge</a>
+
+<li>
+  <a href="http://legacy.python.org/dev/peps/">PEP</a>(Python增强建议书)
+
+<ul>
+<li>
+  PEP是Python Enhancement Proposals的缩写
+
+<li>
+  一个PEP是一份为Python社区提供各种增强功能的技术规格
+
+<ul>
+<li>
+  跟踪Python中的新特性
+
+<li>
+  说明Python中的某一个设计问题
+
+<li>
+  关于Python的提案，但不针对Python语言本身
+
+</ul>
+<li>
+  PEP 0       //index of PEPs
+
+<li>
+  PEP 1       //PEP Purpose and Guidelines
+
+</ul>
+</ul>
+
+<h2 id="toc_0.2">Tools</h2>
+<ul>
+<li>
+  Show image in terminal when call Image.show() within PIL
+
+<ul>
+<li>
+  sudo apt-get install imagemagick
+
+</ul>
+<li>
+  <a href="Py2exe.html">Py2exe</a>
+
+<li>
+  <a href="http://stackoverflow.com/questions/3220404/why-use-pip-over-easy-install">easy_install &amp; pip</a>
+
+<li>
+  <a href="https://github.com/philipbjorge/EditREPL">EditREPL use vim in python interacive shell</a>
+
+<li>
+  <a href="PythonVirtualEnviroment.html">PythonVirtualEnviroment</a>
+
+<li>
+  <a href="http://www.ibm.com/developerworks/cn/linux/l-cn-pythondebugger/">Debug</a>
+
+<li>
+  <a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Unofficial Windows Binaries for Python Extension Packages</a>
+
+<li>
+  <a href="Distribute and Install package.html">Distribute and Install package</a>
+
+<li>
+  <a href="http://www.pythonforbeginners.com/basics/ipython-a-short-introduction/">IPython</a> ===
+
+<ul>
+<li>
+  Tab completion              " very useful
+
+<li>
+  Using Python debugger
+
+<li>
+  Profiles
+
+<li>
+  QT-based
+
+</ul>
+<li>
+  <a href="http://yangzetian.github.io/2013/02/08/ipython-notebook-interactive-computing-new-era/">IPython-notebook</a>
+<pre>
+IPython Notebook 是一种新兴的交互式数据分析与记录工具，它定义了一种全新的计算文件格式，其中包含了代码，
+代码说明以及每一步的计算输出(数值或图片等)，也就是说这一个文件完整记录了计算过程中的所有相关信息。此外，
+该文件还可以嵌入网络视频，图片， 公式等众多副文本格式，实为交互计算，记录思维，传播思想的好帮手。
+</pre>
+
+<ul>
+<li>
+  &gt; sudo ipython notebook
+
+<li>
+  &gt; sudo ipython notebook --pylab
+
+<li>
+  &gt; sudo ipython notebook --pylab inline
+
+<li>
+  As ipython notebook kernel must run as root while chrome can't run as root
+
+<ul>
+<li>
+  modify /usr/bin/google-chrome, add <strong>--user-data-dir</strong> in the end of last line
+
+</ul>
+</ul>
+</ul>
+
+<h2 id="toc_0.3">Books &amp; Docs</h2>
+<ul>
+<li>
+  <a href="Python Cook Book.html">Python Cook Book</a>
+
+<li>
+  <a href="http://www.tummy.com/presentations/vimpython-20070225/">python&amp;vim</a>
+
+<li>
+  <a href="Python Core Programming.html">Python Core Programming</a>
+
+<li>
+  <a href="http://woodpecker.org.cn/diveintopython3/special-method-names.html">特殊方法 深入Python3</a> <a href="http://www.cnblogs.com/vamei/archive/2012/11/19/2772441.html">Examples</a>
+
+<li>
+  <a href="http://effbot.org/zone/python-for-statement.htm">For Statement</a>
+
+<ul>
+<li>
+ original     _<em>getitem</em>__  
+
+<li>
+ new          __<em>iter</em>__ and __<em>next</em>__
+
+</ul>
+<li>
+  <a href="http://effbot.org/zone/python-with-statement.htm">With Statement</a>
+
+<ul>
+<li>
+  __<em>enter</em>__ and __<em>exit</em>__ 
+
+</ul>
+<li>
+  <a href="http://effbot.org/zone/python-getattr.htm">getattr Function</a>
+
+<ul>
+<li>
+  __<em>getattr</em>__ 
+
+</ul>
+</ul>
+
+<h3 id="toc_0.3.1">Tools make live easier</h3>
+<ul>
+<li>
+  <a href="WppFormat.html">WppFormat</a>
+
+<li>
+  <a href="SymStore.html">SymStore</a>
+
+<li>
+  <a href="LogChange.html">LogChange</a>   
+
+<li>
+  <a href="GetFileVersion.html">GetFileVersion</a>
+
+<li>
+  <a href="WppLogConvert.html">WppLogConvert</a>    
+
+<li>
+  <a href="DelCorruptSymFle.html">DelCorruptSymFle</a>
+
+</ul>
+
+
+<h2 id="toc_0.4">Python3</h2>
+<ul>
+<li>
+  sudo apt-get install python3
+
+<li>
+  sudo apt-get install python3-setuptools
+
+</ul>
+
+<h3 id="toc_0.4.1">Web Framework for Python</h3>
+
+<h4 id="toc_0.4.1.1">Web.py</h4>
+<dl>
+<dt><a href="http://webpy.org/">http://webpy.org/</a> </dt>
+</dl>
+<p>
+"Django lets you write web apps in Django. TurboGears lets you write web apps in TurboGears. Web.py lets you write web apps in Python."
+</p>
+
+<p>
+A Complete web.py application
+</p>
+<pre class = "brash: python">
+import web
+urls = (
+        '/(.*)', 'hello'
+)
+app = web.application(urls, globals())
+
+class hello:
+    def GET(self, name):
+        if not name:
+           name = 'World'
+           return 'Hello, ' + name + '!'
+
+if __name__ == "__main__":
+    app.run()
+</pre>
+
+<dl>
+<dt>Start the server</dt>
+</dl>
+<blockquote>
+$python code.py
+<br>$python code.py 1234
+</blockquote>
+
+<h4 id="toc_0.4.1.2">Django</h4>
+
+<ul>
+<li>
+  <strong>Install</strong>
+
+<li>
+  <strong>Command</strong>
+
+</ul>
+<dl>
+<dt>Create Project</dt>
+</dl>
+<pre class="brush: bash">
+    &gt;django-admin.py startproject mysite    #Creating a project    
+</pre>
+
+<dl>
+<dt>Run Development Server</dt>
+</dl>
+<pre class="brush: bash">
+    &gt;python manage.py runserver
+</pre>
+
+<dl>
+<dt>Create App</dt>
+</dl>
+<pre class="brush: bash">
+    &gt;python manage.py startapp wiki 
+</pre>
+<p>
+Add mysite.wiki in the INSTALLED_APPS in settings.py
+</p>
+
+<dl>
+<dt>Config Database</dt>
+</dl>
+<blockquote>
+settings.py:
+DATABASE_ENGINE = "sqlite3"
+DATABASE_NAME = "django.db"
+</blockquote>
+<pre class="brush: bash">
+    &gt;python manage.py syncdb    #create list in database
+</pre>
+<blockquote>
+<a href="https://docs.djangoproject.com/en/1.5/ref/django-admin/#django-admin-runserver">more command...</a>
+</blockquote>
+    
+<dl>
+<dt>Other</dt>
+</dl>
+<blockquote>
+Django－Python 解释器
+manage.py shell它能进行一些必要的Django环境设置
+如果安装ipython，manage.py shell会默认使用它。
+</blockquote>
+<ul>
+<li>
+<a href="http://showmedo.com/videotutorials/video?name=1100000&amp;fromSeriesID=110">Wiki over Django</a>
+
+</ul>
+
+<h3 id="toc_0.4.2"><a href="http://www.pythonforbeginners.com/basics/ipython-a-short-introduction/">IPython</a></h3>
+<ul>
+<li>
+  Tab completion              " very useful
+
+<li>
+  Using Python debugger
+
+<li>
+  Profiles
+
+<li>
+  QT-based
+
+</ul>
+ 
+<h4 id="toc_0.4.2.1"><a href="http://yangzetian.github.io/2013/02/08/ipython-notebook-interactive-computing-new-era/">IPython-notebook</a></h4>
+<pre>
+IPython Notebook 是一种新兴的交互式数据分析与记录工具，它定义了一种全新的计算文件格式，其中包含了代码，
+代码说明以及每一步的计算输出(数值或图片等)，也就是说这一个文件完整记录了计算过程中的所有相关信息。此外，
+该文件还可以嵌入网络视频，图片， 公式等众多副文本格式，实为交互计算，记录思维，传播思想的好帮手。
+</pre>
+<ul>
+<li>
+  &gt; sudo ipython notebook
+
+<li>
+  &gt; sudo ipython notebook --pylab
+
+<li>
+  &gt; sudo ipython notebook --pylab inline
+
+<li>
+  As ipython notebook kernel must run as root while chrome can't run as root
+
+<ul>
+<li>
+  modify /usr/bin/google-chrome, add <strong>--user-data-dir</strong> in the end of last line
+
+</ul>
+</ul>
+
+<h3 id="toc_0.4.3"><a href="http://www.scipy.org/">Scipy</a></h3>
+<ul>
+<li>
+  SciPy (pronounced “Sigh Pie”) is a Python-based ecosystem of opensource software for mathematics, science, and engineering. 
+
+<li>
+  NumPy是一个定义了数值数组和矩阵类型和它们的基本运算的语言扩展。
+
+<li>
+  SciPy是另一种使用NumPy来做高等数学、信号处理、优化、统计和许多其它科学任务的语言扩展。
+
+<li>
+  Matplotlib是一个帮助绘图的语言扩展。
+
+<li>
+  <a href="http://reverland.org/python/2012/08/24/scipy/#scipynumpymatplotlib">Example</a>
+
+</ul>
+
+<h3 id="toc_0.4.4"><a href="http://pypy.org/">PyPy</a></h3>
+<ul>
+<li>
+  JIT(Just in time)   compile -&gt; cache -&gt; run
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>VirsualBox</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Virsual Machime</a>
+<ul>
+<li><a href="#toc_1.1">Virsual Box</a>
+<ul>
+<li><a href="#toc_1.1.1">Introduction</a>
+<li><a href="#toc_1.1.2">Install</a>
+<li><a href="#toc_1.1.3">Share fold with Host</a>
+</ul>
+</ul>
+</ul>
+</div>
+<h1 id="toc_1">Virsual Machime</h1>
+<h2 id="toc_1.1">Virsual Box</h2>
+
+<h3 id="toc_1.1.1">Introduction</h3>
+<h3 id="toc_1.1.2">Install</h3>
+<p>
+<a href="https://www.virtualbox.org/wiki/Downloads">Download</a>
+</p>
+<h3 id="toc_1.1.3">Share fold with Host</h3>
+<ol>
+<li>
+In Host, add /usr/share/virsualbox/VBoxGuestAdditions.iso to Settings-&gt;Storage-&gt;CD/DVD
+
+<li>
+In Guest(Ubuntu12.04 Server), need to install build-essential and dkms first.<br> sudo apt-get update <br> sudo apt-get install build-essential
+
+<li>
+In Guest, mount CD. <br> cd /media <br> sudo mkdir vbox <br> sudo mount /dev/sr0 vbox/  <br> cd vbox/
+
+<li>
+In Guest  <br> sudo ./VBoxLinuxAdditions.run
+
+<li>
+Add Share Folder in Settings-&gt;Shared Folders-&gt;Add
+
+<li>
+Restart Guest, then <br> sudo mount -t vboxsf Host /mnt
+
+</ol>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

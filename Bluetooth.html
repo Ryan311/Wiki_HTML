@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Bluetooth</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Package Format</a>
+<li><a href="#toc_0.2">Bluetooth in 2014</a>
+<li><a href="#toc_0.3">BT4.2 Features</a>
+<li><a href="#toc_0.4">BLE in Win8+</a>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">Package Format</h2>
+<pre>
+    HCI Header
+        U16 Handle_Flag
+        U16 DataLength
+    L2cap Header
+        U16 Length
+        U16 Channel ID
+    PayLoad
+        Fix Channel
+            U8  Cmd
+                Parameter
+        Data Channel
+            Data Payload
+</pre>
+
+<h2 id="toc_0.2">Bluetooth in 2014</h2>
+<ul>
+<li>
+LE Secure Connections - Host Functionality has been changed
+
+<ul>
+<li>
+Enhances the Security Manager to be compatible with BR/EDR security for 
+
+<li>
+seamless integration for dual-mode 
+
+</ul>
+<li>
+LE Secure Connections - HCI Cryptographic... has been changed 
+
+<li>
+Huge Attributes has been changed 
+
+<li>
+Low Latency Reconnections (LLR) has been changed
+
+<li>
+High Accuracy Asset Tracking (HAAT) has been changed
+
+<li>
+2Mbps LE PHY has been changed 
+
+<li>
+Public Indoor Positioning has been changed 
+
+<li>
+LE Data Packet Length Extension has been added
+
+<ul>
+<li>
+Extends the length of LE data packets 
+
+</ul>
+<li>
+LE Advertising Packet Length Extension has been added 
+
+<ul>
+<li>
+Extends the length of LE Advertising packets 
+
+</ul>
+<li>
+Slot Availability Mask (SAM) has been changed
+
+<ul>
+<li>
+Allows a Bluetooth device to inform remote devices of available time slots 
+
+<li>
+for transmission and reception. This enhancement is useful for improving 
+
+<li>
+Bluetooth performance in the presence of collocated Mobile Wireless Service (MWS) radios.  
+
+</ul>
+<li>
+GATT Improvements has been added 
+
+<ul>
+<li>
+It is proposed that GATT is improved to enable better user experience by 
+
+<li>
+reducing Service Discovery time, using friendly name during pairing, and
+
+<li>
+providing a deterministic characteristic discovery scheme.  
+
+</ul>
+<li>
+LE Privacy 1.2 has been changed 
+
+<ul>
+<li>
+Proposes to enhance the LE Privacy feature  of the Core Specification v4.0.  
+
+<li>
+This enhancement will not only increase the level of anonymity for the LE 
+
+<li>
+Peripheral, but also apply the same level of Privacy to the LE Central device. 
+
+</ul>
+</ul>
+
+<h2 id="toc_0.3">BT4.2 Features</h2>
+<ol>
+<li>
+  LE Data Packet Length Extension
+
+<li>
+  LE Secure Connections
+
+<li>
+  Link Layer Privacy
+
+<li>
+  Link Layer Extended Filter Policies
+
+</ol>
+
+<p>
+The term for ‘LE privacy v1.2’ is changed to Link Layer Privacy and Link Layer Extended Filter Policies.
+</p>
+
+<h2 id="toc_0.4">BLE in Win8+</h2>
+<ul>
+<li>
+  <a href="https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/home?searchTerm=Windows%208%2C%20Bluetooth%20LE%20and%20BluetoothFindFirstDevice%2FBluetoothFindNextDevice%2FBluetoothFindDeviceClose">https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/home?searchTerm=Windows%208%2C%20Bluetooth%20LE%20and%20BluetoothFindFirstDevice%2FBluetoothFindNextDevice%2FBluetoothFindDeviceClose</a>
+
+<li>
+  The Windows 8 Bluetooth GATT apis requires that the device be paired using the built-in UI and does not allow application to connect to an arbitrary Bluetooth LE device.
+
+<li>
+  Windows上BLE的缺点， 只能通过Buildin UI来scan， pairy设备， 不能将Classic Device和BLE Device区别开来
+
+<li>
+  对于BLE设备来说， 有很多情景并不需要配对，如iBeacon，它只支持Advertising，IPhone只需要Scan到它并从Advertising中得到信息就可以了。Windows中对类似iBeacon的应用就不能提供支持
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

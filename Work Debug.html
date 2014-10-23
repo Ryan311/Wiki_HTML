@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Work Debug</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">filter driver</a>
+<ul>
+<li><a href="#toc_0.1.1">patch code download</a>
+</ul>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">filter driver</h2>
+<h3 id="toc_0.1.1">patch code download</h3>
+<ul>
+<li>
+  在收到bthusb的event read request时来做download patch动作
+
+<li>
+  客户在WHCK时遇到BSOD(0x9F), stack text如下： 
+<pre>
+    nt!KiSwapContext+0x7a
+    nt!KiCommitThreadWait+0x1d2
+    nt!KeWaitForSingleObject+0x19f
+    Wdf01000!FxIoTarget::SubmitSync+0x355
+    Wdf01000!imp_WdfRequestSend+0x2d1
+    RtkBtfilter!WdfRequestSend+0x15 (Inline Function @ fffff880`08a7aa34) [c:\program files\windows kits\8.0\include\wdf\kmdf\1.9\wdfrequest.h @ 660]
+    RtkBtfilter!FilterSendCommand+0x24c [e:\btsw\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\filter_helper.c @ 2271]
+    RtkBtfilter!FilterSendVendorCommandToBrEdr+0xa6 [e:\btsw\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\filter_helper.c @ 2316]
+    RtkBtfilter!FilterIsPatchCodeExist+0x7a [e:\btsw\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\fwpatch.c @ 388]
+    RtkBtfilter!FilterDownLoadPatchCode+0x5b [e:\btsw\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\fwpatch.c @ 920]
+    RtkBtfilter!FilterEvtIoInternalDeviceControl+0x510 [e:\btsw\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\filter.c @ 944]
+    Wdf01000!FxIoQueue::DispatchRequestToDriver+0x542
+    Wdf01000!FxIoQueue::DispatchEvents+0x66f
+    Wdf01000!FxIoQueue::QueueRequest+0x2ab
+    Wdf01000!FxPkgIo::Dispatch+0x4da
+    Wdf01000!FxDevice::Dispatch+0x19a
+    Wdf01000!FxDevice::DispatchWithLock+0xa6
+    BTHUSB!UsbWrapSubmitInterruptRead+0x1ec
+    BTHUSB!UsbWrapStartAllPingPongs+0xe0
+    BTHUSB!USBStartInterruptTransfers+0x64
+    BTHUSB!BthUsb_SetPipeState+0x1b9
+    BTHUSB!BthUsb_StartUpPipes+0xe8
+    BTHUSB!BthUsb_PnpStartDevice+0xfc
+    bthport!BthProcessStart+0x75
+    bthport!BthHandleStartDevice+0x3be
+    bthport!BthHandlePnp+0x17c
+    bthport!BthDispatchPnp+0x73
+    nt!PnpAsynchronousCall+0xce
+    nt!PnpStartDevice+0x11d
+    nt!PnpStartDeviceNode+0x156
+    nt!PipProcessStartPhase1+0x74
+    nt!PipProcessDevNodeTree+0x296
+    nt!PiProcessReenumeration+0x98
+    nt!PnpDeviceActionWorker+0x327
+    nt!ExpWorkerThread+0x111
+    nt!PspSystemThreadStartup+0x5a
+    nt!KxStartSystemThread+0x16
+</pre>
+
+<li>
+  从中可以看到
+
+<ul>
+<li>
+  event read request是bthusb发下来的
+
+<li>
+  该request发下来时，bthport在做StartDevice动作，PNP IRP没有Complete
+
+<li>
+  所以整个Download过程不能超过10s, 否则就会出现0x9F BSOD
+
+<li>
+  WdfRequestSend本身是异步的函数，但这里是当成同步来用的（加了参数），所以不太合适
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

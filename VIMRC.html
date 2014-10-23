@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>VIMRC</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h2 id="toc_0.1">VIM</h2>
+<hr />
+<ul>
+<li>
+  自定义补完
+
+<ul>
+<li>
+  vim通过定义快键来实现括号自动补全： 
+        让vim实现输入： [      而在文件中输入:     []      并把光标置于中括号中，方法如下： 
+        :inoremap  [  []&lt;Esc&gt;i  
+
+</ul>
+</ul>
+<hr />
+<ul>
+<li>
+  Key map
+
+<ul>
+<li>
+  show mapping relevant to a particular key
+
+<ul>
+<li>
+  :map &lt;C-J&gt;
+
+</ul>
+<li>
+  Find mapping interface(and where they come from), this is useful when map confilct
+
+<ul>
+<li>
+  :verbose nmap &lt;C-J&gt;
+
+<li>
+  :verbose nmap j
+
+</ul>
+</ul>
+</ul>
+<hr />
+<ul>
+<li>
+  Comment Out Block
+<pre May not keep in vimrc, move them to ftplugin>
+    "Comment out block for Python, ftplugin/python.vim
+        vnoremap &lt;silent&gt; # :norm 0i#&lt;cr&gt;
+        vnoremap &lt;silent&gt; - :norm 0x&lt;cr&gt;
+    
+    "Comment out block for C++/C, ftplugin/c.vim
+        vnoremap &lt;silent&gt; / :norm 0i//&lt;cr&gt;
+        vnoremap &lt;silent&gt; - :norm 02x&lt;cr&gt;
+    
+    "Comment out block for VIML, ftpugin/vim.vim
+        vnoremap &lt;silent&gt; # :norm 0i"&lt;cr&gt;
+        vnoremap &lt;silent&gt; - :norm 0x&lt;cr&gt;
+    Note: in vim, use '#' instead of '"' as comment symbol, because '"' is used as register pefix
+</pre>
+
+</ul>
+<hr />
+<ul>
+<li>
+  Windows GVIM中，CTRL-V不能用：将_vimrc中的
+<pre>
+    *   source $VIMRUNTIME/mswin.vim
+    *   behave mswin
+    *   注释掉且不定义CTRL-V, CTRL-C, CTRL-X, 与Linux下一致
+    *   如果想继续使用mswin的其它定义，可只移除CTRL-V，不注释上边两行，只加入"unmap &lt;C-V&gt;"即可
+</pre>
+
+</ul>
+<hr />
+<ul>
+<li>
+  Registers in vim
+
+<ul>
+<li>
+  There are nine types of registers  --&gt;  "{a-zA-Z0-9.%#:-"}
+<pre>
+    *   The unnamed register ""
+    *   10 numbered registers "0 to "9
+    *   The small delete register "-
+    *   26 named registers "a to "z or "A to "Z
+    *   four read-only registers ":, "., "% and "#
+        *   ".	Contains the last inserted text
+        *   "%	Contains the name of the current file.
+        *   "#	Contains the name of the alternate file.
+        *   ":	Contains the most recent executed command-line.
+    *   the expression register "=
+    *   The selection and drop registers "*, "+ and "~
+    *   The black hole register "_
+    *   Last search pattern register "/
+</pre>
+
+</ul>
+</ul>
+<hr />
+<ul>
+<li>
+  Jump
+<pre>
+            A "jump" is one of the following commands: "'", "`", "G", "/", "?", "n",
+        "N", "%", "(", ")", "[[", "]]", "{", "}", ":s", ":tag", "L", "M", "H" and
+        the commands that start editing a new file.  If you make the cursor "jump"
+        with one of these commands, the position of the cursor before the jump is
+        remembered.  You can return to that position with the "''" and "``" command,
+        unless the line containing that position was changed or deleted.
+</pre>
+
+<ul>
+<li>
+  jumplist    if make a jump(use jump cmd) , the jump will be remembered in a jump list
+
+<li>
+  :jumps      show jump list
+
+<li>
+  CTRL-o      goto the last cursor position in jump list
+
+<li>
+  CRTL-i      goto the next cursor position in jump list
+
+</ul>
+</ul>
+<hr />
+<ul>
+<li>
+  UndoFile
+
+<ul>
+<li>
+  设置了UndoFile之后，会在目录下为每个文件创建一个undo history文件，它记录了所有更改，即使保存关闭再打开,'u'也是有效的
+
+<li>
+  在windows下如果将UndoDir设置为C:\Window\Temp，保存文件时会出现E828错误，权限不够，所以最好设置为用户目录下
+
+<li>
+  每次保存文件时，也会将所有的undo history保存到指定文件中, 该文件不是文本文件
+
+<li>
+  :undo   列出undo list
+<pre>
+    if MySys() == "windows"
+      set undofile    " automatically save undo history to an undo file when write a buffer to a file
+    else
+      set undodir=~/.vim_runtime/undodir
+    endif
+
+    set undofile
+</pre>
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

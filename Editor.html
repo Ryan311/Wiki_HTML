@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Editor</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h1 id="toc_1">Editor</h1>
+
+<h2 id="toc_1.1">VIM</h2>
+<ul>
+<li>
+  <a href="VIM Tricky.html">VIM Tricky</a>
+
+<li>
+  <a href="VIM Commands.html">VIM Commands</a> 
+
+<li>
+  <a href="Plugins.html">Plugins</a>
+
+<li>
+  <a href="Writing VIM Plugins.html">Writing VIM Plugins</a>
+
+<li>
+  Docs
+
+<ul>
+<li>
+  <a href="http://blog.sanctum.geek.nz/buffers-windows-tabs/">Buffer Window Tab</a>
+
+<li>
+  <a href="file://F:/Wiki/wiki2_html/Vimwiki1.1.1QR.pdf">VimWiki help</a>
+
+<li>
+  <a href="http://vim.wikia.com/wiki/Mapping_keys_in_Vim_-_Tutorial_(Part_1)">Key map</a>
+
+</ul>
+<li>
+  MyVimrc
+
+<ul>
+<li>
+  <a href="vimrc_for_linux.html">vimrc_for_linux</a> 
+
+</ul>
+<li>
+  在Source Insight中使用VIM编缉文件
+<pre>
+    1.Source Insight中,Options-&gt;Custom Commands...-&gt;Add...,New Command name 随便 写,如"Edit with Vim"
+    2.Run中写入: "C:\Program Files\Vim\vim63\gvim.exe" --remote-silent +%l %f
+        意思是在当前已经打开的gvim窗口里面打开当前的文件,并且跳转到指定行 %l为当前的行号,%f为文件名
+        使用 --remote-silent 的作用是,如果已经打开了对应文件,就不会打开第二次,而是在 已经打开的文件里跳转到对应行
+    3.还是同一个对话框里面,选择Keys-&gt;Assign New Key...-&gt;按F2,如果你已经将F2设置 给其他命令,选择其他的按键就行了
+    4.设置完
+</pre>
+
+<li>
+  <span class="todo">TODO:</span>
+
+<ul>
+<li>
+  INF Syntax
+
+</ul>
+</ul>
+    
+<h2 id="toc_1.2">Eclipse</h2>
+<ul>
+<li>
+  Plugins
+
+<ul>
+<li>
+  CDT for C/C++ project
+
+<li>
+  Pydev for python project
+
+<li>
+  Erlide for Erlang project
+
+</ul>
+<li>
+  Show eclipse icon in the Unity launcher
+    <br><strong>sudo cp ~/Persnail_WorkSpace/eclipse/icon.xpm /usr/share/pixmaps/eclispe.xpm</strong>
+
+<li>
+  Pydev
+
+<ul>
+<li>
+  下载最新版<a href="http://www.pydev.org/download.html#pydev-does-not-appear-after-install">http://www.pydev.org/download.html#pydev-does-not-appear-after-install</a>
+
+<li>
+  将Zip文件解压到eclipse的主目录(两个目录features和plugins)
+
+<li>
+  需要jdk1.7才能运行, 所以要安装jdk7和jre7
+<pre>
+        sudo apt-get install openjdk-7-dbg openjdk-7-jdk openjdk-7-jre openjdk-7-jre-headless
+</pre>
+
+<li>
+  安装完之后,可以用命令java -version 看当前运行的是java的哪个版本,如果不是已安装的version7
+
+<li>
+  运行sudo update-alternatives --config java, 然后选择正确的mode, 并再次运行java -version查看
+
+<li>
+  在Eclipse目录下,修改eclipse.ini文件, 将Dosgi.requiredJavaVersion修改为1.7
+
+<li>
+  再次运行Eclipse就可以看到pydev了
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

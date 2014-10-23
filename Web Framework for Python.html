@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Web Framework for Python</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h2 id="toc_0.1">Web.py</h2>
+<dl>
+<dt><a href="http://webpy.org/">http://webpy.org/</a> </dt>
+</dl>
+<p>
+"Django lets you write web apps in Django. TurboGears lets you write web apps in TurboGears. Web.py lets you write web apps in Python."
+</p>
+
+<p>
+A Complete web.py application
+</p>
+<pre class = "brash: python">
+import web
+urls = (
+        '/(.*)', 'hello'
+)
+app = web.application(urls, globals())
+
+class hello:
+    def GET(self, name):
+        if not name:
+           name = 'World'
+           return 'Hello, ' + name + '!'
+
+if __name__ == "__main__":
+    app.run()
+</pre>
+
+<dl>
+<dt>Start the server</dt>
+</dl>
+<blockquote>
+$python code.py
+<br>$python code.py 1234
+</blockquote>
+
+<h2 id="toc_0.2">Django</h2>
+<ul>
+<li>
+  <strong>Install</strong>
+
+<li>
+  <strong>Command</strong>
+
+</ul>
+<dl>
+<dt>Create Project</dt>
+</dl>
+<pre class="brush: bash">
+    &gt;django-admin.py startproject mysite    #Creating a project    
+</pre>
+
+<dl>
+<dt>Run Development Server</dt>
+</dl>
+<pre class="brush: bash">
+    &gt;python manage.py runserver
+</pre>
+
+<dl>
+<dt>Create App</dt>
+</dl>
+<pre class="brush: bash">
+    &gt;python manage.py startapp wiki 
+</pre>
+<p>
+Add mysite.wiki in the INSTALLED_APPS in settings.py
+</p>
+
+<dl>
+<dt>Config Database</dt>
+</dl>
+<blockquote>
+settings.py:
+DATABASE_ENGINE = "sqlite3"
+DATABASE_NAME = "django.db"
+</blockquote>
+<pre class="brush: bash">
+    &gt;python manage.py syncdb    #create list in database
+</pre>
+<blockquote>
+<a href="https://docs.djangoproject.com/en/1.5/ref/django-admin/#django-admin-runserver">more command...</a>
+</blockquote>
+    
+<dl>
+<dt>Other</dt>
+</dl>
+<blockquote>
+Django－Python 解释器
+manage.py shell它能进行一些必要的Django环境设置
+如果安装ipython，manage.py shell会默认使用它。
+</blockquote>
+<ul>
+<li>
+<a href="http://showmedo.com/videotutorials/video?name=1100000&amp;fromSeriesID=110">Wiki over Django</a>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

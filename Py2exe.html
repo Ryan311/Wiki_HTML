@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Py2exe</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Py2exe</a>
+<ul>
+<li><a href="#toc_0.1.1">Install Package</a>
+<li><a href="#toc_0.1.2">Tutorial</a>
+<li><a href="#toc_0.1.3">Build an installer if applicable</a>
+</ul>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">Py2exe</h2>
+<p>
+<a href="http://www.py2exe.org/">http://www.py2exe.org/</a>
+<br>
+<br>py2exe is a Python Distutils extension which converts Python scripts into executable 
+<br>Windows programs, able to run without requiring a Python installation.
+<br>
+</p>
+<h3 id="toc_0.1.1">Install Package</h3>
+<p>
+<a href="http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/">http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/</a>
+</p>
+
+<h3 id="toc_0.1.2">Tutorial</h3>
+<p>
+<a href="http://www.py2exe.org/index.cgi/Tutorial">http://www.py2exe.org/index.cgi/Tutorial</a>
+<br><a href="http://justcoding.iteye.com/blog/900993">http://justcoding.iteye.com/blog/900993</a>
+</p>
+
+<ul>
+<li>
+  Prepare your python module(hello.py)
+<pre class = "brush: python">
+import os
+print "Hello World"
+print "Current Path is %s" % os.getcwd()
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Create setup script(setup.py)
+<pre class = "brush: python">
+from distutils.core import setup
+import py2exe
+
+setup(console=['hello.py])
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  Run the setup script
+    <br><strong>&gt;python setup.py py2exe</strong>
+    <br>......
+    <br>
+    <br>Two directories will be created, build and dist
+    <br>files in dist directory are the ones needed to run your application
+    <br>the need file is: python27.dll, library.zip, hello.exe
+
+</ul>
+
+<ul>
+<li>
+  Test it
+    <br>&gt;cd dist
+    <br>&gt;hello.exe
+    <br>...
+
+</ul>
+
+<h3 id="toc_0.1.3">Build an installer if applicable</h3>
+<p>
+py2exe is not an installer builder - it merely assembles the files needed 
+</p>
+<blockquote>
+to run your Python program.
+</blockquote>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>
