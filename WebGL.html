@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>WebGL</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">WebGL</a>
+<li><a href="#toc_0.2">glMatrix</a>
+<li><a href="#toc_0.3">Three.js</a>
+<ul>
+<li><a href="#toc_0.3.1">Reference</a>
+</ul>
+<li><a href="#toc_0.4">Terms</a>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">WebGL</h2>
+<ul>
+<li>
+  2009年，Khronos Group把OpenGL技术运用到Web浏览器并制定了WebGL
+
+<li>
+  WebGL是OpenGL和JavaScript之间的结晶.
+
+<li>
+  InternetExplore支持MS独自开发的三维图形API 「DirectX」，但不能跨平台
+
+<li>
+  Canvas是HTML5中新加入的标签，它支持使用JavaScript来绘制2D图形和通过WebGL来绘制3D图形
+
+<li>
+  WebGL非常有名的例子[[<a href="http://webglsamples.googlecode.com/hg/aquarium/aquarium.html|Aquarium]]">http://webglsamples.googlecode.com/hg/aquarium/aquarium.html|Aquarium]]</a>
+
+<li>
+  <a href="Learning WebGL.html">Learning WebGL</a> <a href="https://github.com/gpjt/webgl-lessons">webgl lessons sample code</a>
+
+</ul>
+
+<h2 id="toc_0.2"><a href="http://glmatrix.net/">glMatrix</a></h2>
+<ul>
+<li>
+  JavaScript已经原生支持3D绘图，通过WebGL和硬件加速
+
+<li>
+  这种类型的应用需要矩阵和向量计算，但JavaScript并没有提供默认的支持
+
+<li>
+  glMatrix is designed to perform vector and matrix operations stupidly fast!
+
+<li>
+  class <strong>mat4</strong>
+
+<ul>
+<li>
+  4*4 Matrix
+
+<li>
+  mat4.translate() ==&gt; 坐标系的平移变换，(x,y,x)轴都与原坐标系平行
+
+<li>
+  mat4.rotate() ==&gt; 坐标系的旋转变换，要指定旋转轴和旋转角度
+
+<li>
+  mat4.rotateX() ==&gt; 坐标系沿x轴旋转一定角度
+
+</ul>
+</ul>
+
+<h2 id="toc_0.3">Three.js</h2>
+<ul>
+<li>
+  Three.js的三大组件, 有了这三样东西，才能将物体渲染到网页中去
+
+<ul>
+<li>
+  场景(scence)    场景是所有物体的容器
+
+<li>
+  相机(camera)    相机决定了场景中哪个角度的景色会显示出来，相机有多种，常用的是透视相机
+
+<ul>
+<li>
+  THREE.Camera子类: 正投影相机THREE.OrthographicCamera和透视投影相机THREE.PerspectiveCamera
+
+</ul>
+<li>
+  渲染器(renderer)    渲染器的作用是将相机拍摄下来的图片放到浏览器中显示
+
+</ul>
+<li>
+  渲染循环
+
+<ul>
+<li>
+  渲染有两种方式: 实时渲染和离线渲染
+
+<li>
+  实时渲染：不停的对画面进行渲染，即使画面中什么也没有改变，也需要重新渲染
+
+<li>
+  离线渲染：事先渲染好一帧一帧的图片，然后再把图片拼接
+
+</ul>
+<li>
+  光源, THREE.Light光源基类
+
+<ul>
+<li>
+  THREE.AmbientLight  环境光
+
+<li>
+  THREE.AreaLight 区域光
+
+<li>
+  THREE.DirectionalLight 方向光
+
+<li>
+  THREE.SpotLight 聚光灯
+
+<li>
+  THREE.PointLight 点光源
+
+</ul>
+<li>
+  材质, 物体的质地
+
+<ul>
+<li>
+  Lambert材质，在灰暗的或不光滑的表面产生均匀散射而形成的材质类型，不会产生镜面效果。
+
+</ul>
+</ul>
+<h3 id="toc_0.3.1">Reference</h3>
+<ul>
+<li>
+  2010 Mr.doob
+
+<li>
+  JavaScript 3D library
+
+<li>
+  <a href="http://www.hewebgl.com/">http://www.hewebgl.com/</a>
+
+<li>
+  <a href="http://mrdoob.github.io/three.js/">http://mrdoob.github.io/three.js/</a>
+
+<li>
+  <a href="https://github.com/mrdoob/three.js/">https://github.com/mrdoob/three.js/</a>
+
+</ul>
+
+
+<h2 id="toc_0.4">Terms</h2>
+<ul>
+<li>
+  着色器
+
+<ul>
+<li>
+  顶点着色器
+
+<li>
+  片元着色器
+
+</ul>
+<li>
+  模型视图矩阵
+
+<li>
+  投影矩阵
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

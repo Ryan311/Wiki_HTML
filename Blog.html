@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Blog</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h2 id="toc_0.1">Jekyll</h2>
+<ul>
+<li>
+  /d3i:kel/
+
+<li>
+  静态站点生成器，它会根据网页源码生成静态文件，它提供了模板、变量、插件等功能。
+
+<li>
+  _site目录就是实际网站的内容
+
+<li>
+  任何以下划线开头的文件和目录都不会成为网站的一部分, 如_layouts
+
+<li>
+  任何不以下划线开头的文件和目录都会被复制到生成的网站中(默认为_site)
+
+<li>
+  有YAML front matter的任何文件(不以下划线开头)将会先被Jekyll处理然后才被放进_site目录中
+
+<li>
+  如果不以YFM开头，将会直接被放进_site目录
+
+</ul>
+
+<h3 id="toc_0.1.1">Install</h3>
+<ul>
+<li>
+  sudo apt-get install ruby1.9.1 rubygems1.8 libyaml-ruby libopenssl-ruby
+
+<li>
+  sudo apt-get install python-pygments
+
+<li>
+  sudo gem install json
+
+<li>
+  sudo gem install rdoc
+
+<li>
+  sudo gem install jekyll
+
+</ul>
+<h3 id="toc_0.1.2">安装Jekyll引导程序</h3>
+<ul>
+<li>
+  $ git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git">https://github.com/plusjade/jekyll-bootstrap.git</a> USERNAME.github.com
+
+<li>
+  $ cd USERNAME.github.com
+
+<li>
+  $ git remote set-url origin git@github.com:USERNAME/USERNAME.github.com.git
+
+<li>
+  $ git push origin master
+
+</ul>
+<h3 id="toc_0.1.3">在本地预览你的Blog</h3>
+<ul>
+<li>
+  $ git clone <a href="https://github.com/plusjade/jekyll-bootstrap.git">https://github.com/plusjade/jekyll-bootstrap.git</a>
+
+<li>
+  $ cd jekyll-bootstrap
+
+<li>
+  $ jekyll server
+
+<li>
+  在浏览器中预览http://localhost:4000
+
+</ul>
+<h3 id="toc_0.1.4">更换themes</h3>
+<ul>
+<li>
+  rake theme:install git="<a href="https://github.com/dhulihan/hooligan.git"">https://github.com/dhulihan/hooligan.git"</a>
+
+<li>
+  <a href="http://themes.jekyllbootstrap.com/preview/hooligan/">Themes Template</a>
+
+</ul>
+
+<h3 id="toc_0.1.5">Create a Post</h3>
+<ul>
+<li>
+  具体内容要看Rakefile文件，例如:
+
+<li>
+  rake post title="Hello Jekyll"
+
+<li>
+  rake page name="about.md" or "pages/about.md" or "pages/about"
+
+</ul>
+ 
+<h3 id="toc_0.1.6">使用别人的模板建立自己的Blog</h3>
+<ul>
+<li>
+  git clone 别人的模板
+
+<li>
+  删除掉.git
+
+<li>
+  修改_config.yml中的个人信息为自己的
+
+<li>
+  修改_include/themes/default.html中的个人信息为自己的，也可以删除掉一些自己不需要的内容
+
+<li>
+  git post tagline="hello world"
+
+<li>
+  本地查看jekyll build, jekyll server
+
+</ul>
+
+<h3 id="toc_0.1.7">Terms</h3>
+<ul>
+<li>
+  Liquid template engine
+
+<li>
+  Markdown and Textile: easy-to-use lightweight markup languages
+
+<li>
+  <a href="http://www.yaml.org/">YAML</a>: YAML Ain't Markup Language
+
+<li>
+  Pygments
+
+</ul>
+
+<h3 id="toc_0.1.8">Tools</h3>
+<ul>
+<li>
+  PanDoc
+
+<ul>
+<li>
+  pandoc <strong>name</strong>.md -o <strong>name</strong>.html
+
+</ul>
+</ul>
+
+<h3 id="toc_0.1.9">Reference</h3>
+<ul>
+<li>
+  <a href="http://jekyllbootstrap.com/usage/jekyll-quick-start.html">JekyllQuickStart</a>
+
+<li>
+  <a href="http://jekyllbootstrap.com/lessons/jekyll-introduction.html">Jekyll Introduction</a>
+
+<li>
+  <a href="https://github.com/mojombo/jekyll/wiki/Sites">Examples</a>
+
+<li>
+  <a href="http://www.ruanyifeng.com/blog/2012/08/blogging_with_jekyll.html">Jekyll入门</a>
+
+<li>
+  [[<a href="http://yanping.me/cn/blog/2011/12/15/building-static-sites-with-jekyll/|用Jekyll构建静态网站]]">http://yanping.me/cn/blog/2011/12/15/building-static-sites-with-jekyll/|用Jekyll构建静态网站]]</a>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

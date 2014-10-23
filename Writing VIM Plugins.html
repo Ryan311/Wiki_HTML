@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Writing VIM Plugins</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Wrinte VIM Plugin</a>
+<ul>
+<li><a href="#toc_1.1">Basics</a>
+<li><a href="#toc_1.2">Tutorial</a>
+<li><a href="#toc_1.3">Examples</a>
+</ul>
+</ul>
+</div>
+<h1 id="toc_1">Wrinte VIM Plugin</h1>
+<hr />
+<h2 id="toc_1.1">Basics</h2>
+<ul>
+<li>
+  Enviroment Path
+
+<ul>
+<li>
+  $VIM            C:\Program Files\VIM
+
+<li>
+  $HOME           C:\Users\rui_huang
+
+<li>
+  $VIMRUNTIME     C:\Program Files\Vim\vim74
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Configuration Path
+<pre>
+    * 	A list of directories which will be searched for runtime files:
+        *   filetype.vim	filetypes by file name |new-filetype|
+        *   scripts.vim	    filetypes by file contents |new-filetype-scripts|
+        *   autoload/	    automatically loaded scripts |autoload-functions|
+        *   colors/	        color scheme files |:colorscheme|
+        *   compiler/	    compiler files |:compiler|
+        *   doc/		    documentation |write-local-help|
+        *   ftplugin/	    filetype plugins |write-filetype-plugin|
+        *   indent/	        indent scripts |indent-expression|
+        *   keymap/	        key mapping files |mbyte-keymap|
+        *   lang/		    menu translations |:menutrans|
+        *   menu.vim	    GUI menus |menu.vim|
+        *   plugin/	        plugin scripts |write-plugin|
+        *   print/	        files for printing |postscript-print-encoding|
+        *   spell/	        spell checking files |spell|
+        *   syntax/	        syntax files |mysyntaxfile|
+        *   tutor/	        files for vimtutor |tutor|
+    *   after               This is for personal preferences to overrule or add to the distributed defaults or system-wide settings
+    *   autoload            :call filename#funcname     When such a function is called, and it is not defined yet, Vim will search the
+                            "autoload" directories in 'runtimepath' for a script file called "filename.vim"
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <a href="http://stackoverflow.com/questions/102384/using-vims-tabs-like-buffers">tabs vs buffers</a>
+
+<ul>
+<li>
+  A buffer is the in-memory text of a file
+
+<li>
+  A window is a viewport on a buffer
+
+<li>
+  A tab page is a collection of windows
+<pre>
+    Opening multiple files is achieved in vim with buffers. In other editors (e.g. notepad++) this is done with tabs, so the name tab
+    in vim maybe misleading. Windows are for the purpose of splitting the workspace and displaying multiple files (buffers) together 
+    on one screen. In other editors this could be achieved by opening multiple GUI windows and rearranging them on the desktop. Finally
+    in this analogy vim's tabs would correspond to multiple desktops, that is different rearrangements of windows.
+
+    As vim help explains a tab can be used, when one wants to temporary edit a file, but does not want to change anything in the current
+    layout of windows and buffers. In such a case another tab can be used just for the purpose of editing that particular file.
+</pre>
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Eval functions
+
+<ul>
+<li>
+  :echo bufwinnr(1)               return the number of the first window accociated with buffer 1
+
+<li>
+  :echo bufwinnr("filepath")      return the number of the first window associated with buffer which file name is "filepath"
+
+<li>
+  :echo bufname(3)                file name in buffer 3
+
+<li>
+  :echo bufname("%")              file name in current buffer
+
+<li>
+  :[count]winc[md] {arg}          like CRTL-W j  &lt;==&gt; :wincmd j
+
+<li>
+  :exec N . "wincmd w"            move cursor to N window     :wincmd equal to CTRL-W
+
+<li>
+  :echo winnr()                   current window number
+
+<li>
+  :echo winnr('$')                window count
+
+<li>
+  :echo tabpagenr()               current tab number
+
+<li>
+  :echo tabpagenr('$')            tab count
+
+<li>
+  :echo tabpagewinnr(2, '$')      number of windows in tag page 2
+
+<li>
+  :echo tabpagewinnr(N)            equal to winnr(N)
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Variable type in VIM
+
+<ul>
+<li>
+  Number      32 or 64 bit signed number
+
+<li>
+  Float       floating point number
+
+<li>
+  String      NUL terminated string of 8-bit unsigned characters
+
+<li>
+  Funcref     a reference of a function Funcref
+
+<li>
+  List        an ordered sequence of items List
+
+<li>
+  Dictionary  an associative, unordered array, Key:Value pair entry
+
+<li>
+  Convert Function:  str2nr(), str2float(), float2nr()...
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Internal variable
+
+<ul>
+<li>
+  :let    Create
+
+<li>
+  :unlet  explicitly destroyed
+
+<li>
+  name spaces for variables   
+
+<ul>
+<li>
+  b   local to the current buffer 
+
+<li>
+  w   local to the current window
+
+<li>
+  t   local to the current tab page
+
+<li>
+  g   Global
+
+<li>
+  l   local to a function
+
+<li>
+  s   local to a :source'ed Vim script
+
+<li>
+  a   Function argument(only inside a function)
+
+<li>
+  v   Global, predefined by VIM
+
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li>
+  Buildin Functions
+
+</ul>
+
+<ul>
+<li>
+  :exe[cute] {expr1} ..       executes the string that result from the evaluation of {expr1} as an Ex command
+
+<ul>
+<li>
+  :execute "buffer" 2     go to buffer 2
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Work Modes
+
+<li>
+  Name	Description	help page
+
+<ul>
+<li>
+  normal	For navigation and manipulation of text. This is the mode that vim will usually start in, which you can usually get back to with ESC
+
+<li>
+  insert	For inserting new text. 
+
+<li>
+  visual	For navigation and manipulation of text selections
+
+<li>
+  select	Similar to visual but with a more MS-Window like behavior
+
+<li>
+  command-line	For entering editor commands - like the help command in the 3rd column.  <strong>normal mode type ':'</strong>
+
+<li>
+  Ex-mode	Similar to the command-line mode but optimized for batch processing.    <strong>normal mode type 'Q'</strong>
+
+</ul>
+</ul>
+<hr />
+
+<h2 id="toc_1.2">Tutorial</h2>
+<ul>
+<li>
+  <a href="http://css.dzone.com/articles/how-write-vim-plugins-python">http://css.dzone.com/articles/how-write-vim-plugins-python</a>
+
+</ul>
+
+
+<hr />
+<h2 id="toc_1.3">Examples</h2>
+<ul>
+<li>
+  <a href="vimmit.vim.html">vimmit.vim</a>
+
+<ul>
+<li>
+  :source %
+
+<li>
+  :call Reddit()
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

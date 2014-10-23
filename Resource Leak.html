@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Resource Leak</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">WDF Handle Leak</a>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">WDF Handle Leak</h2>
+<p>
+WDFVerifier也会检查内存泄露，当Driver卸载后，如果有Handle的Reference不为0，就会检测出来并走到DebugBreak，要求连接调试器，否则蓝屏。
+<dl>
+<dt><strong>检测方法</strong></dt>
+</p>
+</dl>
+<ul>
+<li>
+  WDFVerifier.exe选择Trace Reference to中的ALL WDF HANDLES
+
+<li>
+  也可以在Driver的Parameter\Wdf选项下加入TrackHandles（REG_MULTI_SZ）并设为*
+
+</ul>
+<dl>
+<dt><strong>如果出现这个问题的BSOD，打如下命令</strong></dt>
+</dl>
+<blockquote>
+<em>!wdfkd.wdfdriverinfo RtkBtfilter 0xfff</em>
+<br>会看到是哪个Handle的Reference不为0，再按提示操作就可以找出目标
+</blockquote>
+
+<p>
+<a href="http://blogs.msdn.com/b/doronh/archive/2006/05/19/601286.aspx">http://blogs.msdn.com/b/doronh/archive/2006/05/19/601286.aspx</a>
+<em>How do I track leaked references on KMDF handles?</em>
+</p>
+<blockquote>
+In addition to the standard KMDFDV behavior, you can enable further verification on handles by their type. 
+<br>By enabling per handle type verification, you get a history of handle references/dereferences and tag
+<br>tracking on those references. The KMDF tag tracking behaves just like the WDM IO remove lock tracking:
+<br>you provide a PVOID tag when you call WdfObjectReference and then you must provide the same tag when you ,
+<br>call WdfObjectDereference. All outstanding references keep track of their tag, so you do not need to release
+<br>the tag before referencing with a different one. If the tag provided to the dereference call does not exist
+<br>in any previously tracked references, KMDF will break into the debugger to allow you to debug this mismatch. 
+<br>This tracking facility also keeps a history of the last 25 reference/dereferences. 
+<br>To view the history, you use !wdfkd.wdftagtracker. To get the wdftagtracker parameter you need to use !wdfhandle and !wdfobject:
+</blockquote>
+
+<pre>
+kd&gt; !wdfhandle 0x7dfa26d9
+
+handle 0x7dfa26d9, type is WDFREQUEST
+[...]
+
+!wdfobject 0x8205d8b0
+kd&gt; !wdfobject 0x8205d8b0
+
+The type for object 0x8205d8b0 is FxRequest
+[...]
+
+Object debug extension 8205d898
+   !wdftagtracker 0x82115c98
+   Verifier lock 0x81991d08
+
+   State history:
+    [0] FxObjectStateCreated (0x1)
+
+kd&gt;  !wdftagtracker 0x82115c98
+[...]
+To enable this feature, you can add the following value under the same key as where you added the "VerifierOn" value:
+"TrackHandles" : REG_MULTI_SZ
+</pre>
+
+<p>
+You will then specify each type name that you want to verify as a string in the multi sz. 
+<br>For instance, if you want to verify devices and requests, the contents would be "WDFDEVICE"
+<br>"WDFREQUEST" (without the quotes). If you want to specify all handle types specify "*" as 
+<br>the only string for the value. !wdfdriverinfo will also tell you which handle types are being
+<br>verified (where in this case I have enabled checking on WDFREQUEST and WDFDEVICE):
+</p>
+<pre>
+1: kd&gt; !wdfdriverinfo wdfrawbusenumtest fff
+[...]
+----------------------------------
+WDF Verifier settings for wdfrawbusenumtest.sys is ON
+  Pool tracking is ON
+  Handle verification is ON
+  IO verification is ON
+  Lock verification is ON
+  Handle reference tracking is ON for the following types:
+    WDFDEVICE WDFREQUEST
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

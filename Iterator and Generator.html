@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Iterator and Generator</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Iterator</a>
+<li><a href="#toc_0.2">Generator</a>
+<li><a href="#toc_0.3">Generator expression</a>
+<li><a href="#toc_0.4">Understanding the inner mechanisms of iteration</a>
+<li><a href="#toc_0.5">itertools</a>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">Iterator</h2>
+<p>
+An iterable object is an object that implements _<em>iter</em>_. 
+<br>_<em>iter</em>_ is expected to return an iterator object.
+<br>An iterator is an object that implements _<em>next</em>_. 
+<br>_<em>next</em>_ is expected to return the next element of 
+<br>the iterable object that returned it, and raise a 
+<br>StopIteration exception when no more elements are available
+</p>
+
+<pre class = "brush: python">
+&gt;&gt;&gt;mylist = [1,2,3]
+&gt;&gt;&gt;for i in mylist:
+    print i
+&gt;&gt;&gt;mylist2 = [x*x for x in range(3)]
+&gt;&gt;&gt;for i in mylist2
+    print i
+    
+#Mylist is an iterable. When you use a list comprehension, you create a list, and so an iterable:
+#Everything you can use "for... in..." on is an iterable: lists, strings, files...
+</pre>
+
+<pre class = "brush: python">
+import random
+
+class RandomIterable:
+    def __iter__(self):
+        return self
+    def next(self):
+        if random.choice(["go", "go", "stop"]) == "stop":
+            raise StopIteration  # signals "the end"
+        return 1
+        
+for eggs in RandomIterable():
+    print eggs
+    
+print list(RandomIterable())
+</pre>
+
+<h2 id="toc_0.2">Generator</h2>
+<p>
+<strong>A generator is a function that produces values for use in iteration</strong>
+<strong>Generator allow you to declare a function that behaves like an iterator</strong>, 
+<br>ie. it can be used in a for loop. It looks like a normal function except 
+<br>that it contains <em>yield</em> statements for producing a series a values usable
+<br>in a for-loop or that can be retrieved one at a time with the next() function. 
+<br>Each <em>yield</em> temporarily suspends processing, remembering the location execution 
+<br>state (including local variables and pending try-statements). When the generator
+<br>resumes, it picks-up where it left-off (in contrast to functions which start 
+<br>fresh on every invocation).
+</p>
+
+<pre class = "brush: python">
+# a generator that yields items instead of returning a list
+def firstn(n):
+    num = 0
+    while num &lt; n:
+        yield num
+        num += 1
+
+first = firstn(5)   #function body does not run
+for i in first:     #begin to run, return a num each time
+    print i
+
+for i in first:     #empty, because it has already run over
+    print i
+</pre>
+
+<p>
+<br><a href="http://stackoverflow.com/questions/231767/the-python-yield-keyword-explained">http://stackoverflow.com/questions/231767/the-python-yield-keyword-explained</a>
+<br><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-python-yield/">http://www.ibm.com/developerworks/cn/opensource/os-cn-python-yield/</a>
+<br><a href="http://wiki.python.org/moin/Generators">http://wiki.python.org/moin/Generators</a>
+</p>
+
+<h2 id="toc_0.3">Generator expression</h2>
+<p>
+<strong>An expression that returns an iterator</strong>. It looks like a normal expression followed
+<br>by a for expression defining a loop variable, range, and an optional if expression.
+<br>Generators are iterators, but you can only iterate over them once. It's because they
+<br>do not store all the values in memory, they generate the values on the fly
+</p>
+
+<pre class = "brush: python">
+&gt;&gt;&gt;mygenerator = (x*x for x in range(3))
+&gt;&gt;&gt;for i in mygenerator:
+...    print(i)
+
+#It is just the same except you used () instead of []. BUT, you can not perform 
+#for i in mygenerator a second time since generators can only be used once: they
+#calculate 0, then forget about it and calculate 1, and end calculating 4, one by one
+
+&gt;&gt;&gt;
+&gt;&gt;&gt; sum(i*i for i in range(10))         # sum of squares 0, 1, 4, ... 81
+#These expressions are designed for situations where the generator is used right 
+#away by an enclosing function(like sum, set, dict, max, list...)
+</pre>
+
+<h2 id="toc_0.4">Understanding the inner mechanisms of iteration</h2>
+<p>
+Iteration is a process implying iterables (implementing the _<em>iter</em>_() method) and iterators (implementing the _<em>next</em>_() method). 
+<br>Iterables are any objects you can get an iterator from. 
+<br>Iterators are objects that let you iterate on iterables.
+</p>
+
+
+<h2 id="toc_0.5">itertools</h2>
+<p>
+<a href="http://docs.python.org/2/library/itertools.html">Doc</a>
+<br><a href="http://www.cnblogs.com/cython/articles/2169009.html">http://www.cnblogs.com/cython/articles/2169009.html</a>
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

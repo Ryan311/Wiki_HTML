@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>VS</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">VS2012</a>
+<ul>
+<li><a href="#toc_0.1.1">VS2012 写DLL</a>
+</ul>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">VS2012</h2>
+<ul>
+<li>
+  VS2012 Config
+
+<ul>
+<li>
+  Turn off Unicode in VC++ Project
+
+<ul>
+<li>
+  Project Properties -&gt; General -&gt; Project Defaults -&gt; <strong>Character Set</strong>
+
+</ul>
+<li>
+  .sdf and ipch
+
+<ul>
+<li>
+  Visual Studio用来保存预编译的头文件和Intellisense用的
+
+<li>
+  不在当前工程中生成这些文件, VS用临时文件夹保存这些文件
+<pre>
+        Tools-&gt;Options  Text Editor -&gt; C/C++ -&gt; Advanced
+        Fallback Location:  Always use Fallback Location -&gt; Set True
+                            Do Not Warn if Fallback Location Used  -&gt; Set True
+</pre>
+
+</ul>
+</ul>
+<li>
+  <a href="https://github.com/jaredpar/VsVim">VsVim</a> vim extension in VS2012
+
+<ul>
+<li>
+  Tools -&gt; Extensions and Updates -&gt; Search VsVim and Install -&gt; Restart VS2012
+
+<li>
+  Config Key mappings
+
+<li>
+  :set vimrc          -&gt; Show the vimrc which VsVim read
+
+</ul>
+<li>
+  VS2012 静态编译c c++运行库
+
+<ul>
+<li>
+  Win8上编译的程序在Win7上有可能不能运行，原因是它们使用的C运行库不一样，好的解决方法是在编译时将运行库编译进程序，随程序一起发布
+
+<li>
+  在VS2012中修改设置：Project Property-&gt;Configuration Properties-&gt;C/C++-&gt;Code Generation-&gt;Runtime Library-&gt;修改选项为"Mutiple-threaded(/MT)"
+
+</ul>
+<li>
+  VS里面非常好用的功能，在build之前或之后可以完成一些动作，比如文件Copy，但是在Copy时注意命令的写法：(nonpnp sample in e:\work\sampledriver)
+<pre //不能想当然的写相对路径，要使用VS定义的宏来指明路径，在调用该cmd时会解析成完整路径>
+Error   copy "..\..\wdf\x86\WdfCoInstaller01011.dll" ".\bin"
+Right   copy "$(SolutionDir)..\..\wdf\x86\WdfCoInstaller01011.dll" "$(SolutionDir)bin\"
+</pre>
+
+</ul>
+
+<h3 id="toc_0.1.1">VS2012 写DLL</h3>
+<ul>
+<li>
+  File-&gt;New-&gt;Project  ==&gt; 
+
+<ul>
+<li>
+  New Project:    Win32 -&gt; Win32 Project -&gt; Name &amp; Location   ==&gt; Next 
+
+<li>
+  Win32 Application Wizard:   DLL -&gt; Empty Project    创建空项目
+
+<li>
+  手动创建.c和.h文件，并添加到项目中(刚开始要有dllmain.c)
+
+<li>
+  在Resource Files中右键： Add -&gt; Resource    添加rc文件，file version
+
+<li>
+  PROJECT-&gt; Property Pages-&gt; c/c++-&gt; Preprocessor-&gt; Preprocessor Definitions ==&gt;
+
+<ul>
+<li>
+  Add "*****_EXPORTS"   
+<pre>
+Note:   这里之所以创建空的项目，是因为我想用.c文件而不是.cpp文件
+        因为在cpp中使用wpp输出log总是编译不过, 原因还不太清楚！！！
+</pre>
+
+</ul>
+</ul>
+<li>
+  在项目中使用WPP
+
+<ul>
+<li>
+  增加trace.h文件到项目中，内容见模板，GUID要重新生成
+
+<li>
+  增加RunTraceWpp.bat， CleanTmh.bat到项目目录下
+
+<li>
+  在每个.c文件头部添加  #include "trace.h" \  #include "文件名.tmh"
+
+<li>
+  PROJECT -&gt; Property Pages -&gt; Build Events ==&gt;
+
+<ul>
+<li>
+  Pre-Build Event:    Command Line -&gt; "RunTraceWpp"
+
+<li>
+  Post-Build Event:   Command Line -&gt; "CleanTmh"
+
+</ul>
+<li>
+  在dllmain.c中加入：
+
+<ul>
+<li>
+  DLL_PROCESS_ATTACH:     WPP_INIT_TRACING(L"LEGap.dll")
+
+<li>
+  DLL_PROCESS_DETACH:     WPP_CLEANUP():w
+
+</ul>
+</ul>
+<li>
+  如何在Dll中导出API
+
+<ul>
+<li>
+  定义宏    LEGAP_API
+
+<li>
+  将想要导出的函数之前加入宏LEGAP_API即可
+
+<li>
+  在Preprocessor Definitions中加入LEGAP_EXPORTS
+<pre>
+    #ifdef LEGAP_EXPORTS    // 导出函数
+        #define LEGAP_API __declspec(dllexport)
+    #else                   // 导入函数
+        #define LEGAP_API __declspec(dllimport)
+    #endif
+</pre>
+
+</ul>
+<li>
+  dll是用C来写，如果Test函数用C++来写的话，会有编译错误，用C来写Test函数就OK
+
+<ul>
+<li>
+  原因是C和C++编译出的函数名称不同，要用extern "C"来告诉编译器按照C的方式来使用函数，这是一种约定！
+
+<li>
+  可参考<a href="http://www.cnblogs.com/skynet/archive/2010/07/10/1774964.html">http://www.cnblogs.com/skynet/archive/2010/07/10/1774964.html</a>
+
+<li>
+  可能用工具dumpbin.exe(VS自带,分析PE文件格式)来调试这种链接错误
+
+<li>
+  dumpbin.exe -exports LEGap.dll      //查看dll的导出函数
+
+<li>
+  dumpbin.exe -imports LEGapTest.exe  //查看exe中导入的函数
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

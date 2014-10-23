@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>random</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h1 id="toc_1">random</h1>
+<ul>
+<li>
+  random.seed([x])
+<pre class = "brush: python">
+# 如果不提供seed，默认使用系统时间, 使用相同的seed，可以获得相同的随机的数序列
+&gt;&gt;&gt;from random import *
+&gt;&gt;&gt;a = Random(); a.seed(1)
+&gt;&gt;&gt;[a.randint(1, 100) for i in range(20)]
+[14, 85, 77, 26, 50, 45, 66, 79, 10, 3, 84, 44, 77, 1, 45, 73, 23, 95, 91, 4]
+
+&gt;&gt;&gt;b = Random(); b.seed(1)
+&gt;&gt;&gt;[b.randint(1, 100) for i in range(20)]
+[14, 85, 77, 26, 50, 45, 66, 79, 10, 3, 84, 44, 77, 1, 45, 73, 23, 95, 91, 4]
+</pre>
+
+<li>
+  random.randint(a, b)
+<pre class = "brush: python">
+# 生成随机整数， a&lt;=n&lt;=b
+print random.randint(12, 20)
+print random.randint(20, 20)
+print random.randint(20, 12)    #error, must b&gt;a
+</pre>
+
+<li>
+  random.randrange(stop)
+
+<li>
+  random.randrange(start, stop[, step])
+<pre class = "brush: python">
+print random.ranrange(10, 100, 2)
+# 从序列[10, 12, 14, ...96, 98]中获取一个随机数
+# 等价于random.choice(rande(10, 100, 2)), 只是不会产生中间的随机列表
+</pre>
+
+<li>
+  random.choice(seq)
+<pre class = "brush: python">
+# 从序列中获取一个随机元素，seq是有序类型，如string, list, tuple
+print random.choice("hello")
+print random.choice(("Tuple", "list", "Dict"))
+</pre>
+
+<li>
+  random.shuffle(x[, random])
+<pre class = "brush: python">
+# 将序列中的元素打乱， 可以实现洗牌程序
+l1 = ["Python", "C++", "Perl", "Erlang"]
+random.shuffle(l1)
+print l1
+</pre>
+
+<li>
+  random.sample(seq, k)
+<pre class = "brush: python">
+# 从指定序列中随机获取指定长度的片段, 原序列不会改变
+list = [1,2,3,4,5,6]
+slice = random.sample(list,3)
+print slice
+print list
+</pre>
+
+<li>
+  random.random()
+<pre class = "brush: python">
+# 返回在[0.0, 1.0]之间的随机浮点数
+</pre>
+
+<li>
+  random.uniform(a, b)
+<pre class = "brush: python">
+# 返回在[a, b]之前的随机浮点数
+# 等价于a + (b-a)random()
+</pre>
+
+<li>
+  这个模块很 "变态"，还支持三角、β分布、指数分布、伽马分布、高斯分布等等非常专业的随机算法
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

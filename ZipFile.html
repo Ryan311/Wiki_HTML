@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>ZipFile</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h2 id="toc_0.1">ZipFile</h2>
+<ul>
+<li>
+  class zipfile.ZipFile   =&gt; class for reading and writing ZIP file
+
+<li>
+  class zipfile.ZipInfo   =&gt; class used to represent information about a member of an archive
+
+<li>
+  zipfile.is_zipfile(filename)    =&gt; return ture if filename is a valid ZIP file based on its magic number
+
+<li>
+  ZipFile Objects  =&gt; return by zipfile.ZipFile()
+
+<ul>
+<li>
+  ZipFile.close()
+
+<li>
+  ZipFile.getinfo(name)
+
+<li>
+  ZipFile.infolist()
+
+<li>
+  ZipFile.namelist()
+
+<li>
+  ZipFile.open(name[, mode[, pwd]])
+
+<li>
+  ZipFile.extract(member[, path[, pwd]])
+
+<li>
+  ZipFile.extractall([path[, members[, pwd]]])
+
+<li>
+  ZipFile.setpassword(pwd)
+
+<li>
+  ZipFile.read(name[, pwd])
+
+<li>
+  ZipFile.write(filename[, arcname[, compress_type]])
+
+</ul>
+<li>
+  ZipInfo Objects     =&gt; returned by getinfo() and infolist() methods of ZipFile objects
+
+<ul>
+<li>
+  ZipInfo.filename： 获取文件名称。
+
+<li>
+  ZipInfo.date_time： 获取文件最后修改时间。返回一个包含6个元素的元组：(年, 月, 日, 时, 分, 秒)
+
+<li>
+  ZipInfo.compress_type： 压缩类型。
+
+<li>
+  ZipInfo.comment： 文档说明。
+
+<li>
+  ZipInfo.extr： 扩展项数据。
+
+<li>
+  ZipInfo.create_system： 获取创建该zip文档的系统。
+
+<li>
+  ZipInfo.create_version： 获取 创建zip文档的PKZIP版本。
+
+<li>
+  ZipInfo.extract_version： 获取 解压zip文档所需的PKZIP版本。
+
+<li>
+  ZipInfo.reserved： 预留字段，当前实现总是返回0。
+
+<li>
+  ZipInfo.flag_bits： zip标志位。
+
+<li>
+  ZipInfo.volume： 文件头的卷标。
+
+<li>
+  ZipInfo.internal_attr： 内部属性。
+
+<li>
+  ZipInfo.external_attr： 外部属性。
+
+<li>
+  ZipInfo.header_offset： 文件头偏移位。
+
+<li>
+  ZipInfo.CRC： 未压缩文件的CRC-32。
+
+<li>
+  ZipInfo.compress_size： 获取压缩后的大小。
+
+<li>
+  ZipInfo.file_size： 获取未压缩的文件大小。
+
+</ul>
+<li>
+  Examples
+<pre class = "brush: python">
+#1  创建一个zip，并将eggs.txt放入包中
+with ZipFile('spam.zip', 'w') as myzip:
+    myzip.write('eggs.txt')
+
+#2  将zip中的txt.txt文件导出，使用了read方法
+import zipfile, os  
+zipFile = zipfile.ZipFile(os.path.join(os.getcwd(), 'txt.zip'))  
+data = zipFile.read('txt.txt')  
+(lambda f, d: (f.write(d), f.close()))(open(r'd:/txt.txt', 'wb'), data)  #一行语句就完成了写文件操作。仔细琢磨哦~_~  
+zipFile.close()  
+
+#3  解压txt.zip中所有文件到d:/Work目录下
+import zipfile, os
+zipFile = zipfile.ZipFile(os.path.join(os.getcwd(), 'txt.zip'))
+for file in zipFile.namelist():
+    zipFile.extract(file, r'd:/Work')
+zipFile.close()
+
+#4  完整应用，可以继续完善
+#!/usr/bin/env python 
+# -*- coding: utf-8 -*- 
+from zipfile import * 
+import zipfile 
+ 
+#解压zip文件 
+def unzip(): 
+    source_zip="c:\\update\\SW_Servers_20120815.zip" 
+    target_dir="c:\\update\\" 
+    myzip=ZipFile(source_zip) 
+    myfilelist=myzip.namelist() 
+    for name in myfilelist: 
+        f_handle=open(target_dir+name,"wb") 
+        f_handle.write(myzip.read(name))       
+        f_handle.close() 
+    myzip.close() 
+ 
+#添加文件到已有的zip包中 
+def addzip(): 
+    f = zipfile.ZipFile('archive.zip','w',zipfile.ZIP_DEFLATED) 
+    f.write('file_to_add.py') 
+    f.close() 
+ 
+#把整个文件夹内的文件打包 
+def adddirfile(): 
+    f = zipfile.ZipFile('archive.zip','w',zipfile.ZIP_DEFLATED) 
+    startdir = "c:\\mydirectory" 
+    for dirpath, dirnames, filenames in os.walk(startdir): 
+        for filename in filenames: 
+            f.write(os.path.join(dirpath,filename)) 
+    f.close() 
+</pre>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>PythonVirtualEnviroment</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">virtualenv</a>
+<ul>
+<li><a href="#toc_0.1.1">Introduction</a>
+<li><a href="#toc_0.1.2">Install</a>
+<li><a href="#toc_0.1.3">Create an enviroment and start</a>
+</ul>
+<li><a href="#toc_0.2">pythonbrew</a>
+</ul>
+</ul>
+</div>
+<h2 id="toc_0.1">virtualenv</h2>
+<h3 id="toc_0.1.1">Introduction</h3>
+<p>
+VirtualEnv用于在一台机器上创建多个独立的python运行环境，类似于一个个沙盒环境。
+<br>virtualenv只能隔离第三方依赖库，不能在多个python版本之间切换。pythonbrew可以满足这个需求
+</p>
+<h3 id="toc_0.1.2">Install</h3>
+<ul>
+<li>
+  sudo easy_install virtualenv
+
+<li>
+  sudo apt-get install python-virtualenv
+
+<li>
+  sudo pip install virtualenv
+
+</ul>
+
+<h3 id="toc_0.1.3">Create an enviroment and start</h3>
+<ul>
+<li>
+  &gt;virtualenv env_name            #create virtual env
+
+<li>
+  &gt;source env_path/bin/activate   #start virtual env
+
+<li>
+  (env_name)&gt;pip install PIL      #install PIL in env
+
+<li>
+  (env_name)&gt;deactivate           #exit virtual env
+
+</ul>
+
+<hr />
+<h2 id="toc_0.2">pythonbrew</h2>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>
