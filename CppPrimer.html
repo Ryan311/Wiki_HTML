@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>CppPrimer</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Input/Output</a>
+<li><a href="#toc_0.2">class types</a>
+<li><a href="#toc_0.3">Char</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Input/Output</h2>
+<p>
+The C++ language does not define any statements to do input or output (IO).
+Instead, C++ includes an extensive standard library(iostream) that provides IO.
+</p>
+<blockquote>
+#include &lt;iostream&gt;
+std::cout
+std::cin
+std::cerr
+std::clog
+</blockquote>
+<p>
+All the names defined by the standard library are in the std namespace
+The standard library headers typically have no suffix at all.
+</p>
+
+<h2 id="toc_0.2">class types</h2>
+<p>
+C++, allow programmers to define types that include operations as well as data. A
+major design goal of C++ is to let programmers define their own types that are as
+easy to use as the built-in types.
+</p>
+
+<h2 id="toc_0.3">Char</h2>
+<p>
+A char is guaranteed to be big enough to hold numeric values corresponding to the 
+characters in the machine’s basic character set. That is, a char is the same size
+as a single machine byte.
+The remaining character types—wchar_t, char16_t, and char32_t—are used
+for extended character sets. The wchar_t type is guaranteed to be large enough to
+hold any character in the machine’s largest extended character set. The types
+char16_t and char32_t are intended for Unicode characters. (Unicode is a
+standard for representing characters used in essentially any natural language.)
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

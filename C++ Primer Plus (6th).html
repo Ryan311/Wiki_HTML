@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>C++ Primer Plus (6th)</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">C</a>
+<li><a href="#toc_0.2">C++</a>
+<li><a href="#toc_0.3">C++融合了3种不同的编程方式</a>
+<li><a href="#toc_0.4">Basic</a>
+<li><a href="#toc_0.5">C++ 11</a>
+<li><a href="#toc_0.6">C++ &gt; C</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">C</h2>
+<ul>
+<li>
+  20世纪70年代早期诞生于贝尔实验室
+
+<li>
+  Dennis Ritchie
+
+</ul>
+
+<h2 id="toc_0.2">C++</h2>
+<ul>
+<li>
+  20世纪80年代诞生于贝尔实验室
+
+<li>
+  Bjarne Stroustrup
+
+</ul>
+
+<h2 id="toc_0.3">C++融合了3种不同的编程方式</h2>
+<ul>
+<li>
+  C语言代表的过程性语言
+
+<li>
+  C++在C语言基础上添加的类代表的面向对象的语言
+
+<li>
+  C++模板支持的泛型编程  
+
+<ul>
+<li>
+  泛型： 指的是创建独立于类型的化代码， C++模板提供了完成这种任务的机制。
+
+</ul>
+<li>
+  最重要的OOP特性：
+
+<ul>
+<li>
+  抽象
+
+<li>
+  封装和数据隐藏
+
+<li>
+  多态
+
+<li>
+  继承
+
+<li>
+  代码的可重用性
+
+</ul>
+</ul>
+
+<h2 id="toc_0.4">Basic</h2>
+<ul>
+<li>
+  using std namespace
+
+<ul>
+<li>
+  所谓namespace，是指标识符的各种可见范围。
+
+<li>
+  C++标准程序库中的所有标识符都被定义于一个名为std的namespace中。
+
+<li>
+  using则类似于Python中的Import。
+<pre //std使用方式>
+1、直接指定标识符。例如std::ostream而不是ostream。完整语句如下：
+    std::cout &lt;&lt; std::hex&lt;&lt; 3.4&lt;&lt; std::endl;
+
+2、使用using关键字，部分导入。
+    using std::cout;
+    using std::endl;
+
+    cout &lt;&lt; std::hex&lt;&lt; 3.4&lt;&lt; endl;
+
+3、最方便的就是在函数声明之前使用using namespace std；全部导入。
+</pre>
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  头文件climits中定义了符号常量来表示类型的限制
+
+<ul>
+<li>
+  cout &lt;&lt; "Minimum int value = " &lt;&lt; INT_MIN &lt;&lt; endl;
+
+<li>
+  cout &lt;&lt; "Maxmum int value = " &lt;&lt; INT_MAX &lt;&lt; endl;
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  const限定符
+
+<ul>
+<li>
+  const int Months = 12   声明Months为符号常量， 其值是固定的， 编译器不允许再修改这个常量的值。
+
+<li>
+  C语言中定义符号常量用#define， const比它好
+
+<ul>
+<li>
+  能够明确指定类型
+
+<li>
+  可以使用C++作用域将其定义限制在特定函数内
+
+<li>
+  可以将const用于复杂类型
+
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li>
+  cin    istream对象， 处理输入
+
+<ul>
+<li>
+  cin &gt;&gt; name     将标准输入内容放到name中， 它只处理单词， 遇到空格、制表符、换行符就停止
+
+<li>
+  cin.getline(name, length)  每次读取一行， 并最多读取length个字符到name中， 换行符不会存在name中， 用空字符结尾
+
+<li>
+  cin.get()       也是按行读取， 但换行符不会丢弃
+
+<li>
+  混合输入字符串和数字
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  string.h, cstring和string文件区别
+
+<ul>
+<li>
+  string.h是C语言中字符串操作函数的头文件
+
+<li>
+  cstring是c++语言中对C风格字符串的操作函数的头文件，与string.h是功能相同， 但是属于C++， 包含在std中。
+
+<li>
+  string是c++语言中string类模板的申明 
+
+</ul>
+</ul>
+     
+<ul>
+<li>
+  结构体是可以像变量一样赋值的
+
+<ul>
+<li>
+  struct Student S1 { 10, 165.2 };
+
+<li>
+  struct Student S2;
+
+<li>
+  S2 = S1;        OK, S1的内容会直接赋值给S2
+
+</ul>
+</ul>
+ 
+<ul>
+<li>
+  内存分配
+
+<ul>
+<li>
+  运算符new， delete
+
+<li>
+  int* a = new int;   分配一个类型为int的存储空间， 并将指针赋值给a， 这个存储空间是匿名的， 它只能通过a来访问
+
+<li>
+  delete a；          释放new分配的内存
+
+<li>
+  int* parr = new int[10];    创建动态数组
+
+<li>
+  delete [] parr;             删除动态数组
+
+</ul>
+</ul>
+     
+<ul>
+<li>
+  指针
+
+<ul>
+<li>
+  指针算术： 整数变量加1后， 其值将增加1； 指针变量加1后， 增加的量等待它指向的类型的字节数
+
+<li>
+  int i;  i++;  i的值加1                       int ar[10]; int *p = ar;  p++;     p的值增加4， 因为它是指向int型的指针
+
+<li>
+  const用于指针
+
+<ul>
+<li>
+  让指针指向一个常量对象， 防止使用该指针修改指向的值
+<pre>
+                int gorp = 16;
+                int chips = 12;
+                const int jar = 11;
+                const int* p_snack = &amp;gorp;
+
+                *p_snack = 20       // invalid -- 不能修改指针指向的值， 不能通过p_snack修改gorp的值， 但可以通过gorp本身来修改其值
+                *p_snack = &amp;jar     // valid -- 可以将const变量的地址批赋给指向const的指针， 这时， jar的值任何情况下都不能改变
+                p_snack = &amp;chips    // valid -- 可以修改指针的指向， 但仍不能修改其值
+                
+                // 如果数据本身并不是指针， 可以将const数据或非const数据的地址赋给指向const的指针
+                // 但只能将非const数据的地址赋给非const指针
+</pre>
+
+<li>
+  将指针本身声明为常量， 防止改变指针指向的位置
+<pre>
+                int gorp = 16;
+                int chips = 12;
+                int* const p_snack = &amp;gorp;
+
+                *p_snack = 20;      // valid -- 可以修改指针指向的值
+                p_snack = &amp;chips    // invalid -- 指针本身不能再改变
+</pre>
+
+<li>
+  指向const对象的const指针
+<pre>
+                double trouble = 2.001;
+                const double* const stick = &amp; trouble;  // 指针和值都不能改变
+</pre>
+
+<li>
+  尽可能的使用const， 如将函数的形参声明为指向const的指针
+
+<ul>
+<li>
+  可以避免由于无意间修改数据而导致的编程错误
+
+<li>
+  使用const使得函数能够处理const和非const实参， 否则只能接受非const数据作为实参
+
+<li>
+  使用const引用使函数能够正确生成并使用临时变量
+
+</ul>
+</ul>
+</ul>
+</ul>
+             
+<ul>
+<li>
+  引用
+
+<ul>
+<li>
+  C++中的复合类型， 是已定义的变量的别名， 必须在定义时初始化(与const指针相同)
+<pre>
+        int rats;
+        int &amp; rodents = rats;
+        
+        //rodents只是一个符号，和rodents完全等价，它不占用任何资源 
+</pre>
+
+<li>
+  函数按引用传递参数， 比按值传递好， 不用复制数据。 C只支持按值传递。
+
+<li>
+  如果函数的实参与引用参数不匹配， C++将生成临时变量， 当前仅当参数为const引用时才允许这样做
+
+<li>
+  函数返回引用
+
+<ul>
+<li>
+  传统的返回是按值返回， 与按值传递类似， 需要copy。 返回引用时少了一次copy动作， 效率更高
+<pre>
+                double m = sqrt(16.0);  // 传统的返回， sqrt将结果复制到一个临时变量， 然后再将临时变量copy到m中
+
+                int &amp; sum(int &amp;a, int &amp;b);
+                int a = 3, b = 4;
+                int &amp;a1 = a;
+                int &amp;b1 = b;
+                a1 = sum(a1, a2);
+                // sum返回引用， 会将结果直接赋给a1， 比按值返回效率更高 
+
+</pre>
+
+<li>
+  返回的引用不能是临时变量的引用， 否则函数退出时该变量被释放， 引用无效， 可以用以下方法避免：
+
+<ul>
+<li>
+  可返回一个作为参数传递给函数的引用
+
+<li>
+  可返回用new来分配的新的存储空间的引用
+<pre>
+                const free_throws &amp; clone(free_throws &amp; ft)
+                {
+                    free_throws newguy;      
+                    newguy = ft;            
+                    return newguy;          
+                }
+                /// Error, newguy是临时变量， 出了函数就不存在了， 引用也就无效
+</pre>
+
+</ul>
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li>
+  数组
+
+<ul>
+<li>
+  <strong>C++将数组名视为数组的第一个元素的地址</strong>
+
+<li>
+  const保护数组
+
+<ul>
+<li>
+  函数声明中可使用const保护数组， void show_array(const int ar[], int n)  //表示ar是一个常量数组， 只读
+
+<li>
+  const int ar[]  ==  const int* ar
+
+</ul>
+<li>
+  二维数组作为函数参数
+
+<ul>
+<li>
+  int sum(int ar2[][4], int size)     //ar2是指针， 指向包含4个元素的数组
+
+<li>
+  int sum(int (*ar2)[4], int size)    //size指明了行数
+
+</ul>
+</ul>
+</ul>
+     
+<ul>
+<li>
+  cctype    --&gt;   C中的ctype.h
+
+<ul>
+<li>
+  与字符相关的函数
+
+<li>
+  isalnum(), isalpha()....
+
+</ul>
+</ul>
+     
+<ul>
+<li>
+  文件输入输出
+
+<ul>
+<li>
+  include &lt;fstream&gt;       --&gt; 包含ofstream和ifstream, 用于输出和输入
+
+<li>
+  将创建的对象与文件关联后， 使用方式与cout和cin相同
+<pre>
+    ofstream outFile;
+    outFile.open("carinfo.txt");
+
+    outFile &lt;&lt; "year 2015" &lt;&lt; endl;
+
+    outFile.close();
+</pre>
+
+</ul>
+</ul>
+
+
+<h2 id="toc_0.5">C++ 11</h2>
+<ul>
+<li>
+  新增类型
+
+<ul>
+<li>
+  long long
+
+<li>
+  char16_t和Char32_t
+
+<ul>
+<li>
+  L'C'    前缀L表示wcha_t的字符常量和字符串常量
+
+<li>
+  u'C'    前缀u表示char16_t的字符常量和字符串常量
+
+<li>
+  U'C'    前缀U表示char32_t的字符常量和字符串常量
+
+<li>
+  R"Hello\n"    前缀R表示原始字符串, 显示时不进行字符串解析， 即\n不会表示换行
+
+<li>
+  R"+<strong>"(Who are your?)", she whispered+</strong>"      "+<strong>...</strong>+" 是自定义边界
+
+</ul>
+</ul>
+<li>
+  列表初始化
+
+<ul>
+<li>
+  数组初始化新增功能
+
+<ul>
+<li>
+  初始化数组， 可省略等号
+
+<ul>
+<li>
+  int arr[4] {2,3,4,5}
+
+</ul>
+<li>
+  可不在大括号内包含任何东西， 这将所有元素都设为零
+
+<ul>
+<li>
+  float blance[100] {};
+
+</ul>
+<li>
+  列表初始化禁止缩窄转换
+
+<ul>
+<li>
+  char slifs[4] { 'h', 4, 111210, '\0'}   Error, 111210超过Char取值范围
+
+</ul>
+</ul>
+<li>
+  字符串初始化
+
+<ul>
+<li>
+  字符数组是用于存储字符串的存储单元， 而string类变量是一个表示字符串的对象， 包含了字符串相关操作
+
+<li>
+  char first_date[] = {"Le Chapon Dodu"};
+
+<li>
+  char second_date[] {"The Elegant Plate"};
+
+<li>
+  string third_date = {"The Bread Bowl"};
+
+<li>
+  string fourth_date {"Hank's Fine Eats"};
+
+</ul>
+<li>
+  类的初始化
+
+<ul>
+<li>
+  Bozo fufu{"fufu", "hehe"};
+
+<li>
+  Bozo *pc = new Bozo{"PoPo", "haha"};
+
+</ul>
+</ul>
+<li>
+  作用域内枚举
+
+<li>
+  Array
+
+<ul>
+<li>
+  C++98新增的标准模板库(STL)提供了模板类vector, 它是动态数组的替代品。 功能强大， 效率低。
+
+<li>
+  C++11提供了模板类array， 它是定长数组的替代品。 长度固定时比vector好
+<pre>
+    #include &lt;vector&gt;       //stl c++98, vector
+    #include &lt;array&gt;        //c++11, array
+
+    vector&lt;double&gt; a2[4];
+    array&lt;double, 4&gt; a3 = {3.14, 3.12, 1.68, 2.7};
+    array&lt;double, 4&gt; a4;
+    a4 = a3;
+</pre>
+
+</ul>
+<li>
+  decltype    关键字， 用于解决模板函数问题
+<pre>
+        template&lt;typename T1, typename T2&gt;
+        auto Add2Diff(T1 x, T2 y) -&gt; decltype(x+y)  // 返回类型不知道何类型， 用后置声明
+        {
+            decltype(x+y) xy = x+y;     // 声明的变量无法知道类型， 用decltype定义
+            cout &lt;&lt; xy &lt;&lt; endl;
+            return x+y;
+        }
+</pre>
+
+<li>
+  auto    自动类型推断 
+
+<li>
+  constexpr   创建常量表达式  ？？？
+
+<li>
+  thread_local    用于多线程编程  ？？？
+
+<li>
+  作用域内枚举
+<pre>
+       enum egg{ Small, Medium, Large, Jumbo};
+       enum t_shirt{ Small, medium， Large， Jumbo};    // Error, Small is redefinition
+    
+       enum class egg{ Small, Medium, Large, Jumbo};
+       enum class t_shirt{ Small, medium， Large， Jumbo};  // OK, egg::Small and t_shirt::Small
+       
+       enum class :short pizza{Small, Medium, Large, Jumbo};    //将enum底层类型指定为short， 默认是int
+</pre>
+
+</ul>
+       
+
+<h2 id="toc_0.6">C++ &gt; C</h2>
+<ul>
+<li>
+  C++包含完整的C标准库函数， 头文件在C头文件基础上加c， 包含在std中。 如cctype.h
+
+<li>
+  引用
+
+<li>
+  函数
+
+<ul>
+<li>
+  函数默认参数
+
+<ul>
+<li>
+  对于带参数列表的函数， 必须从右向左添加默认值， 即要为某个参数添加默认值， 必须为其右边所有参数添加。
+
+<li>
+  实参按从左向右的顺序依次向形参赋值， 不能跳过任何参数
+
+</ul>
+<li>
+  函数重载：仅当函数基本上执行相同的任务， 但使用不同形式的数据时才使用重载。
+
+<ul>
+<li>
+  名称修饰：  实现重载的关键
+
+</ul>
+<li>
+  函数模板， 使用泛型来定义函数， 其中的泛型可使用具体的类型来代替
+
+<ul>
+<li>
+  模板并不创建函数， 只是告诉编译器如何定义函数
+<pre>
+            //template和typename是关键字
+            template &lt;typename T&gt;
+            void Swap(T &amp;a, T &amp;b)
+            {
+                T temp;
+                temp = b;
+                b = a;
+                a = temp;
+            }
+</pre>
+
+<li>
+  具体化      得到模板实例， 即包含具体类型的函数定义
+
+<ul>
+<li>
+  隐式实例化  最初只能使用该方式
+
+<li>
+  显示实例化  前缀template， 显示让编译器创建特定函数实例
+
+<li>
+  显示具体化  前缀template &lt;&gt;， 不使用模板来生成函数定义， 而应使用专门为该类型显式地定义的函数定义
+<pre>
+                template &lt;class T&gt;
+                void Swap (T &amp;, T &amp;);   //template prototype
+
+                template &lt;&gt; void Swap&lt;job&gt; (job &amp;, job &amp;);  // explicit specialization for job
+
+                int main(void)
+                {
+                    template void Swap&lt;char&gt; (char &amp;, char &amp;);  // explicit instantiation for char
+
+                    short a, b;
+                    Swap(a, b);     // implicit template instatiation for short
+
+                    job n, m;
+                    Swap(n,m);      // use explicit specialization for job          job is a struct
+                    
+                    char g, h;
+                    Swap(g,h);      // use explicit template instatitiation for char
+                }
+
+</pre>
+
+</ul>
+</ul>
+<li>
+  特殊成员函数
+
+<ul>
+<li>
+  C++自动提供下面的这些成员函数：
+
+<ul>
+<li>
+  默认构造函数， 如果没有定义构造函数, 编译器提供无参数， 无任何操作的构造函数
+
+<li>
+  默认析构函数， 如果没有定义
+
+<li>
+  复制构造函数， 如果没有定义
+
+<li>
+  赋值运算符， 如果没有定义
+
+<li>
+  地址运算符， 如果没有定义
+
+<li>
+  移动构造函数(C++11)
+
+<li>
+  移动赋值运算符(C++11)
+
+</ul>
+</ul>
+</ul>
+<li>
+  语言链接性
+
+<ul>
+<li>
+  extern "C" void spiff(int);     // use C protocol for name look-up , _spiff
+
+<li>
+  extern void spiff(int);         // use C++ protocol , _spiff_i  , default
+
+<li>
+  extern "C++" void spiff(int);   // use C++ protocol , _spiff_i
+
+</ul>
+<li>
+  定位New运行符， 它只返回传递给它的地址， 并将其强制转换为void *, 以便能够赋给任何指针类型。
+
+<ul>
+<li>
+  #include &lt;new&gt;
+<pre>
+        #include &lt;new&gt;
+        char buffer[500];
+        int main()
+        {
+            int *p1;
+            int *p2;
+            p1 = new int[20];       // normal, place structure in heap
+            p2 = new (buffer) int[20];  // place structure in buffer
+            
+            delete [] p1;   // OK
+            delete [] p2;   // ERROR, 不能通过Delete释放
+        }
+</pre>
+
+</ul>
+</ul>
+<p>
+}
+</p>
+<ul>
+<li>
+  namespace   名称空间， 减少名称冲突
+
+<ul>
+<li>
+  using std::cout         //  using声明,  类似在该作用域声明一个变量
+
+<li>
+  using namespace std     //  using编译指令， 导入一个名称空间
+
+</ul>
+<li>
+  Class
+
+<ul>
+<li>
+  访问控制
+
+<ul>
+<li>
+  private     只能通过公共成员访问的类成员， 实现数据隐藏
+
+<li>
+  public      组成类的公共接口的类成员， 实现抽象
+
+<li>
+  protected   在继承中用到 
+
+<li>
+  类成员访问类型默认是private, 而在C++中，Struct结构成员默认的是public
+
+</ul>
+<li>
+  内联方法
+
+<ul>
+<li>
+  定义位于类声明中的函数都将自动成为内联函数， 通常将短小的成员函数作为内联函数。
+
+<li>
+  也可以在函数声明之外将成员函数定义为内联， 使用关键字inline
+
+</ul>
+<li>
+  客户/服务器模型
+
+<ul>
+<li>
+  客户 --&gt;  类的使用者， 只需要了解接口， 通过接口使用服务器
+
+<li>
+  服务器  --&gt; 类， 服务器设计者要确保接口可靠准确执行， 只能修改类设计的实现细节， 不能修改接口
+
+</ul>
+<li>
+  数据成员命名规则， 使用m_前缀
+
+<li>
+  const成员函数
+
+<ul>
+<li>
+  只要类方法不修改调用对象， 就应将其声明为const
+
+<li>
+  声明    void stock::show() const;
+
+</ul>
+<li>
+  this指针    每个成员函数（包括构造函数和析构函数）都有一个this指针， 指向调用对象。
+<pre>
+        const Stock &amp; Stock::topval(const Stock &amp; s) const
+        {
+            if (s.total_val &gt; total_val)
+                return s;
+            else
+                return *this;   //返回对象本身， 返回类型定义为const &amp;， 则不能修改这个对象
+        }
+</pre>
+
+</ul>
+<li>
+  Smart Pointer       智能指针模板， 属于std namespace， #include &lt;memory&gt;
+
+<ul>
+<li>
+  auto_ptr        C++98引入， C++11废弃， 有缺陷 
+
+<li>
+  shared_ptr      c++11,  如果程序要使用多个指向同一个对象的指针， 使用该它  
+
+<li>
+  unique_ptr      c++11,  如果程序不需要使用多个指向同一个对象的指针，使用它
+
+<li>
+  week_ptr        c++11, 
+
+<li>
+  以上三个是智能指针模板， 定义了类似指针的对象， 可以将new获得的地址赋给这种对象， 当智能指针过期时， 其析构使用delete释放内存。
+
+<li>
+  所有智能指针都重载了“operator-&gt;”操作符，直接返回对象的引用，用以操作对象
+
+</ul>
+<li>
+  C++的四种强制类型转换
+
+<ul>
+<li>
+  新类型的强制转换(相比于C的强制转换) 可以提供更好的控制强制转换过程，允许控制各种不同种类的强制转换。C++中风格是 static_cast&lt;type&gt;(content)。
+
+<li>
+  C++风格的强制转换其他的好处是，它们能更清晰的表明它们要干什么。程序员只要扫 一眼这样的代码，就能立即知道一个强制转换的目的。
+
+<li>
+  static_cast:    可以实现C++中内置基本数据类型之间的相互转换。
+
+<ul>
+<li>
+  int c=static_cast&lt;int&gt;(7.987);
+
+<li>
+  如果涉及到类的话，static_cast只能在有相互联系的类型中进行相互转换,不一定包含虚函数。
+
+</ul>
+<li>
+  const_cast:     
+
+<ul>
+<li>
+  const_cast操作不能在不同的种类间转换。相反，它仅仅把一个它作用的表达式转换成常量。
+
+<li>
+  可以使一个本来不是const类型的数据转换成const类型的，或者把const属性去掉。
+
+</ul>
+<li>
+  reinterpret_cast:       powerful
+
+<ul>
+<li>
+  有着和C风格的强制转换同样的能力。它可以转化任何内置的数据类型为其他任何的数据类型，也可以转化任何指针类型为其他的类型。
+
+<li>
+  它甚至可以转化内置的数据类型为指针，无须考虑类型安全或者常量的情形。不到万不得已绝对不用。
+
+</ul>
+<li>
+  dynamic_cast:
+
+<ul>
+<li>
+  其他三种都是编译时完成的，dynamic_cast是运行时处理的，运行时要进行类型检查。
+
+<li>
+  不能用于内置的基本数据类型的强制转换。
+
+<li>
+  dynamic_cast转换如果成功的话返回的是指向类的指针或引用，转换失败的话则会返回NULL。
+
+<li>
+  使用dynamic_cast进行转换的，基类中一定要有虚函数，否则编译不通过。
+
+<li>
+  在类的转换时，在类层次间进行上行转换时，dynamic_cast和static_cast的 效果是一样的。
+
+<li>
+  在进行下行转换时，dynamic_cast具有类型检查的功能，比static_cast更安全。
+
+<li>
+  向下转换的成功与否与将要转换的类型有关，即要转换的指针指向的对象的实际类型与转换以后的对象类型一定要相同，否则转换失败。
+
+<li>
+  向上转换即为指向子类对象的向下转换，即将父类指针转化子类指针。  ???
+<pre>
+                class A
+                {
+                public:
+                    virtual void f() { cout &lt;&lt; "hello A" &lt;&lt; endl; }
+                };
+
+                class B: public A
+                {
+                public:
+                    void f() { cout &lt;&lt; "hello B" &lt;&lt; endl; }
+                };
+
+                A * a1 = new B;//a1是A类型的指针指向一个B类型的对象
+                A * a2 = new A;//a2是A类型的指针指向一个A类型的对象
+                B * b;
+                
+                b = dynamic_cast&lt;B*&gt;(a1);//结果为not null，向下转换成功，a1之前指向的就是B类型的对象，所以可以转换成B类型的指针。
+                b = dynamic_cast&lt;B*&gt;(a2);//结果为null，向下转换失败
+</pre>
+
+</ul>
+</ul>
+<li>
+  运算符重载
+
+<ul>
+<li>
+  operator op(argument list)
+
+<li>
+  重载后的运算符必须至少有一个操作数是用户定义的类型， 防止用户为标准类型重载运算符
+
+<li>
+  使用运算符时不能违反运算符的句法规则
+
+<li>
+  不能创建新的运算符
+
+<li>
+  并不是所有运算符都能重载
+
+<li>
+  运算符重载可以作为成员函数， 也可以用非成员函数， 对应相同的运算符表达式， 所以不能两个都实现
+<pre>
+        Time operator+(const Time &amp; t) const;   //成员函数重载运算符
+        friend operator+(const Time &amp; t1, const Time &amp; t2);//非成员函数重载运算符， 要声明为友元， 且比成员函数重载多一个参数
+</pre>
+
+</ul>
+<li>
+  友元    
+
+<ul>
+<li>
+  类型：
+
+<ul>
+<li>
+  友元函数
+
+<li>
+  友元类
+
+<li>
+  友元成员函数
+
+</ul>
+<li>
+  通过让函数成为友元函数， 可以赋予函数与类的成员函数相同的访问权限
+
+<li>
+  一般用友元函数实现运算符重载
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

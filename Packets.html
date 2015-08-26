@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Packets</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Packet structure</a>
+<ul>
+<li><a href="#toc_0.1.1">ACCESS CODE</a>
+<li><a href="#toc_0.1.2">Packet Header</a>
+<li><a href="#toc_0.1.3">Packet Types</a>
+<ul>
+<li><a href="#toc_0.1.3.1">Common Packet Types</a>
+</ul>
+<li><a href="#toc_0.1.4">SCO Packet Types</a>
+<li><a href="#toc_0.1.5">eSCO Packet Types</a>
+<li><a href="#toc_0.1.6">ACL Packets</a>
+<li><a href="#toc_0.1.7">Packet Format</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Packet structure</h2>
+<ul>
+<li>
+  Basic Rate
+<pre>
+    LSB     68/72       54          0-2790          bits
+            ACCESS Code     HEADER      PAYLOAD
+</pre>
+
+<li>
+   Enhanced Data Rate
+<pre>
+    LSB                                                                                 MSB
+    ACCESS CODE     HEADER  GUARD   SYNC    ENHANCED Data Rate Payload      Trailer
+    | &lt;--    GFSK    --&gt; |   | &lt;--     DPSK                          --&gt; |
+</pre>
+
+</ul>
+
+<h3 id="toc_0.1.1">ACCESS CODE</h3>
+<ul>
+<li>
+  In the Bluetooth system all transmissions over the physical channel begin with an access code
+
+<ul>
+<li>
+device access code (DAC)      used during page, page scan and page response substates and shall be derived from the paged device’s BD_ADDR
+
+<li>
+channel access code (CAC)     used in the CONNECTION state, synchronization train substate, and synchronization scan substate
+
+<li>
+inquiry access code (IAC)     used in the inquiry substate
+
+</ul>
+<li>
+  All access codes are derived from the LAP of a device address or an inquiry address
+
+<li>
+  
+
+</ul>
+
+<h3 id="toc_0.1.2">Packet Header</h3>
+<pre  18 bits>
+    The header contains link control (LC) information and consists of 6 fields: 
+    LT_ADDR:    3-bit logical transport address 
+    TYPE:       4-bit type code 
+    FLOW:       1-bit flow control 
+    ARQN:       1-bit acknowledge indication 
+    SEQN:       1-bit sequence number 
+    HEC:        8-bit header error check
+    
+    LSB     3           4       1       1       1       8       MSB
+            LT_ADDR     TYPE    FLOW    ARQN    SEQN    HEC
+</pre>
+
+<h3 id="toc_0.1.3">Packet Types</h3>
+<p>
+The packets used on the piconet are related to the logical transports on which 
+they are used. Four logical transports with distinct packet types are defined 
+</p>
+<ul>
+<li>
+  SCO logical transport 
+
+<li>
+  eSCO logical transport 
+
+<li>
+  ACL logical transport
+
+<li>
+  CSB logical transport 
+
+</ul>
+
+<h4 id="toc_0.1.3.1">Common Packet Types</h4>
+<ul>
+<li>
+  ID Packet
+
+<li>
+  NULL Packet
+
+<ul>
+<li>
+  no payload, 126 bits
+
+<li>
+  return link information to the source regarding the success of the previous transmission (ARQN), or the status of the RX buffer (FLOW)
+
+<li>
+  The NULL packet may not have to be acknowledged
+
+</ul>
+<li>
+  POLL Packet
+
+<ul>
+<li>
+  no payload, 126 bits
+
+<li>
+  requires a confirmation from the recipient
+
+<li>
+  It is not a part of the ARQ scheme
+
+<li>
+  This packet can be used by the master in a piconet to poll the slaves. 
+
+<li>
+  Slaves shall not transmit the POLL packet.
+
+</ul>
+<li>
+  FHS Packet  (Frequency Hop Synchronization)
+
+<ul>
+<li>
+  The payload contains 144 information bits plus a 16-bit CRC code. 
+
+<li>
+  The payload is coded with a rate 2/3 FEC(Forward Error Correction code) with a gross payload length of 240 bits
+
+<li>
+  The FHS packet contains real-time clock information
+
+<li>
+  The FHS packet is used in page master response, inquiry response and in role switch.
+    <img src="images/FHS.jpg" />
+
+</ul>
+<li>
+  DM1 Packet
+
+</ul>
+
+<h3 id="toc_0.1.4">SCO Packet Types</h3>
+<ul>
+<li>
+  HV(High quality Voice) packets do not include a MIC or CRC and shall not be retransmitted
+
+<li>
+  DV(Data Voice) packets include a CRC on the data section, but not on the synchronous data section. DV packets do not include a MIC. The data section of DV packets shall be retransmitted
+
+<li>
+  HV1 Packet
+
+<li>
+  HV2 Packet
+
+<li>
+  HV3 Packet
+
+<li>
+  DV Packet
+
+</ul>
+
+<h3 id="toc_0.1.5">eSCO Packet Types</h3>
+<ul>
+<li>
+  Three eSCO packet types (EV3, EV4, EV5) are defined for Basic Rate operation and four additional eSCO packet types (2-EV3, 3-EV3, 2-EV5, 3-EV5) for Enhanced Data Rate operation.
+
+<li>
+  Basic Rate:
+
+<ul>
+<li>
+  EV3 Packet
+
+<li>
+  EV4 Packet
+
+<li>
+  EV5 Packet
+
+</ul>
+<li>
+  Enhanced Rate:
+
+<ul>
+<li>
+  2-EV3 Packet    payload is modulated using  π/4-DQPSK
+
+<li>
+  2-EV5 Packet    payload is modulated using  π/4-DQPSK
+
+<li>
+  3-EV3 Packet    payload is modulated using 8DPSK
+
+<li>
+  3-EV5 Packet    payload is modulated using 8DPSK
+
+</ul>
+</ul>
+
+<h3 id="toc_0.1.6">ACL Packets</h3>
+<ul>
+<li>
+  M   2/3 FEC enabled
+
+<li>
+  Basic Rate:
+
+<ul>
+<li>
+  DM1 Packet
+
+<li>
+  DH1 Packet
+
+<li>
+  DM3 Packet
+
+<li>
+  DH3 Packet
+
+<li>
+  DM5 Packet
+
+<li>
+  DH5 Packet
+
+<li>
+  AUX1 Packet
+
+</ul>
+<li>
+  Enhanced Rate:      [symbol rate]-D*[slots]
+
+<ul>
+<li>
+  2-DH1 packet
+
+<li>
+  2-DH3 packet
+
+<li>
+  2-DH5 Packet
+
+<li>
+  3-DH1 packet
+
+<li>
+  3-DH3 Packet
+
+<li>
+  3-DH5 Packet
+
+</ul>
+</ul>
+
+<h3 id="toc_0.1.7">Packet Format</h3>
+<pre>
+    HCI Header
+        U16 Handle_Flag
+        U16 DataLength
+    L2cap Header
+        U16 Length
+        U16 Channel ID
+    PayLoad
+        Fix Channel
+            U8  Cmd
+                Parameter
+        Data Channel
+            Data Payload
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

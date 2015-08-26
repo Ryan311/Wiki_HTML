@@ -44,113 +44,21 @@
 <div class="toc">
 <ul>
 <li><a href="#toc_1">Programming</a>
-<ul>
-<li><a href="#toc_1.1">Analyzing performance</a>
-<ul>
-<li><a href="#toc_1.1.1">time</a>
-<li><a href="#toc_1.1.2">execute within a timing context manager</a>
-<li><a href="#toc_1.1.3">line-by-line monitor</a>
-<li><a href="#toc_1.1.4">how much memory does it use</a>
-<li><a href="#toc_1.1.5">IPython shortcuts for line_profiler and memory_profiler</a>
-<li><a href="#toc_1.1.6">memory leak</a>
-</ul>
-</ul>
 </ul>
 </div>
 <h1 id="toc_1">Programming</h1>
-<hr />
-<h2 id="toc_1.1"><a href="http://www.huyng.com/posts/python-performance-analysis/">Analyzing performance</a></h2>
-<h3 id="toc_1.1.1">time</h3>
 <ul>
 <li>
-  $ time python yourprogram.py
-
-</ul>
-<h3 id="toc_1.1.2">execute within a timing context manager</h3>
-<pre class = "brush: python">
-#timer.py
-
-import time
-class Timer(object):
-    def __init__(self, verbose=False):
-        self.verbose = verbose
-
-    def __enter__(self):
-        self.start = time.time()
-        return self
-
-    def __exit__(self, *args):
-        self.end = time.time()
-        self.secs = self.end - self.start
-        self.msecs = self.secs * 1000  # millisecs
-        if self.verbose:
-            print 'elapsed time: %f ms' % self.msecs
-
-# example
-from timer import Timer
-from redis import Redis
-rdb = Redis()
-
-with Timer() as t:
-    rdb.lpush("foo", "bar")
-print "=&gt; elasped lpush: %s s" % t.secs
-
-with Timer as t:
-    rdb.lpop("foo")
-print "=&gt; elasped lpop: %s s" % t.secs
-</pre>
-<h3 id="toc_1.1.3">line-by-line monitor</h3>
-<ul>
-<li>
-  $ sudo pip install line_profiler
+  Python
 
 <li>
-  the executable script is "kernprof.py"
+  C_C++
 
 <li>
-  yourprogram.py must add decorator <strong>@profile</strong> for the func you want to measure the execute time
+  Erlang
 
 <li>
-  $ kernprof.py -l -v yourprogram.py
-
-</ul>
-<h3 id="toc_1.1.4">how much memory does it use</h3>
-<ul>
-<li>
-  $ sudo pip install -U memory_profiler
-
-<li>
-  $ sudo install psutil
-
-<li>
-  add <strong>@profile</strong> to your func
-
-<li>
-  $ python -m memory_profiler yourprogram.py
-
-</ul>
-<h3 id="toc_1.1.5">IPython shortcuts for line_profiler and memory_profiler</h3>
-<ul>
-<li>
-  %load_ext memory_profiler
-
-<li>
-  %load_ext line_profiler
-
-<li>
-  %mprun -f yourprogram func()
-
-<li>
-  %lprun -f yourprogram func()
-
-</ul>
-<h3 id="toc_1.1.6">memory leak</h3>
-<ul>
-<li>
-  $ sudo pip install <a href="http://mg.pov.lt/objgraph/">objgraph</a>
-
-<li>
-  $ sudo pip install xdot
+  Doxgen
 
 </ul>
 

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>WinForm</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Introduction</a>
+<li><a href="#toc_0.2">Features</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Introduction</h2>
+<ul>
+<li>
+  WinForm是.NET开发平台中对Windows Form的一种称谓。.NET为开发WinForm的应用程序提供了丰富的Class Library（类库）。
+
+<li>
+  这些WinFrom类库支持RAD(快速应用程序开发)，这些类库被封装在一个名称空间之中，这个名称空间就是System.Windows.Forms。
+
+<li>
+  MFC与WinForm对比学习:简单介绍   <a href="http://blog.csdn.net/weiwenhp/article/details/8070026">http://blog.csdn.net/weiwenhp/article/details/8070026</a>
+
+<li>
+  Samples：   
+
+<ul>
+<li>
+  198个经典C#WinForm实例源码.zip
+
+<li>
+  WinForms HTML Editor.zip
+
+</ul>
+<li>
+  Windows 窗体 from MSDN   <a href="https://msdn.microsoft.com/zh-cn/library/dd30h2yb%28v=vs.110%29.aspx">https://msdn.microsoft.com/zh-cn/library/dd30h2yb%28v=vs.110%29.aspx</a>
+
+</ul>
+
+
+<h2 id="toc_0.2">Features</h2>
+<ul>
+<li>
+  处理和引发事件      委托模型
+<pre>
+        C# Winform 是基于委托事件机制
+        MFC是消息机制
+        win32 api都是两者的基石 
+        
+        委托是 .NET Framework 中通常用于建立事件处理机制的类。 委托大体上相当于 Visual C++ 和其他面向对象语言中常用的函数指针。 
+        但与函数指针不同的是，委托是面向对象的、类型安全的和保险的。 另外，函数指针只包含对特定函数的引用，
+        而委托由对对象的引用以及对该对象内一个或多个方法的引用组成。
+         
+        此事件模型使用“委托”将事件绑定到用来处理它们的方法。 委托允许其他类通过指定处理程序方法来注册事件通知。 当发生事件时，委托会调用绑定的方法。
+</pre>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

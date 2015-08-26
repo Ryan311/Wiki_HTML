@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>WPF</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Windows Presentation Foundation</a>
+<ul>
+<li><a href="#toc_1.1">Features</a>
+<li><a href="#toc_1.2">Layout</a>
+<li><a href="#toc_1.3">WPF属性模型 </a>
+<li><a href="#toc_1.4">WPF事件模型</a>
+<li><a href="#toc_1.5">控件类 </a>
+<li><a href="#toc_1.6">Application类 </a>
+<li><a href="#toc_1.7">元素绑定</a>
+<li><a href="#toc_1.8">WPF命令模型</a>
+</ul>
+</ul>
+</div>
+
+<p>
+*WPF编程宝典：使用C# 2012和.Net 4.5 第5版*
+</p>
+<pre>
+    WPF，微软在Win Form的思路上走到死胡同后，终于痛下决心用正确的方法开发UI库了。21世纪的UI一定是定义出来的，绝对不能是代码写出来的，所以有了XAML这个强大的定义工具，
+    不但可以定义UI布局，还包括图形动画效果，消息响应方式等。配合C#这种优秀的语言，更是如虎添翼。但是问题也很明显，就是过于庞大，不仅开发时要用到庞大的IDE和设计工具，
+    发行的安装包也十分巨大，所以目前还是很少有人拿他写通用软件客户端的，大多是做企业项目时写专用客户端。
+    大概4-5年前吧疼讯曾经用WPF写了个QQ，但是只实现了基本功能就已经比C++客户端大好多了，而且运行缓慢，主要是太吃内存，而且那时WPF的优化还不充分。
+    
+    MFC和QT是C++中常见的GUI框架,而WinForm和WPF是C#中常用的框架,不过我们一般很少叫WinForm框架,可能直接叫图形控件类库更多点.反正只是个称呼罢了,爱咋叫就咋叫.
+    另外WinForm与WPF(即Windows Form与Windows Presentation Foundation,用于windows的上的桌面应用开发)都只是提供了一堆GUI类库,
+    而MFC与QT除了一堆GUI类库外还提供了其他很多类.功能更强大.
+    
+    C++中的MFC和C#中的WinForm有点类似,而C++中的QT与C#中的WPF又有点类似
+    
+    MFC,QT与WinForm,WPF简介:
+        http://blog.csdn.net/weiwenhp/article/details/8442553
+</pre>
+
+<h1 id="toc_1">Windows Presentation Foundation</h1>
+<p>
+wpf在msdn中是这样定义的：“WPF是下一代显示系统，用于生成能带给用户震撼视觉体验的Windows客户端应用程序。使用WPF，您可以创建广泛的独立应用程序以及浏览器承载的应用程序。”
+</p>
+
+<p>
+Silverlight在msdn中是这样定义的：“Silverlight 是一种跨浏览器、跨平台的 .NET Framework 实现，用于为 Web 生成和提供下一代媒体体验和丰富的交互式应用程序 (RIA)。
+Silverlight 统一了服务器、Web 和桌面的功能，统一了托管代码和动态语言、声明性编程和传统编程以及 Windows Presentation Foundation (WPF) 的功能。”
+</p>
+
+<p>
+wpf/silverlight体系架构和运行机制
+<a href="http://www.cnblogs.com/windstore/archive/2011/08/28/2156185.html">http://www.cnblogs.com/windstore/archive/2011/08/28/2156185.html</a>
+</p>
+
+<h2 id="toc_1.1">Features</h2>
+<ul>
+<li>
+  WPF通过DirectX提供硬件加速功能
+
+<ul>
+<li>
+  WPF底层的图形技术不再是GDI、GDI+, 而是DirectX， DirectX在渲染图形时会将尽可能多的工作递交给图形处理单元（GPU）去处理， GPU是显卡专用处理器
+
+</ul>
+<li>
+  WPF不是使用物理像素设置尺寸， 而是使用可进行缩放以适应不同显示器分辨率的设备无关单位
+
+<ul>
+<li>
+  传统的Windwos应用程序是不可伸缩的
+
+<li>
+  WPF会根据系统DPI设置进行缩放， 并不会根据物理显示设备的DPI进行缩放
+
+<li>
+  WPF窗口以及其中的所有元素都使用与设备无关的单位进行度量， 定义为1/96英寸
+
+</ul>
+<li>
+  用户界面由XAML语言来编写
+
+</ul>
+
+<h2 id="toc_1.2">Layout</h2>
+<ul>
+<li>
+  WPF用不同的容器(container)安排布局， 抵制基于坐标的布局
+
+<li>
+  WPF布局容器都是派生自System.Windows.Controls.Panel抽象类的面板， 派生自Panel的类
+
+<ul>
+<li>
+  StackPanel
+
+<li>
+  WrapPanel   
+
+<li>
+  DockPanel
+
+<li>
+  Grid        前三个是最简单的布局容器， Grid是最强大的布局容器
+
+<li>
+  UniformGrid
+
+<li>
+  Canvas      允许使用精确的坐标放置元素
+
+</ul>
+</ul>
+
+<h2 id="toc_1.3">WPF属性模型 </h2>
+<ul>
+<li>
+  在WPF的核心特性(如动画、数据绑定以及样式)中需要嵌入依赖项属性
+
+<li>
+  WPF元素提供的大多数属性都是依赖项属性
+
+</ul>
+
+
+<h2 id="toc_1.4">WPF事件模型</h2>
+<ul>
+<li>
+  WPF通过事件路由(event routing)的概念增强了.NET事件模型， 事件路由允许源自某个元素的事件由另一个元素引发
+
+<li>
+  路由事件是具有更强传播能力的事件， 它们可在元素树中向上冒泡和向下隧道传播， 并且沿着传播路径被事件处理程序处理
+
+<ul>
+<li>
+  冒泡路由    在包含层次中向上传递路由事件
+
+<li>
+  隧道路由    包含层次中向下传递路由事件， 在事件到达恰当的控件之前为预览事件提供了机会， 以Preview开头的事件
+
+<li>
+  如果隧道路由事件标记为已处理过， 那就不会发生冒泡路由事件， 因为两个事件共享RoutedEventArgs类的同一个实例
+
+</ul>
+</ul>
+     
+<h2 id="toc_1.5">控件类 </h2>
+<ul>
+<li>
+  继承自System.Windows.Control类的元素
+
+<li>
+  WPF窗口充满了各种元素， 但是只有一部分是控件， 控件通常被描述为与用户交互的元素--能接收焦点并接受键盘或鼠标输入的元素
+
+<li>
+  所有控件都包含背景和前景概念， 通常背景是控件的表面， 而前景是文本
+
+</ul>
+
+<h2 id="toc_1.6">Application类 </h2>
+<ul>
+<li>
+  每个运行中的WPF应用程序都由System.Windwos.Application类的一个实例来表示， 该类跟踪在应用程序中打开的所有窗口， 决定何时关闭应用程序， 并引发可执行初始化和清除操作的应用程序事件
+
+</ul>
+
+<h2 id="toc_1.7">元素绑定</h2>
+<ul>
+<li>
+  元素之间的绑定
+
+<li>
+  元素与非元素之间的绑定
+
+</ul>
+
+<h2 id="toc_1.8">WPF命令模型</h2>
+<ul>
+<li>
+  使用路由事件可响应广泛的鼠标和键盘动作， 但是事件是非常低级的元素
+
+<li>
+  在实际应用程序中， 功能被划分成一些高级的任务（即所谓的命令）， 将控件连接到命令， 从而不重复编写事件处理程序
+
+<li>
+  命令模型由4个重要元素
+
+<ul>
+<li>
+  命令
+
+<li>
+  命令绑定
+
+<li>
+  命令源
+
+<li>
+  命令目标
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

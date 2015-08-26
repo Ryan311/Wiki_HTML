@@ -46,7 +46,7 @@
 <li><a href="#toc_0.1">Windows Debugging and Troubleshooting</a>
 <ul>
 <li><a href="#toc_0.1.1">Ntdebugging</a>
-<li><a href="#toc_0.1.2">Driver-Driver and Driver-Application Communication</a>
+<li><a href="#toc_0.1.2">windows下捕获dump</a>
 <li><a href="#toc_0.1.3">My experience</a>
 </ul>
 </ul>
@@ -54,6 +54,67 @@
 </div>
 
 <h2 id="toc_0.1">Windows Debugging and Troubleshooting</h2>
+<ul>
+<li>
+  RCDRKD(short form of recorder kd) Extensions   <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/hh920376%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/hh920376%28v=vs.85%29.aspx</a>
+
+<ul>
+<li>
+  This section describes the RCDRKD debugger extension commands. These commands display WPP trace messages created by drivers. 
+
+<li>
+  <strong>Starting with Windows 8, you no longer need a separate trace message format (TMF) file to parse WPP messages</strong>. The TMF information
+
+<li>
+  is stored in the regular symbol file (PDB file). Also starting in Windows 8, drivers can use the WPP Recorder API to write trace 
+
+<li>
+  messages to a circular buffer that is always available, regardless of whether WPP tracing has been explicitly enabled for the driver. 
+
+<li>
+  The RCDRKD commands read messages from the circular buffers, format the messages, and display the messages in the debugger. 
+
+<li>
+  For more information, see Part 2 of the USB Debugging Innovations in Windows 8 video.
+
+<li>
+  从Win8开始， 不用再通过单独的tmf文件解析wpp message了， 信息都包含在PDB中
+
+<li>
+  从Win8开始， 驱动使用WPP Recorder API将log写到循环缓冲区中， 不管wpp是否enable， 它都有效
+
+<li>
+  read the IFR log of wdftester (!rcdrkd.rcdrlogdump wdftester)
+
+<li>
+  read the IFR log of winusb (!rcdrlogdump winusb)
+
+<li>
+  read the IFR logs in the framework(!wdfkd.wdflogdump &lt;drivername&gt;)
+
+</ul>
+<li>
+  the Framework's Event Logger
+
+<ul>
+<li>
+  WDF includes an internal trace logger, sometimes called the framework's In-flight Recorder (IFR). 
+
+<li>
+  The WDF logger creates a trace log that contains a recent history of events for each WDF driver. 
+
+<li>
+  The trace logs track the progress of I/O request packets (IRPs) through the framework and the corresponding requests through a driver. 
+
+<li>
+  Each Kernel-Mode Driver Framework (KMDF) and User-Mode Driver Framework (UMDF) driver has its own log.
+
+<li>
+  The WDF logger is always enabled. For each trace log, the logger stores event records in a circular memory buffer. 
+
+</ul>
+</ul>
+    
 <h3 id="toc_0.1.1">Ntdebugging</h3>
 <ul>
 <li>
@@ -61,7 +122,22 @@
 
 </ul>
 
-<h3 id="toc_0.1.2"><a href="http://blogs.msdn.com/b/iliast/archive/2007/10/06/driver-driver-and-driver-application-communication.aspx">Driver-Driver and Driver-Application Communication</a></h3>
+
+<h3 id="toc_0.1.2">windows下捕获dump</h3>
+<ul>
+<li>
+  [[Windows平台下实现和使用的异常处理机制]]
+
+<li>
+  <a href="http://www.cnblogs.com/cswuyg/p/3207576.html">http://www.cnblogs.com/cswuyg/p/3207576.html</a>
+
+<li>
+  <a href="write_dump_when_capture_exceptions.html">write_dump_when_capture_exceptions</a>
+
+<li>
+  <a href="http://www.cnblogs.com/hdtianfu/archive/2011/12/27/2303113.html">异常和异常处理(windows平台)</a>
+
+</ul>
 
 <h3 id="toc_0.1.3">My experience</h3>
 <ul>

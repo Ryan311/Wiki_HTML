@@ -45,29 +45,69 @@
 <ul>
 <li><a href="#toc_1">Windows</a>
 <ul>
-<li><a href="#toc_1.1">Driver Concepts</a>
-<li><a href="#toc_1.2">WDF</a>
-<li><a href="#toc_1.3">UMDF</a>
+<li><a href="#toc_1.1">System</a>
+<li><a href="#toc_1.2">Driver Concepts</a>
+<li><a href="#toc_1.3">WDF</a>
+<li><a href="#toc_1.4">UMDF</a>
 <ul>
-<li><a href="#toc_1.3.1">Benefit from UMDF driver</a>
-<li><a href="#toc_1.3.2">System-supplied components</a>
-<li><a href="#toc_1.3.3">I/O request Flow</a>
+<li><a href="#toc_1.4.1">Benefit from UMDF driver</a>
+<li><a href="#toc_1.4.2">System-supplied components</a>
+<li><a href="#toc_1.4.3">I/O request Flow</a>
 </ul>
-<li><a href="#toc_1.4">UserMode</a>
+<li><a href="#toc_1.5">UserMode</a>
 <ul>
-<li><a href="#toc_1.4.1">PE Format</a>
+<li><a href="#toc_1.5.1">PE Format</a>
 </ul>
-<li><a href="#toc_1.5">System</a>
-<li><a href="#toc_1.6">Bat</a>
-<li><a href="#toc_1.7">Work Debug</a>
-<li><a href="#toc_1.8">Work experience</a>
+<li><a href="#toc_1.6">System</a>
+<li><a href="#toc_1.7">Bat</a>
+<li><a href="#toc_1.8">Work Debug</a>
+<li><a href="#toc_1.9">Work experience</a>
 </ul>
 </ul>
 </div>
 
 <h1 id="toc_1">Windows</h1>
+<h2 id="toc_1.1">System</h2>
+<ul>
+<li>
+  睡眠(Sleep) ---  S3
+<pre>
+        是Windows系统提供的一种节能状态，当用户需要离开电脑的时候，可以在“关机”菜单里面选择这个命令。
+        这样系统将正在处理的数据保存到内存中，除内存以外的所有设备都停止供电。当用户回到电脑面前的时候，
+        通过移动鼠标或按下任意键，就可以唤醒系统，让电源为其他设备重新开始供电。在短短的几秒钟，计算机
+        就可以恢复到离开之前的状态。这种状态的特点就是唤醒速度快（一般只需要几秒钟），但是不能让内存断电，
+        否则数据会丢失。
+</pre>
+
+<li>
+  休眠(Hibernate) --- S4
+<pre>
+        是微软为移动电脑设计的一种电源节能状态，所以在台式机的“关机”菜单里面看不到它。这种状态是把内存
+        里的所有数据，存储到硬盘的一个特定空间里，然后切断所有的电源供应。以后当用户重新按下开机键，就会
+        将硬盘里临时存储的内存数据恢复到内存里，就可以返回到离开之前的状态。所以这种状态的特点就是可以复
+        原到断电以前的状态，而且可以完全断电，但是恢复的时间较长而且需要占用较大的硬盘空间。
+</pre>
+
+<li>
+  待机
+<pre>
+        是系统将当前状态保存于内存中，然后退出系统，此时电源消耗降低，维持CPU、内存和硬盘最低限度的运行；
+        按计算机上的电源就可以激活系统，电脑迅速从内存中调入待机前状态进入系统，这是重新开机最快的方式，
+        但是系统并未真正关闭，适用短暂离开使用。
+</pre>
+
+<li>
+  混合睡眠(hiber-sleep)
+<pre>
+        是针对台式电脑推出的一种新的睡眠/休眠方法。该技术指睡眠（sleep）和休眠（hibernate）同时进行，也就
+        是说，先把信息写到硬盘的hiberfil.sys文件中，再进行睡眠。如果没有终止外部供电，则睡眠，如终止外部供电，
+        则再次开机时读取hiberfil.sys进行恢复，可以说整合了两者的优势：比起睡眠有防掉电的功能，且比起休眠在
+        不终止外部供电的情况下启动速度更快。
+</pre>
+
+</ul>
 <hr />
-<h2 id="toc_1.1"><a href="http://msdn.microsoft.com/en-us/library/windows/hardware/ff554836(v=vs.85).aspx">Driver Concepts</a></h2>
+<h2 id="toc_1.2"><a href="http://msdn.microsoft.com/en-us/library/windows/hardware/ff554836(v=vs.85).aspx">Driver Concepts</a></h2>
 <ul>
 <li>
   User mode and kernel mode
@@ -158,20 +198,102 @@
 </ul>
 </ul>
 </ul>
+<li>
+  USB Selective Suspend and Remote Wakeup
+
+<ul>
+<li>
+  USB configuration description:  
+
+<ul>
+<li>
+  当bmAttributes的bit6为1时，device支持selective suspend
+
+<li>
+  当bmAttributes的bit5和bit6同时为1时，则device支持selective suspend和remote wakeup
+
 </ul>
-<h2 id="toc_1.2">WDF</h2>
+<li>
+  注册表位置：HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\USB\<strong>VID_0461&amp;PID_4D22</strong>\5&amp;b9fd9be&amp;0&amp;2\Device Parameters
+
+<ul>
+<li>
+  SelectiveSuspendEnabled为1时， DeviceManager中PowerManagement页的Selective Suspend(first one)勾勾是打上的，为0时， 没有勾勾
+
+<li>
+  DeviceRemoteWakeSupported为1时， 第二项Remote Wake选项不是灰色， 为0时该选项为灰色， 不支持Remote Wakeup
+
+<li>
+  HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\BTHPORT\Parameters -&gt; SystemRemoteWakeSupported与DeviceRemoteWakeSupported具有相同功能
+
+<li>
+  DeviceRemoteWakeSupported为1， RemoteWakeEnabled为1时， 勾勾选中， RemoteWakeEnabled为0时， 勾勾取消
+
+<li>
+  这三个注册表值都可以在INF当中指定其值：
 <pre>
-KMDF version	Release method	            Included in this version of     Windows	Drivers using it run on
-1.13            Windows 8.1 Preview WDK     Windows 8.1 Preview             Windows 8.1 Preview
-1.11            Windows 8 WDK               Windows 8                       Windows Vista and later
-1.9             Windows 7 WDK               Windows 7                       Windows XP and later
+            [RsBthFilter]
+                Include=bth.inf
+                Needs=BthUsb.NT
+                CopyFiles=RsBthFilter.CopyList
+
+            [RsBthFilter.HW]
+                include    = bth.inf
+                needs      = BthUsb.NT.HW
+                AddReg=RsBthFilter.HW.Reg
+                
+            [RsBthFilter.HW.Reg]
+                HKR, , LowerFilters, 0x00010000, RtkBtFilter
+                HKR, ,"RemoteWakeEnabled",0x00010001,1
+                HKR, ,"DeviceRemoteWakeSupported",0x00010001,1
+                HKR, ,"SelectiveSuspendEnabled",0x00010001,0
 </pre>
-<h2 id="toc_1.3">UMDF</h2>
+
+<li>
+  SelectiveSuspend控制Idle Request行为， 如果支持， 当Driver中没有IO操作时， USB Client Driver会先发一个Idle Reqeust， 然后让Device进入D2
+
+<li>
+  RemoteWakeup控制WaitWake IRP行为，WaitWake IRP是在D0状态下发到Bus的，如果支持该功能， 则在系统进入S3时， WakitWakeIRP不返回， 当Wait Signal产生时， 系统被唤醒， 该IRP才会返回
+
+<li>
+  如果RemoteWake的勾勾不选中， 则当OS进入S3之前， 这个Wait Wake irp就会返回， 并且只有当系统醒来之后设备在D0状态时再发下去。
+
+</ul>
+<li>
+  对于Bluetooth来说， 只有当配对一个HID 设备时才会有Remote Wakeup功能， 可以看一下Enum枚举出设备的Power Data， S3-&gt;D2且SupportWakeFromS3。
+
+<li>
+  Enum是根据Cod + SDP Record来枚举PDO的， 如果Cod是HID且SDP Record中的HID支持RemoteWake功能， 则在枚举PDO时， Power Data会继承Enum的
+
+</ul>
+</ul>
+<h2 id="toc_1.3">WDF</h2>
 <pre>
-UMDF version	Release method	            Included in this version of Windows	    Drivers using it run on
-2.0             Windows 8.1 Preview WDK     Windows 8.1 Preview                     Windows 8.1 Preview
-1.11            Windows 8                   WDK Windows 8                           Windows Vista and later
-1.9             Windows 7                   WDK Windows 7                           Windows XP and later
+    KMDF version	Release method	            Included in this version of     Windows	Drivers using it run on
+    1.13            Windows 8.1 Preview WDK     Windows 8.1 Preview             Windows 8.1 Preview
+    1.11            Windows 8 WDK               Windows 8                       Windows Vista and later
+    1.9             Windows 7 WDK               Windows 7                       Windows XP and later
+</pre>
+<ul>
+<li>
+  WdfIoQueueReadyNotify
+
+<ul>
+<li>
+  向一个I/O Queue注册一个回调函数， 当Queue从Empty到Non-Empty时会调用这个Callback函数。
+
+<li>
+  只能用于manual dispatching Queue
+
+</ul>
+</ul>
+    
+<h2 id="toc_1.4">UMDF</h2>
+<pre>
+    UMDF version	Release method	            Included in this version of Windows	    Drivers using it run on
+    2.0             Windows 8.1 Preview WDK     Windows 8.1 Preview                     Windows 8.1 Preview
+    1.11            Windows 8                   WDK Windows 8                           Windows Vista and later
+    1.9             Windows 7                   WDK Windows 7                           Windows XP and later
 </pre>
 <ul>
 <li>
@@ -184,7 +306,7 @@ UMDF version	Release method	            Included in this version of Windows	    
   File system drivers, display drivers, and print drivers cannot be UMDF drivers.
 
 </ul>
-<h3 id="toc_1.3.1">Benefit from UMDF driver</h3>
+<h3 id="toc_1.4.1">Benefit from UMDF driver</h3>
 <ul>
 <li>
   稳定性更高，因为只能访问进程的地址空间，而不像KMDF那样可以访问整个内核空间
@@ -202,7 +324,7 @@ UMDF version	Release method	            Included in this version of Windows	    
   UMDF2可以在使用user-mode debugger，也可以使用kernel-mode debugger调试，wdfkd.dll有新增函数
 
 </ul>
-<h3 id="toc_1.3.2">System-supplied components</h3>
+<h3 id="toc_1.4.2">System-supplied components</h3>
 <ul>
 <li>
   Driver host process(<strong>Wudfhost.ext</strong>)
@@ -225,7 +347,7 @@ UMDF version	Release method	            Included in this version of Windows	    
   Reflector
 
 </ul>
-<h3 id="toc_1.3.3">I/O request Flow</h3>
+<h3 id="toc_1.4.3">I/O request Flow</h3>
 <pre>
 an application calls a Win32 file I/O function(such as CreateFile, ReadFileEx, or DeviceIoControl)
 ==&gt; the reflector ==&gt; the driver host process ==&gt; the top of the correct user-mode device stack
@@ -234,7 +356,7 @@ an application calls a Win32 file I/O function(such as CreateFile, ReadFileEx, o
 </pre>
 
 <hr />
-<h2 id="toc_1.4">UserMode</h2>
+<h2 id="toc_1.5">UserMode</h2>
 <ul>
 <li>
   DeviceIOControl的Overlapped参数
@@ -283,7 +405,7 @@ an application calls a Win32 file I/O function(such as CreateFile, ReadFileEx, o
 
 <hr />
 
-<h3 id="toc_1.4.1">PE Format</h3>
+<h3 id="toc_1.5.1">PE Format</h3>
 <ul>
 <li>
   <a href="http://msdn.microsoft.com/en-us/library/ms809762.aspx">http://msdn.microsoft.com/en-us/library/ms809762.aspx</a>
@@ -316,7 +438,7 @@ an application calls a Win32 file I/O function(such as CreateFile, ReadFileEx, o
 </ul>
  
 <hr />
-<h2 id="toc_1.5">System</h2>
+<h2 id="toc_1.6">System</h2>
 <ul>
 <li>
   删除系统服务项
@@ -427,9 +549,12 @@ an application calls a Win32 file I/O function(such as CreateFile, ReadFileEx, o
   查看一下注册表位置，可以看到这个表项下面列出了各种扩展名，如果是ICON或打开文件方式有问题，可以查看该处的注册表项是否正常
 
 </ul>
+<li>
+  <a href="http://jingyan.baidu.com/article/fea4511a79b323f7bb9125bb.html">如何禁止Windows更新驱动</a>
+
 </ul>
 <hr />
-<h2 id="toc_1.6">Bat</h2>
+<h2 id="toc_1.7">Bat</h2>
 <ul>
 <li>
   <a href="http://blog.csdn.net/davidhsing/article/details/1996180">for /f</a>
@@ -520,9 +645,9 @@ an application calls a Win32 file I/O function(such as CreateFile, ReadFileEx, o
 
 
 <hr />
-<h2 id="toc_1.7"><a href="Work Debug.html">Work Debug</a></h2>
+<h2 id="toc_1.8"><a href="Work Debug.html">Work Debug</a></h2>
 
-<h2 id="toc_1.8">Work experience</h2>
+<h2 id="toc_1.9">Work experience</h2>
 <ul>
 <li>
   Bushound

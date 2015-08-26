@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=cp936">
-    <title>git  github</title>
+    <title>git_github</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
     <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
@@ -70,8 +70,10 @@
 <li><a href="#toc_2.4">github pages</a>
 </ul>
 <li><a href="#toc_3">GitHub:Gist</a>
+<li><a href="#toc_4">gitflow</a>
 </ul>
 </div>
+
 <h1 id="toc_1">git</h1>
 <h2 id="toc_1.1">Install or Update</h2>
 <dl>
@@ -167,10 +169,14 @@ git rm '*.txt'    //removing all the things
   ssh-keygen
 
 <li>
-  copy ~/.ssh/id_rsa.pub to github
+  GitHub中设置公钥
+    在GitHub中，依次点击Account settings（右上角倒数第二个图标） -&gt; SSH Keys -&gt; Add SSH Key，
+    将id_rsa.pub文件中的字符串复制进去，注意字符串中没有换行和空格。
 
 <li>
-  ssh -T git@github.com
+  再次检查SSH连接情况：  ssh -T git@github.com
+    如果看到如下所示，则表示添加成功：
+    Hi Ryan311! You’ve successfully authenticated, but GitHub does not provide shell access.
 
 </ol>
 
@@ -234,6 +240,14 @@ git rm '*.txt'    //removing all the things
 
 <li>
   可以将代码片断插入到网页中
+
+</ul>
+
+<hr />
+<h1 id="toc_4">gitflow</h1>
+<ul>
+<li>
+  [[<a href="http://blog.jobbole.com/76867/|Git工作流指南：Gitflow工作流]]">http://blog.jobbole.com/76867/|Git工作流指南：Gitflow工作流]]</a>
 
 </ul>
 

@@ -44,7 +44,16 @@
 <div class="toc">
 <ul>
 <li><a href="#toc_0.1">Eclipse</a>
-<li><a href="#toc_0.2">Shortcut</a>
+<li><a href="#toc_0.2">Eclipse + Cygwin for C/C++</a>
+<li><a href="#toc_0.3">Eclipse + MinGW</a>
+<li><a href="#toc_0.4">Eclipse CDT 对 Doxygen 型注释的支持</a>
+<li><a href="#toc_0.5">Doxygen文档工具在Eclipse中的集成    Eclox</a>
+<li><a href="#toc_0.6">Good Examples</a>
+<li><a href="#toc_0.7">Folding</a>
+<li><a href="#toc_0.8">高亮显示选中变量</a>
+<li><a href="#toc_0.9">修改变量， 方法等字体颜色 </a>
+<li><a href="#toc_0.10">修改Editor中显示字体 </a>
+<li><a href="#toc_0.11">Shortcut</a>
 </ul>
 </ul>
 </div>
@@ -60,6 +69,33 @@
 <li>
   Pydev for python project
 
+<ul>
+<li>
+  Project Address:     <a href="http://sourceforge.net/projects/pydev/files/">http://sourceforge.net/projects/pydev/files/</a>
+
+<ul>
+<li>
+  下载最新版本的PyDev， 解压将Copy到Eclipse目录
+
+</ul>
+<li>
+  Install Location from Eclipse:    <a href="http://pydev.org/updates">http://pydev.org/updates</a>
+
+<li>
+  PyQt5加入到Build_in模块中， 这样在使用时不会显示错误
+
+<ul>
+<li>
+  在PyDev-&gt;Python Interpreter-&gt;Libraries中加入PyQt5库， /usr/lib/python3/dist-packages/PyQt5
+
+<li>
+  在PyDev-&gt;Python Interpreter-&gt;Force Buildins, News:  Add [PyQt5.Qt, PyQt5.QtGui ......], 
+
+<li>
+  上面的列表内容：  python -&gt;  import PyQt5  -&gt;  help(PyQt5)  : PACKAGE CONTENTS
+
+</ul>
+</ul>
 <li>
   Erlide for Erlang project
 
@@ -73,7 +109,123 @@
 
 </ul>
 
-<h2 id="toc_0.2">Shortcut</h2>
+<h2 id="toc_0.2">Eclipse + Cygwin for C/C++</h2>
+<p>
+<a href="http://www.cnblogs.com/zhxxcq/archive/2013/04/21/3033389.html">http://www.cnblogs.com/zhxxcq/archive/2013/04/21/3033389.html</a>
+</p>
+<h2 id="toc_0.3">Eclipse + MinGW</h2>
+<ul>
+<li>
+ 安装Eclipse的CDT
+
+<li>
+ 安装MinGW
+
+<li>
+ 将MinGW\bin下的“mingw32-make.exe”改为“make.exe”
+
+<li>
+ 系统环境变量PATH增加“C:\MinGW\bin”（假如安装目录为C:\MinGW）
+
+<ul>
+<li>
+ C_INCLUDEDE_PATH，CPLUS_INCLUDE_PATH——C:\MinGW\include；LIBRARY_PATH——C:\MinGW\lib
+
+</ul>
+<li>
+ Vim Support
+
+<ul>
+<li>
+ Help -&gt; Install new Software： <a href="http://vrapper.sourceforge.net/update-site/stable">http://vrapper.sourceforge.net/update-site/stable</a>
+
+</ul>
+<li>
+ Color Theme
+
+<ul>
+<li>
+ Help -&gt; Install new Software:  <a href="http://eclipse-color-theme.github.com/update">http://eclipse-color-theme.github.com/update</a>
+
+<li>
+ Window→Preferences→General→Appereance→Color Theme ，在里面就可以选择喜欢的主题
+
+</ul>
+</ul>
+
+<h2 id="toc_0.4">Eclipse CDT 对 Doxygen 型注释的支持</h2>
+<p>
+1、工作空间默认
+</p>
+ 
+<p>
+Windows -&gt; Preferrences -&gt; C/C++ -&gt; Editor -&gt; Documentation tool comments
+</p>
+ 
+<p>
+默认为none，修改为Doxygen即可
+</p>
+ 
+<p>
+2、工程特别属性
+如果不想设置为整个工作空间的默认属性，可以在工作属性对话框的这里找到：
+</p>
+ 
+<p>
+Project -&gt; Properties -&gt; C/C++ General -&gt; Enable project specific settings
+</p>
+ 
+<p>
+选择Doxygen即可
+</p>
+
+<h2 id="toc_0.5">Doxygen文档工具在Eclipse中的集成    Eclox</h2>
+<p>
+<a href="http://blog.csdn.net/zhhymh/article/details/6256966">http://blog.csdn.net/zhhymh/article/details/6256966</a>
+<a href="http://www.cnblogs.com/lanxuezaipiao/p/3551609.html">http://www.cnblogs.com/lanxuezaipiao/p/3551609.html</a>
+</p>
+
+<h2 id="toc_0.6">Good Examples</h2>
+<ul>
+<li>
+  <a href="http://fnch.users.sourceforge.net/doxygen_c.html">http://fnch.users.sourceforge.net/doxygen_c.html</a>
+
+</ul>
+
+<h2 id="toc_0.7">Folding</h2>
+<ul>
+<li>
+  Windows -&gt; Preferences -&gt; c/c++ -&gt; Editor -&gt; Folding 
+
+<li>
+  Select the items
+
+<li>
+  Windows -&gt; Preferences -&gt; General -&gt; Keys:  fold
+
+<li>
+      Toggle Folding -&gt; Binding -&gt; Type a binding key such as "Ctrl + F"
+
+</ul>
+
+<h2 id="toc_0.8">高亮显示选中变量</h2>
+<p>
+windows-&gt; preferences-&gt; c/c++ -&gt; Editor-&gt; Mark Occurences 
+最上边的大标题的复选框勾上，下面的就都可以高亮显示了，Local variables是变量的高亮显示
+</p>
+
+<h2 id="toc_0.9">修改变量， 方法等字体颜色 </h2>
+<p>
+windows-&gt; preferences-&gt; c/c++ -&gt; Editor-&gt; Syntax Coloring
+</p>
+
+<h2 id="toc_0.10">修改Editor中显示字体 </h2>
+<p>
+windows-&gt; preferences-&gt; appearence -&gt; Colors and Fonts -&gt; c/c++ -&gt; Editor:  Edit...
+</p>
+
+
+<h2 id="toc_0.11">Shortcut</h2>
 <ul>
 <li>
   Bind Keys:  Window -&gt; Preferences -&gt; General -&gt; Keys
@@ -111,6 +263,21 @@
         CTrl+左键 or F3     跳到光标所在标识符的定义代码，用于查看变量、方法、类的定义
         Ctrl+Shift+G        在工作空间中查找引用了光标所在标识符的位置（查找所有引用）
         Ctrl+Shift+L        显示快捷键列表
+        
+        Debug 
+            作用域 功能 快捷键 
+            全局 单步返回 F7 
+            全局 单步跳过 F6 
+            全局 单步跳入 F5 
+            全局 单步跳入选择 Ctrl+F5 
+            全局 调试上次启动 F11 
+            全局 继续 F8 
+            全局 使用过滤器单步执行 Shift+F5 
+            全局 添加/去除断点 Ctrl+Shift+B 
+            全局 显示 Ctrl+D 
+            全局 运行上次启动 Ctrl+F11 
+            全局 运行至行 Ctrl+R 
+            全局 执行 Ctrl+U
 </pre>
 
 </ul>

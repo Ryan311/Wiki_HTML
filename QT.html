@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>QT</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Install</a>
+<li><a href="#toc_0.2">QT 模块</a>
+<li><a href="#toc_0.3">Features</a>
+<li><a href="#toc_0.4">Modules</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Install</h2>
+<ul>
+<li>
+  <a href="http://sourceforge.net/projects/mingwbuilds/files/external-binary-packages/Qt-Builds/">http://sourceforge.net/projects/mingwbuilds/files/external-binary-packages/Qt-Builds/</a>
+
+<li>
+  <a href="http://www.qt.io/download/">http://www.qt.io/download/</a>
+
+</ul>
+
+<h2 id="toc_0.2">QT 模块</h2>
+<ul>
+<li>
+  Qt5和Qt4最大的区别之一是底层架构有了修改， Qt5引入了模块化的概念， 将众多功能细分到几个模块之中
+
+<li>
+  Qt5模块分为Essential Modules和Add-on Modules
+
+<ul>
+<li>
+  Essential Modules   基础模块， 在所有平台上都可用
+
+<li>
+  Add-on Modules      扩展模块， 建立在基础的基础上， 在能够运行QT的平台上可酌情引入
+
+</ul>
+<li>
+  Qt 基础模块
+
+<ul>
+<li>
+  Qt Core     提供核心的非GUI功能， 所有模块都需要
+
+<li>
+  Qt Gui      提供GUI程序的基本功能， 窗口集成、事件处理， OpenGL等等
+
+<li>
+  Qt Multimedia   提供视频、音频、收音机及摄像头等功能
+
+<li>
+  Qt Network  提供跨平台的网络功能
+
+<li>
+  Qt Qml      提供QML使用的C++ API
+
+<li>
+  Qt Quick    允许在Qt/C++中购入Qt Quick
+
+<li>
+  Qt SQL      允许使用SQL访问数据库
+
+<li>
+  Qt Test     提供Qt程序的单元测试功能
+
+<li>
+  Qt Webkit   基于WebKit2的实现以及一套全新的QML API
+
+</ul>
+<li>
+  Qt扩展模块
+
+<ul>
+<li>
+  Qt 3D
+
+<li>
+  Qt Bluetooth
+
+<li>
+  Qt D-Bus
+
+<li>
+  Qt OpenGL
+
+<li>
+  Qt Widgets      // Qt4中QtGui相关于Qt5的QtGui+QtWidgets
+
+</ul>
+</ul>
+    
+
+<h2 id="toc_0.3">Features</h2>
+<ul>
+<li>
+  Signal &amp; Slot       
+
+<ul>
+<li>
+  信号和槽不是GUI模块提供的， 而是QT的核心特性之一
+
+<li>
+  不再使用QT4的两个宏SLOT和SIGNAL
+
+</ul>
+<li>
+  Connect
+<pre>
+        QMetaObject::Connection connect(const QObject *, const char *,
+                                        const QObject *, const char *,
+                                        Qt::ConnectionType);
+        
+        QMetaObject::Connection connect(const QObject *, const QMetaMethod &amp;,
+                                        const QObject *, const QMetaMethod &amp;,
+                                        Qt::ConnectionType);
+
+        QMetaObject::Connection connect(const QObject *, const char *,
+                                        const char *,
+                                        Qt::ConnectionType) const;      // this as receiver
+                                        
+        QMetaObject::Connection connect(const QObject *, PointerToMemberFunction, 
+                                        const QObject *, PointerToMemberFunction, 
+                                        QT::ConnectionType);            
+                                        
+        QMetaObject::Connection connect(const QObject *, PointerToMemberFunction, 
+                                        Function);      // Function:    static function \ globle function \ lambda statement
+
+</pre>
+
+<li>
+  Generic containers
+
+<ul>
+<li>
+  QList&lt;T&gt;
+
+<li>
+  QStringList  ==   QList&lt;QString&gt;
+
+<li>
+  QLinkedList&lt;T&gt;
+
+<li>
+  QVector&lt;T&gt;
+
+<li>
+  QStack&lt;T&gt;
+
+<li>
+  QMap&lt;Key, T&gt;
+
+<li>
+  QHash&lt;Key, T&gt;
+
+<li>
+  QMultiMap&lt;Key, T&gt;
+
+<li>
+  QCashe&lt;Key, T&gt;
+
+<li>
+  QSet&lt;T&gt;
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Iterators:  Qt supports the following styles of iteration:
+
+<ul>
+<li>
+  Qt style foreach loops, similar to Perl and Python
+
+<li>
+  Java 1.2 style Iterator , which always points between elements
+
+<li>
+  Standard Library style ContainerType ::iterator
+
+<li>
+  Hand-made while or for loops that use the getters of the container
+
+<li>
+  QDirIterator , for iterating through entries in a directory structure
+<pre>
+        QString winter = "December, January, February";
+        QString sprint = "March, April, May";
+        QString summer = "June, July, August";
+        QString fall = "September, October, November";
+        
+        QStringList list;
+        list &lt;&lt; winter;
+        list += spring;
+        list.append(summer);
+        list &lt;&lt; fall;
+        
+        QString allmonths = list.join(", ");
+        qDebug() &lt;&lt; allmonths;
+        QStringList list2 = allmonths.split(", ");
+        qDebug() &lt;&lt; list2;
+        /* Split is the opposite of join. Each month will have its own element. */
+        
+        // Foreach
+        foreach (const QString &amp;str, list) 
+        {
+            qDebug() &lt;&lt; QString(" [%1] ").arg(str);
+        }
+        
+        // C++ stype iteration
+        for (QStringList::iterator it = list.begin(); it != list.end(); ++it) 
+        {
+            QString current = *it;
+            qDebug() &lt;&lt; "[[" &lt;&lt; current &lt;&lt; "]]";
+        }
+        
+        // Java stype iteration
+        QListIterator&lt;QString&gt; itr (list2);
+        while (itr.hasNext()) 
+        {
+            QString current = itr.next();
+            qDebug() &lt;&lt; "{" &lt;&lt; current &lt;&lt; "}";
+        }
+            
+</pre>
+
+</ul>
+<li>
+  Lambda
+
+</ul>
+
+
+<h2 id="toc_0.4">Modules</h2>
+<ul>
+<li>
+  Qt DBUS
+
+<li>
+  Qt OpenGL
+
+<li>
+  Qt 3D
+
+<li>
+  Qt bluetooth
+
+<li>
+  Qt QML
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>����_�������ӿ�</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">物理接口</a>
+<li><a href="#toc_0.2">逻辑接口</a>
+</ul>
+</ul>
+</div>
+
+<p>
+HCI是主机与控制器之间的接口， 主要完成两个任务：
+</p>
+<ol>
+<li>
+  发送命令给控制器和接收来自控制器的事件
+
+<li>
+  发送和接收来自对端设备的数据
+
+</ol>
+
+<p>
+主机接口既是两个设备之间的物理上的接口， 也是逻辑上的接口。
+</p>
+<ol>
+<li>
+  逻辑接口    定义了命令、事件和数据的封包格式
+
+<li>
+  物理接口    规定了主机和控制器之间如何传输这些数据包
+
+</ol>
+
+
+<h2 id="toc_0.1">物理接口</h2>
+<ul>
+<li>
+  定义了4种物理接口， 对应不同的用途
+
+<ul>
+<li>
+  UART
+
+<li>
+  3线UART， 提供可靠UART传输方式
+
+<li>
+  USB
+
+<li>
+  SDIO    安全数字输入输出， 为消费电子设备提供中等速度的传输方式
+
+</ul>
+</ul>
+
+<h2 id="toc_0.2">逻辑接口</h2>
+<ul>
+<li>
+  信道    控制器与其他设备建立了连接， 控制器的底层HCI接口就创建一个HCI信道， 使用连接句柄标识。
+
+<li>
+  命令数据包cmd
+
+<li>
+  事件数据包event
+
+<li>
+  数据包data
+
+<li>
+  命令流控
+
+<li>
+  数据流控
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

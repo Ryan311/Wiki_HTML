@@ -44,11 +44,7 @@
 <div class="toc">
 <ul>
 <li><a href="#toc_0.0.1">Linux Command</a>
-<li><a href="#toc_0.0.2">Ubuntu</a>
-<ul>
-<li><a href="#toc_0.0.2.1">Tricks</a>
-</ul>
-<li><a href="#toc_0.0.3">Linux Should known</a>
+<li><a href="#toc_0.0.2">Linux Should known</a>
 </ul>
 </ul>
 </ul>
@@ -227,464 +223,164 @@
   watch "dmesg | tail -20"        实时监控dmesg日志输出
 
 </ul>
-</ul>
-
-<hr />
-<h3 id="toc_0.0.2">Ubuntu</h3>
-<h4 id="toc_0.0.2.1">Tricks</h4>
-<ul>
 <li>
-  显示或隐藏文件管理器侧边栏      F9 toggle/
-
-<li>
-  ubuntu unity, 已挂载的磁盘不显示在左边侧栏（启动器）
-<pre>
-Ubuntu 默认总会将挂载的磁盘(硬盘分区)在桌面建立一捷径，Unity 桌面，则除了桌面外，还会在左边侧栏(Launcher)中也建一个捷径。
-
-事实上，Launcher 上面已有了固定的软件、开启的软件的小图示，所以很容易就占着许多图示，因此不必要再让已挂载的磁盘的图示显示在Launcher 上。
-
-若想移除（不再显示）已挂载磁盘的图示：
-
-安装Compiz Config Settings Manager( ccsm)，打开终端(Ctrl - Alt - T)，贴上
-
-sudo apt-get install compizconfig-settings-manager
-
-安装后，打开终端，输入 ccsm
-
-点Desktop(桌面) → 点Ubuntu Unity plugin → 点上方的Experimental → 最下方Show Devices 选择Never → 上一步→ 关闭。
-</pre>
-
-</ul>
+  删除文件名中带空格的文件
 
 <ul>
 <li>
-  ubuntu-tweak0.8.5在清理时会把/etc/X11/X误删除掉，重启后黑屏或停留在logo或startx失败
-<pre>
-解决方法是：   在grup界面按e编辑，在Linux一午上加text，进入文本模式启动，在终端输入以下内容，创建新的软链接
-sudo ln -s /usr/bin/Xorg /etc/X11/X
-重启即可
-将tweak换成0.8.3
-</pre>
-
-</ul>
-
-<ul>
-<li>
-  自动挂载其它分区
-<pre>
-修改/etc/fstab文件
-sudo gedit /etc/fstab
-每一行使用一个tab分成6列，分别为filesystem, mountpoint, type, options,dump, pass
-分别表示:原来在文件系统的位置，加载点位置，类型，参数等，可以使用man fstab来查看各个参数的定义
-将以下内容添加到/etc/fstab 文件尾部，保存，重启即可自动挂载其他分区了。
-
-#Entry for /dev/sda6 :
-UUID=0004FF2F00048EBB   /media/sda6 ntfs-3g defaults,locale=en_US.UTF-8 0   0
-#Entry for /dev/sda7 :
-UUID=00048FA50008DD3A   /media/sda7 ntfs-3g defaults,locale=en_US.UTF-8 0   0
-#Entry for /dev/sda8 :
-UUID=000F3D290008D7EE   /media/sda8 ntfs-3g defaults,locale=en_US.UTF-8 0   0
-
-也可以写成
-/dev/sda6 /media/sda6 ntfs-3g defaults,locale=en_US.UTF-8 0   0
-/dev/sda7 /media/sda7 ntfs-3g defaults,locale=en_US.UTF-8 0   0
-/dev/sda8 /media/sda8 ntfs-3g defaults,locale=en_US.UTF-8 0   0
-</pre>
-
-<li>
-  Backup system
-
-<ul>
-<li>
-<a href="back.sh.html">back.sh</a> 
-
-<li>
-move back.sh to /home
-      <br> cd /home
-      <br> chmod +x back.sh
-      <br> ./back.s
+  rm -rf "git github.wiki"
 
 </ul>
 <li>
-  <a href="http://www.cnblogs.com/vimmer/articles/2645734.html">GoldenDict</a>
+  Ubuntu终端Terminal常用快捷键     
 
 <ul>
 <li>
-  sudo apt-get install goldendict
+  Tab 自动补全
 
 <li>
-  download dictionaries and unzip to a dir
+  Ctrl+a 光标移动到开始位置
 
 <li>
-  open goldendict -&gt; edit this group -&gt; add online dict and local dict
+  Ctrl+e 光标移动到最末尾
 
-</ul>
 <li>
-  Ubuntu加速
+  Ctrl+k 删除此处至末尾的所有内容
 
-<ul>
 <li>
-  Preload, 可以预先加载程序使用的库或二进制文件进内存，加快程序启动速度
+  Ctrl+u 删除此处至开始的所有内容
 
-<ul>
 <li>
-  sudo apt-get install preload
+  Ctrl+d 删除当前字符
 
-</ul>
 <li>
-  随机启动项
+  Ctrl+h 删除当前字符前一个字符
 
-<ul>
 <li>
-  sudo sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop     修改随机启动服务的文件属性，显示隐藏的随机启动系统服务
+  Ctrl+w 删除此处到左边的单词
 
 <li>
-  startup －> 修改
+  Ctrl+y 粘贴由 Ctrl+u ， Ctrl+d ， Ctrl+w 删除的单词
 
-</ul>
-</ul>
 <li>
-  Vim中文显示乱码
+  Ctrl+l 相当于clear，即清屏
 
-<ul>
 <li>
-  Windows上默认是GBK编码，而vim默认是utf-8（gedit默认也是utf-8)，所以在vim上打开windows上的文件中文会显示乱码，只需要修改配置文件，使vim支持gbk编码就可以了。
+  Ctrl+r 查找历史命令
 
 <li>
-  在vimrc中添加*set fileencoding=utf-8,gbk*
+  Ctrl+b 向回移动光标
 
-</ul>
 <li>
-  Unity Configure
+  Ctrl+f 向前移动光标
 
-<ul>
 <li>
-  sudo add-apt-repository  ppa:myunity/ppa
+  Ctrl+t 将光标位置的字符和前一个字符进行位置交换
 
 <li>
-  sudo apt-get update
+  Ctrl+&amp; 恢复 ctrl+h 或者 ctrl+d 或者 ctrl+w 删除的内容
 
 <li>
-  sudo apt-get install myunity
+  Ctrl+S 暂停屏幕输出
 
-</ul>
 <li>
-  Ubuntu Chrome 白屏
+  Ctrl+Q 继续屏幕输出
 
-<ul>
 <li>
-  sudo mkdir /etc/adobe
+  Ctrl+Left-Arrow 光标移动到上一个单词的词首
 
 <li>
-  echo "OverrideGPUValidation=true" &gt;~/mms.cfg
+  Ctrl+Right-Arrow 光标移动到下一个单词的词尾
 
 <li>
-  sudo mv ~/mms.cfg /etc/adobe
+  Ctrl+p 向上显示缓存命令
 
-</ul>
 <li>
-  Ubuntu下玩魔兽
+  Ctrl+n 向下显示缓存命令
 
-<ul>
 <li>
-  安装Wine
+  Ctrl+d 关闭终端
 
 <li>
-  进入War3的目录
+  Ctrl+xx 在EOL和当前光标位置移动
 
 <li>
-  wine War3.exe -opengl -window
+  Ctrl+x@ 显示可能hostname补全
 
-</ul>
 <li>
-  Uninstall Wine
+  Ctrl+c 终止进程/命令
 
-<ul>
 <li>
-  安装wine后会在系统中添加一些新的启动项,比如文本文件会以Notepad方式打开的选项
+  Shift +上或下 终端上下滚动
 
 <li>
-  卸载wine后这些东西仍然残留, 要想彻底删除需要将~/.local/share/applications目录下所有以wine开头的destop文件删除掉
+  Shift+PgUp/PgDn 终端上下翻页滚动
 
 <li>
-  还要将该目录下的mimeinfo.cache删除掉, 里面引用了wine*文件, 重新登录一次就看不到残留内容了
+  Ctrl+Shift+n 新终端
 
-</ul>
 <li>
-  在线制作icon图标
+  alt+F2 输入gnome-terminal打开终端
 
-<ul>
 <li>
-  <a href="http://www.bitbug.net/">http://www.bitbug.net/</a>
+  Shift+Ctrl+T 打开新的标签页
 
-</ul>
 <li>
-  <a href="http://www.playonlinux.com/en">Playonlinux</a>
+  Shift+Ctrl+W 关闭标签页
 
-<ul>
 <li>
-  还需要安装curl: sudo apt-get install curl
+  Shift+Ctrl+C 复制
 
-</ul>
 <li>
-  Sysinfo显示系统硬件信息
+  Shift+Ctrl+V 粘贴
 
-<ul>
 <li>
-  sudo apt-get install sysinfo
+  Alt+数字 切换至对应的标签页
 
 <li>
-  &gt;sudo sysinfo
+  Shift+Ctrl+N 打开新的终端窗口
 
-</ul>
 <li>
-  我的机器是双显卡，Intel集成显卡和Ｎvidia Geforce620
+  Shift+Ctrl+Q 管壁终端窗口
 
-<ul>
 <li>
-  千万不要自己下Nvidia的显卡驱动来安装，重启后进不去Unity
+  Shift+Ctrl+PgUp/PgDn 左移右移标签页
 
 <li>
-  安装Bumblebee（大黄蜂）, 让它来安装nvidia驱动bumblebee-nvidia
+  Ctrl+PgUp/PgDn 切换标签页
 
-<ul>
 <li>
-  sudo add-apt-repository ppa:bumblebee/stable
+  F1 打开帮助指南
 
 <li>
-  sudo add-apt-repository ppa:ubuntu-x-swatx/x-updates    //more drivers
+  F10 激活菜单栏
 
 <li>
-  sudo apt-get update
+  F11 全屏切换
 
 <li>
-  sudo apt-get install bumblebee bumblebee-nvidia
+  Alt+F 打开 “文件” 菜单（file）
 
 <li>
-  sudo reboot
+  Alt+E 打开 “编辑” 菜单（edit）
 
 <li>
-  有时会发现重启后执行optirun glxinfo，显示如下错误
-<pre>
-            Optirun glxgears: Cannot access secondary GPU - error: [XORG] (EE) No devices detected
-</pre>
+  Alt+V 打开 “查看” 菜单（view）
 
 <li>
-  解决方法是sudo gedit /etc/bumblebee/xorg.conf.nvidia, 加上BusID行
-<pre // BUSID可以由lspci, 查看3D Controller>
-            Section "Device"
-            Identifier  "DiscreteNvidia"
-            Driver      "nvidia"
-            VendorName  "NVIDIA Corporation"
-            BusID "PCI:02:00:0"
-</pre>
+  Alt+S 打开 “搜索” 菜单（search）
 
-</ul>
 <li>
-  测试 &gt;optirun glxgears  使用独显运行，可以看到3D效果
+  Alt+T 打开 “终端” 菜单（terminal）
 
 <li>
-  独显运行chrome, &gt;optirun google-chrome，就可以显示webgl绘制的动画
-
-</ul>
-<li>
-  glxgears
-
-<ul>
-<li>
-  测试Linux是否可以顺利运行2D、3D的测试软件
-
-<li>
-  &gt;optirun　glxgears
-
-<li>
-  弹出窗口中有三个转动的齿轮，在terminal中会显示每５s转动多少栅，齿轮跑的越快说明显卡支持越好
-
-</ul>
-<li>
-  glxinfo
-
-<ul>
-<li>
-  查看当前的渲染引擎
-
-<li>
-  glxinfo | grep "OpenGL version"
-
-<li>
-  optirun glxinfo | grep "OpenGL version"
-
-</ul>
-<li>
-  Rhythmbox中文乱码
-
-<ul>
-<li>
-  Ubuntu使用的UTF-8字符集，而rhythmbox等播放器不可以调整MP3歌曲中所包含的ID3标签信息的字符集，造成乱码显示. mutagen可以批量修改MP3曲目中的ID3标签的字符集。
-
-<li>
-  sudo apt-get install python-mutagen
-
-<li>
-  mid3iconv -e GBK *.mp3
-
-<li>
-  find . -iname "*.mp3" -execdir mid3iconv -e gbk {} \; 
-
-</ul>
-<li>
-  Install JDK
-
-<ul>
-<li>
-  sudo apt-get install openjdk-7-jdk
-
-</ul>
-<li>
-  Ubuntu13.04 No sound
-
-<ul>
-<li>
-  sudo vim /etc/modprobe.d/alsa-base.conf
-
-<li>
-  add the following line at the end of the file:
-
-<ul>
-<li>
-  options snd-hda-intel model=3stack
-
-</ul>
-<li>
-  reboot
-
-</ul>
-<li>
-  开机运行程序
-
-<ul>
-<li>
-  Dash ==&gt; Startup Applications
-
-<li>
-  Add apps
-
-</ul>
-<li>
-  添加右键扩展
-
-<ul>
-<li>
-  添加右键菜单以管理 员打开：
-
-<ul>
-<li>
-  sudo apt-get install nautilus-gksu     
-
-</ul>
-<li>
-  添加右键菜单打开终端：
-
-<ul>
-<li>
-  sudo apt-get install nautilus-open-terminal
-
-</ul>
-<li>
-  添加右键菜单图片转换：
-
-<ul>
-<li>
-  sudo apt-get install nautilus-image-converter
-
-</ul>
-<li>
-  清理体系孤独库的软件:
-
-<ul>
-<li>
-  sudo apt-get install gtkorphan
-
-<li>
-  sudo gtkorphan
-
-</ul>
-</ul>
-<li>
-  Chromium    stable, 不会白屏
-
-<ul>
-<li>
-  sudo add-apt-repository ppa:chromium-daily/stable
-
-<li>
-  sudo apt-get update
-
-<li>
-  sudo apt-get chromium-browser
-
-</ul>
-<li>
-  在顶部状态栏显示CPU&amp;Mem&amp;网络信息
-
-<ul>
-<li>
-  sudo add-apt-repository ppa:alexeftimie/ppa
-
-<li>
-  sudo apt-get update
-
-<li>
-  sudo apt-get install indicator-sysmonitor
-
-<li>
-  sudo apt-get install dstat
-
-<li>
-  wget <a href="http://webupd8.googlecode.com/files/sysmon_0.2.tar.gz">http://webupd8.googlecode.com/files/sysmon_0.2.tar.gz</a> &amp;&amp; tar -xvf sysmon_0.2.tar.gz
-
-<li>
-  sudo cp sysmon /usr/local/bin
-
-<li>
-  indicator-sysmonitor =&gt; Preferences =&gt; Advanced =&gt; Use this command: <strong>/usr/local/bin/sysmon</strong>
-
-</ul>
-<li>
-  MenuLibre: a menu editor that provides an easy-to-use interface
-
-<ul>
-<li>
-  sudo add-apt-repository ppa:menulibre-dev/devel
-
-<li>
-  sudo apt-get update
-
-<li>
-  sudo apt-get install menulibre
-
-</ul>
-<li>
-  Screenlets: linux桌面小工具的开发框架
-
-<ul>
-<li>
-  sudo apt-add-repository ppa:screenlets/ppa
-
-<li>
-  sudo apt-get update
-
-<li>
-  sudo apt-get install screenlets
-
-<li>
-  <a href="http://www.ibm.com/developerworks/cn/linux/l-script-linux-desktop-1/">http://www.ibm.com/developerworks/cn/linux/l-script-linux-desktop-1/</a>
+  Alt+H 打开 “帮助” 菜单（help） 
 
 </ul>
 </ul>
 
 <hr />
-<h3 id="toc_0.0.3">Linux Should known</h3>
+<h3 id="toc_0.0.2">Linux Should known</h3>
 <p>
 <a href="http://coolshell.cn/articles/8883.html">http://coolshell.cn/articles/8883.html</a>
 </p>

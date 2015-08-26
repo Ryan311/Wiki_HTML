@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>C#</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Online tutorial</a>
+<li><a href="#toc_0.2">Features</a>
+<ul>
+<li><a href="#toc_0.2.1">Features</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Online tutorial</h2>
+<ul>
+<li>
+  <a href="http://csharp.net-tutorials.com">http://csharp.net-tutorials.com</a>
+
+<li>
+  <a href="https://msdn.microsoft.com/en-us/library/aa287558%28v=vs.71%29.aspx">https://msdn.microsoft.com/en-us/library/aa287558%28v=vs.71%29.aspx</a>
+
+</ul>
+
+
+<h2 id="toc_0.2">Features</h2>
+<p>
+The following reasons make C# a widely used professional language:
+</p>
+<ol>
+<li>
+  Modern, general-purpose programming language
+
+<li>
+  Object oriented.
+
+<li>
+  Component oriented.
+
+<li>
+  Easy to learn.
+
+<li>
+  Structured language.
+
+<li>
+  It produces efficient programs.
+
+<li>
+  It can be compiled on a variety of computer platforms.
+
+<li>
+  Part of .Net Framework.
+
+</ol>
+
+<h3 id="toc_0.2.1">Features</h3>
+<ul>
+<li>
+  Nullables
+
+<ul>
+<li>
+  &lt;data_type&gt; ? &lt;variable_name&gt; = null;
+<pre>
+        出于对数据库访问的需要，C#中定义了一种类型，称为nullable类型。比如，在访问数据库时，需要返回某个整型字段的值。
+        但是，当数据库中不存在符合条件的纪录时，返回的将是null。这样，以下这段代码便是非法：
+        
+                int result = aDbCmd.ExecuteScalar(); // aDbCmd.ExecuteScalar() returns null to indicate no result fetched.
+
+        MS提到了普遍使用的三种解决方法：
+        1、用一个特殊值来表示。缺点在于你需要确定确实有一个值，除了用来指示是否为空外永远不会被用到；
+        2、使用一个bool型的字段或者变量来指示。缺点在于难于作为参数和返回值使用；
+        3、定义一个自定义的可空类型。但只能用于一个封闭的，无法拓展的类型集合。
+
+        于是MS使用了nullable类型。其实在我看来，MS只不过是利用了它对C#的控制，扩充了第三种解决方法，将某种东西附加到每个nonnullable的类型上。
+        在C#中，nullable的表示是在类型之后加上“?”。可以认为以下两种定义是等价的： T?等价于
+        struct nullable
+        {
+            private T value;
+            private bool nullIndicator;
+            public T Value
+            {
+                get
+                {
+                    if (!nullIndicator)
+                        throw new InvalidOperationException();
+                    return value;
+                }
+            }
+            public bool HasValue
+            {
+               get { return nullIndicator; }
+            }
+            public nullable(T aValue)
+            {
+               value = aValue;
+               nullIndicator = true;
+            }
+            public nullable()
+            {
+               value = UnInitializedT;
+               nullIndicator = false;
+            }
+            // ...
+        }
+</pre>
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Arrays
+
+<ul>
+<li>
+  datatype[] arrayName;
+
+<li>
+  int [] marks = new int[5] { 99, 98, 92, 97, 95};
+
+<li>
+  foreach (int j in marks )   ;  遍历数组
+
+<li>
+  Multi-dimensional arrays
+
+<ul>
+<li>
+  string [,] names;   // 2-dimensional array
+
+<li>
+  int [,,] m;     // 3-dimensional array
+<pre>
+            int[,] a = new int[5, 2] {{0,0}, {1,2}, {2,4}, {3,6}, {4,8} };
+            int i, j;
+            /* output each array element's value */
+            for (i = 0; i &lt; 5; i++)
+            {
+                for (j = 0; j &lt; 2; j++)
+                {
+                    Console.WriteLine("a[{0},{1}] = {2}", i, j, a[i,j]);
+                }
+            }
+</pre>
+
+</ul>
+<li>
+  Jagged Arrays:  A Jagged array is an array of arrays
+
+<ul>
+<li>
+  int [][] scores;
+<pre>
+            int[][] scores = new int[5][];
+            for (int i = 0; i &lt; scores.Length; x++)
+            {
+                scores[i] = new int[4];
+            }
+            
+            int[][] scores = new int[2][]{new int[]{92,93,94},new int[]{85,66,87,88}};
+            
+            int i, j;
+            /* output each array element's value */
+            for (i = 0; i &lt; 5; i++)
+            {
+                for (j = 0; j &lt;; 2; j++)
+                {
+                    Console.WriteLine("a[{0}][{1}] = {2}", i, j, scores[i][j]);
+                }
+            }
+</pre>
+
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li>
+  Polymorphism
+
+<ul>
+<li>
+  C# provides two techniques to implement static polymorphism. These are:
+
+<ul>
+<li>
+  Function overloading
+
+<li>
+  Operator overloading 
+<pre>
+            // Overload + operator to add two Box objects.
+            public static Box operator+ (Box b, Box c)
+            {
+                Box box = new Box();
+                box.length = b.length + c.length;
+                box.breadth = b.breadth + c.breadth;
+                box.height = b.height + c.height;
+                return box;
+            }
+</pre>
+
+</ul>
+<li>
+  Dynamic polymorphism is implemented by abstract classes and virtual functions.
+<pre>
+            using System;
+            namespace PolymorphismApplication
+            {
+                abstract class Shape
+                {
+                    public abstract int area();
+                }
+                
+                class Rectangle: Shape
+                {
+                    private int length;
+                    private int width;
+                    public Rectangle( int a=0, int b=0)
+                    {
+                        length = a;
+                        width = b;
+                    }
+                    public override int area ()
+                    {
+                        Console.WriteLine("Rectangle class area :");
+                        return (width * length);
+                    }
+                }
+                class RectangleTester
+                {
+                    static void Main(string[] args)
+                    {
+                        Rectangle r = new Rectangle(10, 7);
+                        double a = r.area();
+                        Console.WriteLine("Area: {0}",a);
+                        Console.ReadKey();
+                    }
+                }
+            }
+</pre>
+
+<ul>
+<li>
+  When you have a function defined in a class that you want to be implemented in an inherited class(es), you use virtual functions.
+<pre>
+            using System;
+            namespace PolymorphismApplication
+            {
+                class Shape
+                {
+                    protected int width, height;
+                    public Shape( int a=0, int b=0)
+                    {
+                        width = a;
+                        height = b;
+                    }
+                    public virtual int area()
+                    {
+                        Console.WriteLine("Parent class area :");
+                        return 0;
+                    }
+                }
+                
+                class Rectangle: Shape
+                {
+                    public Rectangle( int a=0, int b=0): base(a, b)
+                    {
+                    }
+                    
+                    public override int area ()
+                    {
+                        Console.WriteLine("Rectangle class area :");
+                        return (width * height);
+                    }
+                }
+                
+                class Triangle: Shape
+                {
+                    public Triangle(int a = 0, int b = 0): base(a, b)
+                    {
+                    }
+                    
+                    public override int area()
+                    {
+                        Console.WriteLine("Triangle class area :");
+                        return (width * height / 2);
+                    }
+                }
+                
+                class Caller
+                {
+                    public void CallArea(Shape sh)
+                    {
+                        int a;
+                        a = sh.area();
+                        Console.WriteLine("Area: {0}", a);
+                    }
+                }
+                
+                class Tester
+                {
+                    static void Main(string[] args)
+                    {
+                        Caller c = new Caller();
+                        Rectangle r = new Rectangle(10, 7);
+                        Triangle t = new Triangle(10, 5);
+                        c.CallArea(r);
+                        c.CallArea(t);
+                        Console.ReadKey();
+                    }
+                }
+            }
+</pre>
+
+</ul>
+</ul>
+</ul>
+        
+<ul>
+<li>
+  Interface
+
+<ul>
+<li>
+  Interfaces define properties, methods and events, which are the members of the interface. Interfaces contain only the declaration of the members.
+
+<li>
+  It is the responsibility of the deriving class to define the members. It often helps in providing a standard structure that the deriving classes would follow.
+<pre>
+        public interface ITransactions
+        {
+            // interface members
+            void showTransaction();
+            double getAmount();
+        }
+</pre>
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  C# I/O Classes
+
+<ul>
+<li>
+  The System.IO namespace has various class that are used for performing various operation with files,
+
+<li>
+  The FileStream Class
+<pre>
+        using System;
+        using System.IO;
+        namespace FileIOApplication
+        {
+            class Program
+            {
+                static void Main(string[] args)
+                {
+                    FileStream F = new FileStream("test.dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                    for (int i = 1; i &lt;= 20; i++)
+                    {
+                        F.WriteByte((byte)i);
+                    }
+                    F.Position = 0;
+                    for (int i = 0; i &lt;= 20; i++)
+                    {
+                        Console.Write(F.ReadByte() + " ");
+                    }
+                    F.Close();
+                    Console.ReadKey();
+                }
+            }
+        }
+</pre>
+
+<li>
+  The StreamReader and StreamWriter classes are used for reading from and writing data to text files.
+<pre>
+        using System;
+        using System.IO;
+        namespace FileApplication
+        {
+            class Program
+            {
+                static void Main(string[] args)
+                {
+                    try
+                    {
+                        // Create an instance of StreamReader to read from a file.
+                        // The using statement also closes the StreamReader.
+                        using (StreamReader sr = new StreamReader("c:/jamaica.txt"))
+                        {
+                            string line;
+                            // Read and display lines from the file until
+                            // the end of the file is reached.
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                Console.WriteLine(line);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        // Let the user know what went wrong.
+                        Console.WriteLine("The file could not be read:");
+                        Console.WriteLine(e.Message);
+                    }
+                    Console.ReadKey();
+                }
+            }
+        }
+</pre>
+
+<li>
+  The BinaryReader and BinaryWriter classes are used for reading from and writing to a binary file.
+
+<li>
+  The DirectoryInfo class is derived from the FileSystemInfo class. It has various methods for creating, moving, and browsing through directories and subdirectories.
+
+<li>
+  The FileInfo class is derived from the FileSystemInfo class. It has properties and instance methods for creating, copying, deleting, moving, and opening of files, and helps in the creation of FileStream objects.
+<pre>
+        using System;
+        using System.IO;
+        namespace WindowsFileApplication
+        {
+            class Program
+            {
+                static void Main(string[] args)
+                {
+                    //creating a DirectoryInfo object
+                    DirectoryInfo mydir = new DirectoryInfo(@"c:\Windows");
+                    
+                    // getting the files in the directory, their names and size
+                    FileInfo [] f = mydir.GetFiles();
+                    foreach (FileInfo file in f)
+                    {
+                        Console.WriteLine("File Name: {0} Size: {1}",
+                        file.Name, file.Length);
+                    }
+                    Console.ReadKey();
+                }
+            }
+        }
+</pre>
+
+</ul>
+</ul>
+                
+<ul>
+<li>
+  Attribute
+
+<ul>
+<li>
+  Attributes are used for adding metadata, such as compiler instruction and other information such as comments, description, methods and classes to a program. 
+
+<li>
+  The .Net Framework provides two types of attributes: the pre-defined attributes and custom built attributes.
+
+<li>
+  The .Net Framework provides three pre-defined attributes:
+
+<ul>
+<li>
+  AttributeUsage
+
+<li>
+  Conditional
+
+<li>
+  Obsolete
+<pre>
+        public class myClass{
+            public readonly string Name;
+            private int intVal;
+
+            public int Val
+            {
+                get
+                {
+                    return intVal;
+                }
+                set
+                {
+                    if(value &gt;=0 &amp;&amp; value &lt;= 10)
+                        intVal = value;
+                    else
+                        throw (new ArgumentOutofRangeException("val", value, "Val must be assigned a value between 0 and 10."));
+                }
+            }
+            
+            static void main(string [] args)
+            {
+                myClass myOjb = new myClass("My Object");
+                val = 8;
+                Console.WriteLine("Val is {0}", val);
+            }
+        }
+</pre>
+
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li>
+  Properties
+
+<ul>
+<li>
+  Properties are named members of classes, structures and interfaces. Member variables or methods in a class or structures are called Fields.
+
+<li>
+  The accessor of a property contains the executable statements that helps in getting (reading or computing) or setting (writing) the property.
+<pre>
+        public string Code
+        {
+            get
+            {
+                return code;
+            }
+            set
+            {
+                code = value;
+            }
+        }
+</pre>
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Indexers
+
+<ul>
+<li>
+  An indexer allows an object to be indexed like an array. When you define an indexer for a class, this class behaves like a virtual array.
+<pre>
+        A one dimensional indexer has the following syntax:
+        element-type this[int index]
+        {
+            // The get accessor.
+            get
+            {
+                // return the value specified by index
+            }
+            // The set accessor.
+            set
+            {
+                // set the value specified by index
+            }
+        }
+</pre>
+
+</ul>
+</ul>
+    
+<pre>
+        class IndexedNames
+        {
+            private string[] namelist = new string[size];
+            static public int size = 10;
+            public IndexedNames()
+            {
+                for (int i = 0; i &lt; size; i++)
+                {
+                    namelist[i] = "N. A.";
+                }
+                
+                public string this[int index]
+                {
+                    get
+                    {
+                        string tmp;
+                        if( index &gt;= 0 &amp;&amp; index &lt;= size-1 )
+                        {
+                            tmp = namelist[index];
+                        }
+                        else
+                        {
+                            tmp = "";
+                        }
+                        return ( tmp );
+                    }
+                    
+                    set
+                    {
+                        if( index &gt;= 0 &amp;&amp; index &lt;= size-1 )
+                        {
+                            namelist[index] = value;
+                        }
+                    }
+                }
+                
+                public int this[string name]
+                {
+                    get
+                    {
+                        int index = 0;
+                        while(index &lt; size)
+                        {
+                            if (namelist[index] == name)
+                            {
+                                return index;
+                            }
+                            index++;
+                        }
+                        return index;
+                    }
+                }
+            }
+        }
+</pre>
+
+<ul>
+<li>
+  Delegates   委托
+
+<ul>
+<li>
+  <a href="http://www.cnblogs.com/michaelxu/archive/2008/03/31/1131500.html">http://www.cnblogs.com/michaelxu/archive/2008/03/31/1131500.html</a>
+
+<li>
+  委托是一种存储函数引用的类型 
+
+<li>
+  为什么要用委托: 　　使用委托使程序员可以将方法引用封装在委托对象内。然后可以将该委托对象传递给可调用所引用方法的代码，而不必在编译时知道将调用哪个方法。
+
+<li>
+  C# delegates are similar to pointers to functions in C or C++.  // 类似函数指针, 但是委托是类型安全的
+
+<li>
+  A delegate is a reference type variable that holds the reference to a method. 
+
+<li>
+  The reference can be changed at runtime.  
+
+<li>
+  Delegates are especially used for implementing events and the call-back methods. 
+
+<li>
+  All delegates are implicitly derived from the System.Delegate class.
+
+<li>
+  Syntax for delegate declaration is:     delegate &lt;return type&gt; &lt;delegate-name&gt; &lt;parameter list&gt;
+
+<li>
+  Delegate objects can be composed using the "+" operator. A composed delegate calls the two delegates it was composed from. Only delegates of the same type can be composed. The "-" operator can be used to remove a component delegate from a composed delegate.
+<pre>
+        using System;
+        
+        delegate int NumberChanger(int n);
+        namespace DelegateAppl
+        {
+            class TestDelegate
+            {
+                static int num = 10;
+                public static int AddNum(int p)
+                {
+                    num += p;
+                    return num;
+                }
+                
+                public static int MultNum(int q)
+                {
+                    num *= q;
+                    return num;
+                }
+                
+                public static int getNum()
+                {
+                    return num;
+                }
+                
+                public static void showNum(NumberChanger nc)
+                {
+                    nc(10);
+                    Console.WriteLine("Value of Num: {0}", getNum());
+                }
+                
+                static void Main(string[] args)
+                {
+                    //create delegate instances
+                    NumberChanger nc;
+                    NumberChanger nc1 = new NumberChanger(AddNum);
+                    NumberChanger nc2 = new NumberChanger(MultNum);
+                    //calling the methods using the delegate objects
+                    nc1(25);
+                    Console.WriteLine("Value of Num: {0}", getNum());
+                    nc2(5);
+                    Console.WriteLine("Value of Num: {0}", getNum());
+                    
+                    nc = nc1;
+                    nc += nc2;
+                    nc(5);  // equal to nc1(5) + nc2(5)
+                    Console.WriteLine("Value of Num: {0}", getNum());
+                    
+                    showNum(nc1);
+                    showNum(nc2);
+                    Console.ReadKey();
+                }
+            }
+        }
+</pre>
+
+</ul>
+</ul>
+    
+<ul>
+<li>
+  Events
+
+<ul>
+<li>
+  Events are basically a user action like key press, clicks, mouse movements, etc., or some occurrence like system generated notifications.
+
+<li>
+  Applications need to respond to events when they occur.
+
+<li>
+  Events use the publisher-subscriber model.
+
+<ul>
+<li>
+  A publisher is an object that contains the definition of the event and the delegate
+
+<li>
+  A subscriber is an object that accepts the event and provides an event handler
+
+</ul>
+<li>
+  Event关键字给对象赋予了有限制范围的能力，而delegate是无限权力的。
+
+<li>
+  在定义事件前， 必须首先定义一个委托类型， 以用于该事件， 这个委托类型指定了事件处理方法必须拥有的返回类型和参数
+<pre>
+        namespace EventTest
+        {
+            public delegate void MessageHandler(string messageText);   // 声明委托类型
+
+            public class Connection
+            {
+                public event MessageHandler MessageArrived;     // 声明事件， 事件名称为MessageArrived
+                private Timer pollTimer;
+                
+                ......
+
+                private void CheckForMessage(object source, ElapsedEventArgs e)
+                {
+                    if(MessageArrived != Null)  // 当没有注册事件时， 为NULL
+                        MessageArrived("hello Mum!");       //触发事件， 对应的事件处理函数将被执行
+                }
+            }
+            
+            public class Display
+            {
+                public void DisplayMessage(string message)
+                {
+                    Console.WriteLine("Message Arrived: {0}", message);
+                }
+            }
+            
+            static void main(string[] args)
+            {
+                Connection myConnection = new Connection();
+                Display myDisplay = new Display();
+                myConnection.MessageArrived += new MessageHandler(myDisplay.DisplayMessage);    // 注册事件
+                myConnection.Connect();
+                Console.ReadKey();
+            }
+
+        }
+</pre>
+
+<li>
+  可以定义自己的事件类型， 也可以使用标准的、无返回类型的委托类型和派生于System.EventArgs的定制事件参数
+
+<li>
+  还可以使用EventHandler和EventHandler&lt;T&gt;委托类型
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  匿名方法
+
+<ul>
+<li>
+  在添加事件处理程序的地方直接定义要在引发事件时执行的代码， 需要使用delegate关键字
+<pre>
+        myConnection.MessageArrived += delegate(Connection source, MessageArrivedEventargs e)
+        {
+            Console.WriteLine("Message arrived from:{0}", source.Name);
+            Console.WriteLine("Message text: {0}", e.Message);
+        }
+</pre>
+
+</ul>
+<li>
+  匿名类型
+
+<ul>
+<li>
+  简化编程
+<pre>
+        Curry curry = new Curry
+        {
+            MainIngredient = "Lamb",
+            Style = "Dhansak",
+            Spiciness = 5
+        };
+        
+        // 使用匿名类型定义curry, 不需要再定义Curry类
+        var curry = new
+        {
+            MainIngredient = "Lamb",
+            Style = "Dhansak",
+            Spiciness = 5
+        };
+</pre>
+
+</ul>
+<li>
+  Lambda
+
+<ul>
+<li>
+  注册事件处理函数， 将Lambda表达式用于匿名方法
+<pre>
+        myTimer.Elapsed += (source,e) =&gt; Console.Write(
+            "Event handler called after {0} milliseconds.",
+            (source as Timer).Interval);
+</pre>
+
+<li>
+  (source,e)  是参数列表
+
+<li>
+  =&gt;          是Lambda运算符
+
+<li>
+  后面是C#语句
+
+<li>
+  泛型类型
+
+<ul>
+<li>
+  Action
+
+<li>
+  Action&lt;&gt;
+
+<li>
+  Func&lt;&gt;
+
+</ul>
+</ul>
+</ul>
+
+<ul>
+<li>
+  Collections
+
+<ul>
+<li>
+  ArrayList
+
+<li>
+  Hashtable
+
+<li>
+  SortedList
+
+<li>
+  Stack
+
+<li>
+  Queue
+
+<li>
+  BitArray
+
+<li>
+  using System.Collections
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Generics
+
+<ul>
+<li>
+  generics allow you to write a class or method that can work with any data type.     类似模板
+
+<li>
+  using System.Collections.Generic;
+<pre>
+        public class MyGenericArray&lt;T&gt;
+        {
+            private T[] array;
+            public MyGenericArray(int size)
+            {
+                array = new T[size + 1];
+            }
+            public T getItem(int index)
+            {
+                return array[index];
+            }
+            public void setItem(int index, T value)
+            {
+                array[index] = value;
+            }
+        } 
+</pre>
+
+</ul>
+</ul>
+    
+<ul>
+<li>
+  Anonymous Methods
+
+<ul>
+<li>
+  Anonymous methods provide a technique to pass a code block as a delegate parameter. 
+
+<li>
+  Anonymous methods are basically methods without a name, just the body.
+<pre>
+        delegate void NumberChanger(int n);
+        ...
+        NumberChanger nc = delegate(int x)
+        {// body
+            Console.WriteLine("Anonymous Method: {0}", x);
+        };
+</pre>
+
+</ul>
+</ul>
+
+
+<ul>
+<li>
+  Unsafe Codes
+
+<ul>
+<li>
+  The unsafe code or the unmanaged code is a code block that uses a pointer variable
+
+<li>
+  using unsafe to code block that using pointer
+<pre>
+        public unsafe void swap(int* p, int *q) 
+        { 
+            int temp = *p; 
+            *p = *q; 
+            *q = temp
+        }
+</pre>
+
+<li>
+  For compiling unsafe code, you have to specify the /unsafe command-line switch with command-line compiler
+
+<ul>
+<li>
+  csc /unsafe prog1.cs
+
+</ul>
+</ul>
+</ul>
+
+
+<ul>
+<li>
+  Multithreading
+
+<ul>
+<li>
+  the System.Threading.Thread class is used for working with threads
+<pre // Main thread>
+        using System;
+        using System.Threading;
+        namespace MultithreadingApplication
+        {
+            class ThreadCreationProgram
+            {
+                public static void CallToChildThread()
+                {
+                    Console.WriteLine("Child thread starts");
+                }
+                
+                static void Main(string[] args)
+                {
+                    Thread th = Thread.CurrentThread;   // Get Current thread
+                    th.Name = "MainThread";
+                    Console.WriteLine("This is {0}", th.Name);
+                   
+                    ThreadStart childref = new ThreadStart(CallToChildThread);  // Create new thread
+                    Console.WriteLine("In Main: Creating the Child thread"); 
+                    Thread childThread = new Thread(childref); 
+                    childThread.Start();
+                    
+                    Console.ReadKey();
+                }
+            }
+        } 
+</pre>
+
+<li>
+  The Abort() method is used for destroying threads
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  partial class
+
+<ul>
+<li>
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

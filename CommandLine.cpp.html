@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>CommandLine.cpp</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<pre>
+    /*****************************************************************************************
+        在网上，我们似乎很难找到关于获取其他进程命令行的方案或源代码，呵呵~，反正我找了很久还是找不着~~~。废话就不说了，开始进入正题。
+        我们知道，如果获取本进程命令行的话，可以通过调用 GetCommandLine 获得， GetCommandLine 返回的是LPTSTR类型的数据，该返回值便是本进程命令行的内存首地址。那么，我们可以让远程执行 GetCommandLine 这个函数，然后获取远程进程中这个函数的返回值，再通过 ReadProcessMemory 把远程进程的命令行读出来就得到我们想要的了。
+        具体实现步骤如下：
+            1、通过 GetProcAddress 取得 GetCommandLineA 的地址。
+            2、用 CreateRemoteThread 启动远程线程，使远程进程执行 GetCommandLineA 。
+            3、用 WaitForSingleObject 等待远程线程结束。
+            4、用 GetExitCodeThread 取得远程线程退出代码，其实就是远程进程中 GetCommandLineA 函数的返回值，这是远程进程命令行的首地址。
+            5、通过 GetProcAddress 取得 lstrlenA 的地址。
+            6、用 CreateRemoteThread 启动远程线程，使远程进程执行 lstrlenA 。
+            7、用 WaitForSingleObject 等待远程线程结束。
+            8、用 GetExitCodeThread 取得远程线程退出代码，其实就是远程进程中 lstrlenA 函数的返回值，这是远程进程命令行的文本长度。
+            9、使用 ReadProcessMemory 把远程进程的命令行读取出来。
+            10、收工！
+        ·若要转载，请保持该文章的完整性。
+    ******************************************************************************************/
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //功能：获取所有进程的映像路径以及命令行参数                                            
+    //作者：梁增健(lzj85@163.com)                                                           
+    //MyQQ：184186651                                                                       
+    //日期：2007.06.11                                                                      
+    //////////////////////////////////////////////////////////////////////////////////////////
+    #include &lt;windows.h&gt;
+    #include &lt;tlhelp32.h&gt;
+    #include &lt;iostream&gt;
+    using namespace std;
+
+    //定义命令行信息结构体
+    typedef struct tagCOMMANDLINEINFO {
+        DWORD	dwDestCommand_addr;		//目标进程命令行的起始地址
+        DWORD	iDestCommandLength;		//目标进程命令行的长度
+    } COMMANDLINEINFO;
+
+    //函数声明
+    BOOL UpgradeProcessPrivilege(HANDLE, LPCTSTR);
+    BOOL GetProcessCommandLineInfo(HANDLE, COMMANDLINEINFO *);
+
+    //主函数
+    int main( int argc, char *argv[ ], char *envp[ ] )
+    {
+        UpgradeProcessPrivilege(GetCurrentProcess(),SE_DEBUG_NAME);	//提升本进程的权限
+
+        HANDLE hSnapshot, hProcess;
+        hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);	//创建进程快照
+        
+        PROCESSENTRY32 pe;
+        ZeroMemory(&amp;pe,sizeof(PROCESSENTRY32));
+        pe.dwSize = sizeof(PROCESSENTRY32);
+        BOOL bFirstProcess = TRUE, bSucceed = FALSE;
+        do
+        {
+            if(bFirstProcess)
+                bFirstProcess = !(bSucceed = Process32First(hSnapshot, &amp;pe));	//获取第一个进程的信息
+            else
+                bSucceed = Process32Next(hSnapshot, &amp;pe);	//获取下一个进程的信息
+            if(bSucceed)
+            {
+                hProcess = OpenProcess (PROCESS_ALL_ACCESS, FALSE, pe.th32ProcessID);	//打开进程
+                if(hProcess!=0)
+                {
+                    char *strDestCommand;
+                    COMMANDLINEINFO cli;
+                    ZeroMemory(&amp;cli, sizeof(COMMANDLINEINFO));
+                    if(GetProcessCommandLineInfo(hProcess,&amp;cli))	//获取进程的命令行信息
+                    {
+                        try
+                        {
+                            strDestCommand = new char[cli.iDestCommandLength + 1];
+                            ZeroMemory(strDestCommand, cli.iDestCommandLength + 1);
+                            //读取目标进程的命令行文本
+                            ReadProcessMemory (	hProcess,
+                                (const void *)cli.dwDestCommand_addr,
+                                strDestCommand,
+                                cli.iDestCommandLength,
+                                NULL);
+                            cout&lt;&lt;"程序名："&lt;&lt;pe.szExeFile&lt;&lt;"\n命令行："&lt;&lt;strDestCommand&lt;&lt;"\n"&lt;&lt;endl;
+                            delete []strDestCommand;
+                        }
+                        catch(...)
+                        {
+                            cout&lt;&lt;"发生异常！\n"&lt;&lt;endl;
+                        }
+                    }
+                    else
+                    {
+                        cout&lt;&lt;"程序名："&lt;&lt;pe.szExeFile&lt;&lt;"\n"&lt;&lt;endl;
+                    }
+                    CloseHandle(hProcess);	//关闭进程句柄
+                }
+            }
+        }while(bSucceed);
+        CloseHandle(hSnapshot);		//关闭快照句柄
+
+        return 0;
+    }
+
+    /****************************************************************************************/
+    /*****************************************子程序*****************************************/
+    /****************************************************************************************/
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //名称：UpgradeProcessPrivilege                                                         
+    //功能：提升进程权限                                                                    
+    //作者：梁增健(lzj85@163.com)                                                           
+    //MyQQ：184186651                                                                       
+    //日期：2007.06.11                                                                      
+    //////////////////////////////////////////////////////////////////////////////////////////
+    BOOL UpgradeProcessPrivilege(HANDLE hProcess,
+                                 LPCTSTR lpPrivilegeName = SE_DEBUG_NAME)
+    {
+        HANDLE hToken = NULL;
+        if(OpenProcessToken(hProcess, TOKEN_ALL_ACCESS, &amp;hToken)) 
+        {
+            LUID Luid;
+            if(LookupPrivilegeValue(NULL, lpPrivilegeName, &amp;Luid)) 
+            {
+                TOKEN_PRIVILEGES tp;
+                tp.PrivilegeCount = 1;
+                tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+                tp.Privileges[0].Luid = Luid;
+                return( AdjustTokenPrivileges(hToken, FALSE, &amp;tp, 0, NULL, NULL) );
+            }
+        }
+        return FALSE;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    //名称：GetProcessCommandLineInfo                                                       
+    //功能：获取进程命令行信息                                                              
+    //作者：梁增健(lzj85@163.com)                                                           
+    //MyQQ：184186651                                                                       
+    //日期：2007.06.11                                                                      
+    //////////////////////////////////////////////////////////////////////////////////////////
+    BOOL GetProcessCommandLineInfo(HANDLE hProcess, COMMANDLINEINFO *CommandLineInfo)
+    {
+        if(IsBadReadPtr(CommandLineInfo,sizeof(COMMANDLINEINFO)))	//判断指针是否有效
+            return FALSE;
+
+        FARPROC	GetCommandLineA_addr, lstrlenA_addr;
+        HANDLE	hThread;
+
+        //获取 GetCommandLineA 的地址
+        GetCommandLineA_addr = GetProcAddress(GetModuleHandle("Kernel32.dll"), "GetCommandLineA");
+        if(GetCommandLineA_addr == 0)
+            return FALSE;
+        //启动远程线程，使远程进程执行 GetCommandLineA 函数
+        hThread = CreateRemoteThread(hProcess, NULL, 0,
+            (LPTHREAD_START_ROUTINE)GetCommandLineA_addr,NULL, 0, NULL);
+        if(hThread == 0)
+            return FALSE;
+        WaitForSingleObject (hThread, INFINITE);	//等待远程线程结束
+        //作者：梁增健  Email：lzj85@163.com  MyQQ：184186651
+        //获取远程 GetCommandLineA 的返回值，若正常返回，则该值为远程进程命令行的首地址
+        GetExitCodeThread (hThread, &amp;(CommandLineInfo-&gt;dwDestCommand_addr));
+        CloseHandle (hThread);
+        if(CommandLineInfo-&gt;dwDestCommand_addr == 0)
+            return FALSE;
+
+        //获取 lstrlenA 的地址
+        lstrlenA_addr = GetProcAddress( GetModuleHandle ("Kernel32.dll"), "lstrlenA");
+        if(GetCommandLineA_addr == 0)
+            return FALSE;
+        //启动远程线程，使远程进程执行 lstrlenA 函数
+        hThread = CreateRemoteThread(hProcess, NULL, 0,(LPTHREAD_START_ROUTINE)lstrlenA_addr,
+            (void *)CommandLineInfo-&gt;dwDestCommand_addr, 0, NULL);
+        if(hThread == 0)
+            return FALSE;
+        WaitForSingleObject (hThread, INFINITE);
+        //获取远程 lstrlenA 的返回值，若正常返回，则该值为远程进程命令行文本的长度
+        GetExitCodeThread (hThread, &amp;(CommandLineInfo-&gt;iDestCommandLength));
+        CloseHandle (hThread);
+
+        return TRUE;
+    }
+    /*************************************************************************************/
+    /****************************************子程序***************************************/
+    /*************************************************************************************/
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

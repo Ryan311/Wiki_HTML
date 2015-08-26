@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Visual C++��C_C++��ʽ�����</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">格式化输出 </a>
+</ul>
+</ul>
+</div>
+
+<p>
+<a href="http://www.cnblogs.com/cylee025/archive/2011/04/03/2004273.html">http://www.cnblogs.com/cylee025/archive/2011/04/03/2004273.html</a>
+</p>
+
+<h2 id="toc_0.1">格式化输出 </h2>
+<p>
+在本文中将讲述printf/wprintf/CString.Format等相关函数所使用的格式化输出的语法。
+</p>
+
+<p>
+函数中格式化声明的一般格式为： 
+</p>
+<blockquote>
+%[flags] [width] [.precision] [{h | l | ll | I | I32 | I64}]type
+</blockquote>
+
+<p>
+其中的每一个[]项都代表了格式化输出格式中的一个选项。这些输出格式选项一般使用一个字母或者一个数字来表示特定的格式；
+该格式说明语句最简单的形式就是百分号%加上一个类型说明符type，例如%s。如果%后跟的字符并非type类型的选项之一，那么
+这个字符将以文本的形式输出。例如在输出百分号时所采用的语句%%。
+</p>
+
+<p>
+出现在type之前的其他选项都分别控制了格式化输出的其他方面，具体如下：
+</p>
+<ul>
+<li>
+  type    (c, d, i, o, u, x, X, e, E, f, g, G, a, A, n, p, s, S)
+    该选项需要一个字符来确认要输出的参数是以字符的形式输出，还是以字符串的形式输出，或者只是输出一个数字。
+
+<li>
+  flags   
+    它由一个或者若干个字符组成。它控制了输出的对齐方式、正负号、小数点、空白字符和十进制或者是十六进制的前缀等。多个flag可同时出现在同一输出格式控制语句中。
+
+<li>
+  width
+    一个数字，用来说明输出的最小位数。
+
+<li>
+  precision
+    一个数字，用来说明全部输出字符的或者部分输出字符的最大位数。对于整型，该项限定了输出数字的最少个数。
+
+<li>
+  h| l| ll| I| I32| I64
+    用来表示输出参数size的前缀（long/short, 32-/64-bit, single-byte字符/宽字符）。
+
+</ul>
+
+<p>
+Example：
+</p>
+<pre>
+    printf("The le address is 0x%012I64x\n", ServerAddress)      // ServerAddress是64 bit BD_Address
+    输出： The le address is 0x00e04c230303     
+    // 0    %后面的0表示左补0
+    // 12   输出共12位
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

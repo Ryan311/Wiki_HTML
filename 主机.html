@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>����</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">L2CAP 逻辑链路控制和适配协议</a>
+<li><a href="#toc_0.2">属性ATT</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">L2CAP 逻辑链路控制和适配协议</h2>
+<ul>
+<li>
+  BLE使用三个固定信道
+
+<ul>
+<li>
+  0x0004  属性协议信道
+
+<li>
+  0x0005  低功耗信令信道
+
+<li>
+  0x0006  安全管理协议信道
+
+</ul>
+<li>
+  数据包结构
+<pre>
+    2       2       0 - 65535       bytes
+    长度    CID     Payload
+</pre>
+
+<ul>
+<li>
+  最大传输单元(MTU)   MTU = 23    意味着在LE固定信道上传输的最大包为23Bytes, L2cap包为23 + 4(l2cap包头) = 27 B
+
+</ul>
+</ul>
+
+<h2 id="toc_0.2">属性ATT</h2>
+<ul>
+<li>
+  句柄    0x0001 - 0xFFFF
+
+<li>
+  类型    公开的数据的种类， 由128位UUID区分。 通常使用16位再加上蓝牙基数。BLE使用的UUID被分为以下几组：
+
+<ul>
+<li>
+  0x1800 - 0x26ff     用作服务类通用唯一识别码
+
+<li>
+  0x2700 - 0x27ff     用于标识计量单位
+
+<li>
+  0x2800 - 0x28ff     用于区分属性类型
+
+<li>
+  0x2900 - 0x29ff     用作特性描述, charcateristic descriptor
+
+<li>
+  0x2a00 - 0x2aff     用于区分特性类型
+
+</ul>
+<li>
+  值      表示设备公开的状态信息， 长度为0 - 512字节
+
+<li>
+  数据库  一组属性的集合称为数据库， 总是位于属性服务器当中。每台设备最多只有一个属性服务器和一个属性数据库。
+
+<li>
+  属性许可    提供访问限制
+
+<ul>
+<li>
+  使用许可    判定某一属性所能执行的请求的类型， 可读、可写or可读写
+
+<li>
+  认证许可    使用一属性时， 如果需要认证， 客户端发起认证请求(通过SMP)；如果不需要， 属性值必须允许访问。只有之前通过认证的客户端可以访问需要认证的属性；如果未认证的客户端要这样做， 会得到一个未认证的错误信息
+
+<li>
+  授权许可    客户端在使用某属性时， 若接收授权不足的错误码， 它会对此错误无能为力。 授权是服务器的一种行为， 服务器可以选择是否向某一客户端授权， 使其能使用一系列属性。
+
+<ul>
+<li>
+  授权与否完全由服务器端来决定， 客户端无法用任何信号来请求服务器设备的使用者给自己授权
+
+<li>
+  通过， 客户端设备的用户会在服务器设备上把自身加入授权列表， 然后再重新发起请求
+
+</ul>
+</ul>
+<li>
+  服务    service         一组特性和通过它们所公开的行为的集合（接口， 不可变的）。可以引用其他服务进行扩展功能。
+
+<ul>
+<li>
+  首要服务封装了设备的功能，次要服务协助首要服务实现它的行为
+
+</ul>
+<li>
+  特性    characteristic  一种或多种属性的组成， 包含三个基本要素：
+
+<ul>
+<li>
+  特性声明        包括了特性的所有其他属性
+<pre>
+        Attribute Handle  |   Attribute type  |   Attribute Value                                                                           | Attribute Permissions
+        0xNNNN            |   0x2803          |   Characteristic Properties   | Characteristic Value Attribute Handle | Characteristic UUID | Read Only, No Authentication, No Authorization
+        
+        特性声明包含三个字段：
+        1. 特性性质(1 byte)     确定特性数值属性对一系列操作的支持情况， 包括：读取、写入、通知、指示、广播、命令、签名认证。
+        2. 特性数值句柄(2 bytes)    包含特性数值的句柄
+        3. 特性UUID     识别特性数值的类型， 必须与包含该特性数值的属性一致
+
+</pre>
+
+<li>
+  特性数值声明        包含了该特性的实际值， 类型必须与特性声明中的UUID字段符合
+
+<li>
+  描述符      包含了该特性的附加信息或配置， 可选的， 可以包含任意多个
+<pre>
+        句柄        |     类型      |           数值
+        ------------|---------------|-------------------------
+        0x0001      |   首要服务    |   GAP服务
+        0x0002      |   特性        |   读写, 0x0003，设备名称
+        0x0003      |   设备名称    |   “接受标签”
+        0x0004      |   特性        |   读， 0x0005， 外观
+        0x0005      |   外观        |   标签
+</pre>
+
+</ul>
+<li>
+  属性协议    包含六个基本操作， 客户端通过它可以发现并获取属性服务器上的属性。
+
+<ul>
+<li>
+  请求
+
+<li>
+  响应
+
+<li>
+  命令
+
+<li>
+  指示
+
+<li>
+  确认
+
+<li>
+  通知
+
+</ul>
+</ul>
+
+
+<ul>
+<li>
+  通用属性规范(GATT)
+
+<ul>
+<li>
+  属性协议定义了客户端与服务器如何相互发送符合标准的消息
+
+<li>
+  GATT定义了如何发现与使用服务、特性与描述符的标准方法
+
+<li>
+  可以分为三种基本类型：
+
+<ul>
+<li>
+  发现
+
+<ul>
+<li>
+  发现服务
+
+<ul>
+<li>
+  发现所有服务
+
+<li>
+  按服务UUID发现首要服务
+
+<li>
+  查找包含服务
+
+</ul>
+<li>
+  特性发现
+
+<ul>
+<li>
+  发现服务的所有特性
+
+<li>
+  发现所有特性描述符
+
+</ul>
+</ul>
+<li>
+  客户端发起
+
+<ul>
+<li>
+  读取特性值
+
+<li>
+  写入特性值
+
+<li>
+  读取特性描述符
+
+<li>
+  写入特性描述符
+
+</ul>
+<li>
+  服务器发起
+
+<ul>
+<li>
+  通知Notification    不可靠
+
+<li>
+  指示Indication      可靠
+
+</ul>
+</ul>
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>������</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">物理层 </a>
+<ul>
+<li><a href="#toc_0.1.1">频段</a>
+<li><a href="#toc_0.1.2">调制</a>
+<li><a href="#toc_0.1.3">射频信道</a>
+<li><a href="#toc_0.1.4">发射功率</a>
+<li><a href="#toc_0.1.5">接收机灵敏度</a>
+<li><a href="#toc_0.1.6">通信距离</a>
+</ul>
+<li><a href="#toc_0.2">链路层(LL)</a>
+<ul>
+<li><a href="#toc_0.2.1">链路层状态机</a>
+<li><a href="#toc_0.2.2">多状态机</a>
+<li><a href="#toc_0.2.3">报文</a>
+<li><a href="#toc_0.2.4">信道</a>
+<li><a href="#toc_0.2.5">跳频</a>
+<li><a href="#toc_0.2.6">设备发现</a>
+<li><a href="#toc_0.2.7">连接</a>
+<li><a href="#toc_0.2.8">数据报文</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">物理层 </h2>
+<h3 id="toc_0.1.1">频段</h3>
+<ul>
+<li>
+  ISM频段， 工业、科学、医疗
+
+<li>
+  2.4GHz(2400 ~ 2483.5MHz)， 约83.5MHz的带宽
+
+</ul>
+
+<h3 id="toc_0.1.2">调制</h3>
+<ul>
+<li>
+  低功耗蓝牙采用高斯频移键控(GFSK), 高斯滤波器的引入， 意味着从0到1的转换迅速而高效。如果没有高斯滤波器， 频率转换会非常快， 从而导致很大的噪声
+
+<li>
+  物理层比特率为1Mbit/s， 调制指数约为0.5, 接近最优的最小频移键控。 实际调制指数在0.45~0.55之间。
+
+<li>
+  负频偏代表比特0, 正频偏代表比特1， 最小频偏约为180kHz.
+
+</ul>
+
+<h3 id="toc_0.1.3">射频信道</h3>
+<ul>
+<li>
+  BLE使用40个无线信道， 中心频率表示为f = 2402 + 2k   (k = 0, 1, ... 39)， 每个信道带宽为2MHz
+
+<li>
+  其中有3个广播信道， 37个数据信道
+
+<li>
+  最低频率2402MHz, 最高频率2480MHz
+
+</ul>
+
+<h3 id="toc_0.1.4">发射功率</h3>
+<ul>
+<li>
+  2.4GHz ISM频段对无需授权的设备有最大发射功率的限制
+
+<li>
+  对BLE， 规范规定最大发射功率是+10dBm, 最小发射功率不应低于-20dBm
+
+<li>
+  +10dBm的发射功率为10mW， -20dBm的发射功率为10uW
+
+</ul>
+
+<h3 id="toc_0.1.5">接收机灵敏度</h3>
+<ul>
+<li>
+  接收机检测其他设备发出的无线信号有多灵敏， 以dBm为测量单位
+
+<li>
+  BLE规范规定接收机的灵敏度要高于-70dBm
+
+<li>
+  支持BLE的控制器， 其接收灵敏度可达-90dBm, 或者说1pW
+
+</ul>
+
+<h3 id="toc_0.1.6">通信距离</h3>
+<ul>
+<li>
+  取决于路径损耗， 从发射机天线到接收机天线的能量消耗：path loss = 40 + 25log(d)  d为距离
+<pre>
+    发射机功率      接收机功率      允许路径损耗        对应通信距离
+    -20dBm          -70dBm          50dBm               2.5m                最低功率发射， 接收灵敏度最低的情况下达到的通信距离
+    0dBm            -80dBm          80dBm               40m                 常见发射功率和接收灵敏度时的通信距离
+    10dBm           -90dBm          100dBm              250m                最高发射功率， 接收灵敏度非常好时的通信距离
+</pre>
+
+</ul>
+
+<h2 id="toc_0.2">链路层(LL)</h2>
+<h3 id="toc_0.2.1">链路层状态机</h3>
+<ul>
+<li>
+  就绪态：    上电后状态， Host端发命令进入其它状态
+
+<li>
+  广播态：    可以发送报文， 也可以发送扫描响应以回应主动扫描的设备
+
+<li>
+  扫描态：    可以接收广播信道的报文
+
+<ul>
+<li>
+  主动扫描：  当发现新的广播态设备， 会发送扫描请求， 并等待该请求的响应
+
+<li>
+  被动扫描：  仅接收报文， 不能发送任何报文
+
+</ul>
+<li>
+  发起态：    处于发起态的发起者， 其接收机用于侦听自己试图连接的设备， 如果收到来自该设备的广播报文， 链路层会向其发送连接请求并进入连接态
+
+<li>
+  连接态：    两个设备相互传送数据信道报文
+
+<ul>
+<li>
+  master：    只能从发起态进入。 主设备必须定期向从设备发送报文， 从设备只有通过回复这些报文才能发送自己的数据
+
+<li>
+  slave：     只能从广播态进入。 对于从设备， 只有在正确接收主设备的报文后才能发送
+<pre  ||表示双向>
+                扫描态
+                  ||
+                  ||
+    广播态 &lt;--&gt; 就绪态 &lt;--&gt; 发起态
+       |          ||          |
+       |          ||          |
+        --&gt;     连接态     &lt;--
+</pre>
+
+</ul>
+</ul>
+
+<h3 id="toc_0.2.2">多状态机</h3>
+<ul>
+<li>
+  通过配置， 一个设备可以同时作为从设备、广播者和主动扫描者；或者同时作为主设备、广播者、被动扫描者或发起者
+
+<li>
+  BT4.0中的限制：
+
+<ul>
+<li>
+  如果成为了主设备， 便不能同时成为从设备， 主设备不能发送可用于连接的广播报文， 但可以发送不可连接的广播报文或可发现的广播报文
+
+<li>
+  类似地， 从设备也不能同时成为主设备， 从设备不能发起连接。
+
+<li>
+  一个设备也不可以同时成为两个主设备的从设备。
+
+<li>
+  LE不支持经典蓝牙的scatternet（分散式网络）
+
+</ul>
+</ul>
+
+<h3 id="toc_0.2.3">报文</h3>
+<ul>
+<li>
+  报文格式
+<pre>
+    广播信道与数据信道上传输的都是小数据包， 格式均相同：
+    
+    bit     8       32          8       8       0 - 296     24
+            前导    接入地址    报头    长度    数据        CRC
+</pre>
+
+<li>
+  前导：      优化数据包的鲁棒性， 这一长度足够接收者同步比特计时和设置自动增益控制,  接入地址的第一个比特决定了前导是01010101还是10101010
+
+<li>
+  接入地址：  广播信道是固定的， 数据信道中是完全随机的私有值。广播接入地址在广播、扫描、发起连接时使用， 数据接入地址在连接建立之后的两个设备间使用
+
+<ul>
+<li>
+  链路层也不知道其他设备什么时候会发送报文， 因此只能保留最近40us接收到的比特， 并在新的比特移入到寄存器的时候检查序列是否满足前导和接入地址， 这一过程称为与接入地址求相关
+
+<li>
+  广播信道接入地址是固定值0x8E89BED6， 之所以选这个值是因为其相关性非常好。
+
+<li>
+  对于数据信道， 接入地址是一个随机值， 不同的连接有不同的值， 但也要符合一些规则
+
+</ul>
+<li>
+  报头：      描述数据包的内容， 其内容取决于是广播报文还是数据报文
+
+<li>
+  长度：      广播报文， 长度域包含6个比特， 有效范围是6 - 37(多出6个比特的广播设备地址)。 数据报文， 长度域包含5个比特， 有效范围是6 - 31。
+
+<li>
+  数据：      变长的
+
+<li>
+  CRC：       24位循环冗余校验， 可以检测所有奇数位错误， 以及2位或4位错误。
+
+</ul>
+
+<h3 id="toc_0.2.4">信道</h3>
+<ul>
+<li>
+  在LL层， 分为广播信道和数据信道
+
+<li>
+  3个广播信道分散在不同区域，目的是远离Wifi干扰。之间相差24MHz, 位于2402MHz, 2426MHz, 2480MHz， 编号为37, 38, 39
+
+<li>
+  37个数据信道， 编号为0 - 36
+
+</ul>
+
+<h3 id="toc_0.2.5">跳频</h3>
+<ul>
+<li>
+  跳频算法用于数据连接中， 数据信道共37个， fn+1 = (fn + hop) mod 37
+
+<li>
+  hop是一个5 - 16范围内的值， 每次跳频之后中心频率加hop并模37
+
+<li>
+  自适应跳频：将一个已知的坏信道映射到一个已知的好信道。 主机可以告知当前信道情况（信息可以来自其它设备如wifi）， 大多数蓝牙控制器自身也有该功能
+
+</ul>
+
+
+<h3 id="toc_0.2.6">设备发现</h3>
+<ul>
+<li>
+  BLE通过广播信道发现其他设备， 共有4种不同类型的广播
+
+<ul>
+<li>
+  通用广播：  设备能够被扫描设备扫描到， 或者在接收到连接请求时作为从设备进入一个连接。 可以没有连接的情况发出。
+
+<li>
+  定向广播：  用于快速建立连接。 从设备发送报文只包信广播者的地址和发起者的地址， 主设备收到后立即发送连接请求
+
+<li>
+  不可连接的广播： 设备只想广播数据， 而不想被扫描或者连接。 如ibeacon
+
+<li>
+  可发现的广播：  设备可以被发现， 既可以广播数据， 又可以响应扫描， 但不能建立连接。
+
+<li>
+  ？？？在打开扫描窗口时不可连接设备可以show出来吗？？？
+
+</ul>
+</ul>
+
+<h3 id="toc_0.2.7">连接</h3>
+<ul>
+<li>
+  连接使用数据信道在两个设备之间可靠的发送信息，采用自适应跳频增强鲁棒性
+
+<li>
+  发起者收到正确的广播报文时， 将向广播者发送一个连接请求， 其中包括连接开始时需要的所有信息
+
+<ul>
+<li>
+  连接中使用的接入地址
+
+<li>
+  CRC初始值
+
+<li>
+  发送窗口大小
+
+<li>
+  发送窗口偏移
+
+<li>
+  连接间隔
+
+<li>
+  从设备延迟
+
+<li>
+  监控超时
+
+<li>
+  自适应跳频信道图
+
+<li>
+  休眠时钟精度
+
+</ul>
+<li>
+  连接事件：  指主设备和从设备之间相互发送数据包的过程。 
+
+<ul>
+<li>
+  在一个连接当中， 主设备会在每个连接事件里向从设备发送数据包
+
+<li>
+  连接事件的进行始终位于同一个频率， 每个数据包会在上个数据包发完之后等待150us再发送
+
+<li>
+  连接间隔决定主设备与从设备之间的交互间隔， 指连续两个连接事件开始处的时间， 可在7.5ms - 4s之间， 但必须是1.25ms的整数倍
+
+<li>
+  从设备延迟， 是连接间隔的倍数， 代表从设备必须侦听之前可以忽略多少个连接事件。 决定了主从设备实际的交互间隔。
+
+<li>
+  例， 连接间隔为6ms(主设备每6ms发起一个包), 从设备延迟为9(忽略9个， 但必须响应第10个事件), 监控超时应该设为6， 在断开链路前从设备至少会有6次侦听机会。
+
+</ul>
+</ul>
+
+<h3 id="toc_0.2.8">数据报文</h3>
+<ul>
+<li>
+  包含字段：
+
+<ul>
+<li>
+  逻辑链路标识符(LLID)    2bit    判断数据报文属于哪种类型
+
+<ul>
+<li>
+  11      链路层管理报文， 用于管理连接
+
+<li>
+  10      高层报文开始， 也可用于一个完整报文
+
+<li>
+  01      高层报文延续
+
+</ul>
+<li>
+  序列号(SN)      1bit        该值在0, 1之间交替， 如果两个相邻包的SN相同， 则为重传包
+
+<li>
+  下一个预期序列号(NESN)      1bit    用于包的确认
+
+<li>
+  更多数据(MD)    1bit
+
+<ul>
+<li>
+  用来通知对端设备自己还有其他数据准备发送， 如果收到设置了更多数据位的数据包， 应该在当前连接事件中继续与对端设备通信
+
+<li>
+  只要还有数据要发送， 连接事件会自动扩展; 一时不再有数据， 连接事件会迅速关闭
+
+</ul>
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -43,15 +43,123 @@
     
 <div class="toc">
 <ul>
-<li><a href="#toc_0.1">VC</a>
+<li><a href="#toc_0.1">Short Cut</a>
+<li><a href="#toc_0.2">VC C++</a>
+<li><a href="#toc_0.3">VS集成Qt环境搭建</a>
+<li><a href="#toc_0.4">VC</a>
+<li><a href="#toc_0.5">VS2012</a>
 <ul>
-<li><a href="#toc_0.1.1">VS2012 写DLL</a>
+<li><a href="#toc_0.5.1">VS2012 写DLL</a>
 </ul>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_0.1">VC</h2>
+<h2 id="toc_0.1">Short Cut</h2>
+<ul>
+<li>
+  shift + Alt + Enter     全屏切换
+
+<li>
+  Ctrl+D                  设置控件焦点， MFC做图时有用
+
+</ul>
+<p>
+*
+</p>
+<h2 id="toc_0.2">VC C++</h2>
+<ul>
+<li>
+  #pragma是C++中最复杂的预处理指令，下面是最常用的几个#pragma指令：
+
+<ul>
+<li>
+#pragma comment(lib,"XXX.lib")    表示链接XXX.lib这个库，和在工程设置里写上XXX.lib的效果一样。
+
+<li>
+#pragma comment(linker,"/ENTRY:main_function")    表示指定链接器选项/ENTRY:main_function
+
+<li>
+#pragma once  表示这个文件只被包含一次, 它是基于磁盘文件的，而#ifndef则是基于宏的。
+
+<li>
+#pragma warning(disable:4705)     表示屏蔽警告4705 
+
+<ul>
+<li>
+  #pragma warning(disable:4507 34) // 不显示4507和34号警告信息   
+
+<li>
+  #pragma warning(once:4385)       // 4385号警告信息仅报告一次   
+
+<li>
+  #pragma warning(error:164)       // 把164号警告信息作为一个错误
+
+<li>
+  #pragma warning(default:176)     // 重置编译器的176号警告行为到默认状态  
+
+</ul>
+<li>
+#pragma pack(push, n)     将当前字节对齐方式放入到内部编译器栈中，并将当前的内存对齐方式设置为4 
+
+<li>
+#pragma pack(pop)         将内部编译器栈顶的记录弹出，并将其作为当前的内存对齐方式€?€?
+
+<li>
+#pragma alloc_text        编译时控制分页能力
+
+<ul>
+<li>
+  #pragma alloc_text(INIT, DriverEntry)           如果某些代码在驱动程序完成初始化后不再需要，可以直接把它插入到INIT段
+
+<li>
+  #pragma alloc_text(PAGE, a)                     表示函数a运行在分页内存中
+
+</ul>
+</ul>
+</ul>
+
+<h2 id="toc_0.3">VS集成Qt环境搭建</h2>
+<ul>
+<li>
+  <a href="http://blog.sina.com.cn/s/blog_a6fb6cc90101gynd.html">http://blog.sina.com.cn/s/blog_a6fb6cc90101gynd.html</a>
+
+<li>
+  下载Qt5.*安装包（qt-windows-opensource）与Qt插件（Visual Studio Add-in）
+
+<li>
+  配置开发环境
+
+<ul>
+<li>
+  选择：Qt5-&gt;Qt Options-&gt;Add，配置VS的开发环境。
+
+</ul>
+<li>
+  添加环境变量, 否则丢失*.dll的提示信息
+
+<ul>
+<li>
+  右键计算机-&gt;属性-&gt;高级系统设置-&gt;高级-&gt;环境变量，添加环境变量（推荐）
+
+<li>
+  QTDIR：D:\Software\Qt\Qt5.5.0\5.5\msvc2013
+
+<li>
+  PATH：%QTDIR%\bin
+
+</ul>
+<li>
+  编码时， 找不到QT的内容
+
+<ul>
+<li>
+  Assist的Option中， C/C++ 选项 -&gt; Customer -&gt; other include -&gt; 包含QT的Include， 然后重启即可
+
+</ul>
+</ul>
+
+<h2 id="toc_0.4">VC</h2>
 <ul>
 <li>
   <a href="Query Register and Convert 64 int to String.html">Query Register and Convert 64 int to String</a>
@@ -92,18 +200,58 @@
 </ul>
 </ul>
 <li>
+  Extensions:     Tools -&gt; Extensions and Updates...
+
+<ul>
+<li>
   <a href="https://github.com/jaredpar/VsVim">VsVim</a> vim extension in VS2012
 
 <ul>
 <li>
-  Tools -&gt; Extensions and Updates -&gt; Search VsVim and Install -&gt; Restart VS2012
-
-<li>
-  Config Key mappings
+  Options... -&gt; VsVim -&gt; Config Key mappings
 
 <li>
   :set vimrc          -&gt; Show the vimrc which VsVim read
 
+</ul>
+<li>
+  Productivity Power Tools
+
+<ul>
+<li>
+  Enhanced scroll bar(full bar mode)
+
+</ul>
+<li>
+  Visual Studio Color Theme Editor
+
+<ul>
+<li>
+  Dark Theme
+
+</ul>
+<li>
+  Visual Assist
+
+<li>
+  Visual HG       good enough
+
+<ul>
+<li>
+  需要在工程文件夹上先创建Repository， 再打开VS2012工程， 添加文件并Commit
+
+</ul>
+<li>
+  HgSccPackage
+
+<ul>
+<li>
+  Hg source control
+
+<li>
+  <a href="https://bitbucket.org/zzsergant/hgsccpackage/wiki/configVS">https://bitbucket.org/zzsergant/hgsccpackage/wiki/configVS</a>
+
+</ul>
 </ul>
 <li>
   VS2012 静态编译c c++运行库
@@ -230,9 +378,99 @@ section, 在img被装载到内存时，该section不一定会存在（被paged o
   Property Pages-&gt;Configuration Properties-&gt;Linker-&gt;Advanced: Import Library ==&gt; $(OutDir)rtsocket.lib    //指定导入库文件的名字及目录， 一般要上面相同
 
 </ul>
+<li>
+  在Driver中显示Build信息
+
+<ul>
+<li>
+  DriverEntry：   TraceEvents(TRACE_LEVEL_INFORMATION, DBG_INIT,("Built on %s %s\n", _<em>DATE</em>_, _<em>TIME</em>_));
+
+<li>
+  Property Pages -&gt; Driver Module Settings -&gt; General -&gt; Allow Data, time and Timestamp ==&gt; Yes
+
+<li>
+  More Settings:  <a href="http://blog.csdn.net/hxybiseng/article/details/8568132">http://blog.csdn.net/hxybiseng/article/details/8568132</a>
+
+</ul>
+<li>
+  error MSB6006: "tracewpp.exe" exited with code 2
+
+<ul>
+<li>
+  解决方法， 编辑osrusbfx2.vcxproj文件， 将其中的WppEnabled项设置为false，然后重新加载项目即可
+
+<li>
+  vcxproj文件中保存了编译链接的所有信息， 有出现类似问题可以查看该文件
+
+</ul>
 
 
-<h3 id="toc_0.1.1">VS2012 写DLL</h3>
+<h2 id="toc_0.5">VS2012</h2>
+<ul>
+<li>
+  VS2012 Config
+
+<ul>
+<li>
+  Turn off Unicode in VC++ Project
+
+<ul>
+<li>
+  Project Properties -&gt; General -&gt; Project Defaults -&gt; <strong>Character Set</strong>
+
+</ul>
+<li>
+  .sdf and ipch
+
+<ul>
+<li>
+  Visual Studio用来保存预编译的头文件和Intellisense用的
+
+<li>
+  不在当前工程中生成这些文件, VS用临时文件夹保存这些文件
+<pre>
+        Tools-&gt;Options  Text Editor -&gt; C/C++ -&gt; Advanced
+        Fallback Location:  Always use Fallback Location -&gt; Set True
+                            Do Not Warn if Fallback Location Used  -&gt; Set True
+</pre>
+
+</ul>
+</ul>
+<li>
+  <a href="https://github.com/jaredpar/VsVim">VsVim</a> vim extension in VS2012
+
+<ul>
+<li>
+  Tools -&gt; Extensions and Updates -&gt; Search VsVim and Install -&gt; Restart VS2012
+
+<li>
+  Config Key mappings
+
+<li>
+  :set vimrc          -&gt; Show the vimrc which VsVim read
+
+</ul>
+<li>
+  VS2012 静态编译c c++运行库
+
+<ul>
+<li>
+  Win8上编译的程序在Win7上有可能不能运行，原因是它们使用的C运行库不一样，好的解决方法是在编译时将运行库编译进程序，随程序一起发布
+
+<li>
+  在VS2012中修改设置：Project Property-&gt;Configuration Properties-&gt;C/C++-&gt;Code Generation-&gt;Runtime Library-&gt;修改选项为"Mutiple-threaded(/MT)"
+
+</ul>
+<li>
+  VS里面非常好用的功能，在build之前或之后可以完成一些动作，比如文件Copy，但是在Copy时注意命令的写法：(nonpnp sample in e:\work\sampledriver)
+<pre //不能想当然的写相对路径，要使用VS定义的宏来指明路径，在调用该cmd时会解析成完整路径>
+Error   copy "..\..\wdf\x86\WdfCoInstaller01011.dll" ".\bin"
+Right   copy "$(SolutionDir)..\..\wdf\x86\WdfCoInstaller01011.dll" "$(SolutionDir)bin\"
+</pre>
+
+</ul>
+
+<h3 id="toc_0.5.1">VS2012 写DLL</h3>
 <ul>
 <li>
   File-&gt;New-&gt;Project  ==&gt; 

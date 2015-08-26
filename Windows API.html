@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Windows API</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Windows API</a>
+</ul>
+</div>
+
+<h1 id="toc_1">Windows API</h1>
+<ul>
+<li>
+  <a href="http://www.cppblog.com/sunshinealike/archive/2009/03/10/76050.html">Windows 应用程序基本结构</a>
+
+<ul>
+<li>
+  WinMian 函数由三个基本组成部分：函数说明、初始化和消息循环。该函数的功能:
+
+<ul>
+<li>
+  注册窗口类，建立窗口及执行其他必要的初始化工作
+
+<li>
+  进入消息循环，根据从应用程序消息队列接受的消息调用相应的处理过程。
+
+<li>
+  当消息循环检测到 WM_QUIT 消息时终止程序运行。
+
+</ul>
+<li>
+  消息循环
+
+<ul>
+<li>
+  Windows 应用程序的运行以消息为核心。 Windows 将产生的消息放入应用程序的消息队列中，
+
+<li>
+  而应用程序的 WinMain 函数在消息循环中提取队列中的消息，并将其传递给窗口函数的相应过程处理。 
+
+</ul>
+<li>
+  窗口函数
+
+<ul>
+<li>
+  窗口函数的主体是消息处理语句，由一系列 case 语句组成。程序员只需要根据窗口可能收到的消息在 case 语句中编写相应的处理程序段即可。
+
+</ul>
+<li>
+  <a href="Win32Project.html">Win32Project</a>
+
+</ul>
+<li>
+  <a href="http://www.cppblog.com/sunshinealike/archive/2009/03/10/76148.html">图形设备接口及windows绘图</a>
+
+<li>
+  [[<a href="http://www.cppblog.com/sunshinealike/archive/2009/03/11/76242.html|字体设置与输出]]">http://www.cppblog.com/sunshinealike/archive/2009/03/11/76242.html|字体设置与输出]]</a>
+
+<li>
+  [[<a href="http://www.cppblog.com/sunshinealike/archive/2009/03/12/76346.html|对键盘和鼠标的响应]]">http://www.cppblog.com/sunshinealike/archive/2009/03/12/76346.html|对键盘和鼠标的响应]]</a>
+
+<li>
+  <a href="http://www.cppblog.com/sunshinealike/archive/2009/03/14/76539.html">资源在Windows编程中的应用</a>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

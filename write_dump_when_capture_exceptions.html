@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>write_dump_when_capture_exceptions</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+
+<ol>
+<li>
+ Simple Sample
+<pre>
+    #include [windows.h]
+    #include [dbghelp.h] 
+    #include [tchar.h]
+      
+    LONG WINAPI  MyExptFilter(EXCEPTION_POINTERS *pExptInfo)  
+    {  
+        LONG ret = EXCEPTION_CONTINUE_SEARCH;  
+        TCHAR szExePath[MAX_PATH] = {0};  
+        if(::GetModuleFileName(NULL, szExePath, MAX_PATH) &gt; 0)  
+        {  
+            int ch = _T('\\');  
+            *_tcsrchr(szExePath, ch) = _T('\0');  
+            _tcscat(szExePath, _T("\\MyDump.dmp"));  
+        }  
+          
+        // 程序崩溃时，将写入程序目录下的MyDump.dmp文件  
+        HANDLE hFile = ::CreateFile(szExePath, GENERIC_WRITE,   
+                            FILE_SHARE_WRITE, NULL, CREATE_NEW,   
+                            FILE_ATTRIBUTE_NORMAL, NULL );  
+        if(hFile != INVALID_HANDLE_VALUE)  
+        {  
+            MINIDUMP_EXCEPTION_INFORMATION exptInfo;  
+            exptInfo.ThreadId = ::GetCurrentThreadId();  
+            exptInfo.ExceptionPointers = pExptInfo;  
+      
+            BOOL bOK = ::MiniDumpWriteDump(::GetCurrentProcess(),  
+                                         ::GetCurrentProcessId(),   
+                                         hFile, MiniDumpNormal,  
+                                         &amp;exptInfo, NULL, NULL);  
+            if(bOK)  
+                ret = EXCEPTION_EXECUTE_HANDLER;  
+        }  
+      
+        return ret;  
+    }  
+      
+    int main(int argc, char** argv)  
+    {  
+        LPTOP_LEVEL_EXCEPTION_FILTER pPrevFilter =  ::SetUnhandledExceptionFilter(MyExptFilter);  
+        if(pPrevFilter != NULL)  
+            _tprintf(_T("Previous exception filter exists.\n"));  
+        else  
+            _tprintf(_T("No Previous exception filter.\n"));  
+      
+        //只是为了让程序崩溃  
+        *(int*)0 = 1234;  
+      
+        system("PAUSE");  
+        return 0;  
+    } 
+</pre>
+
+</ol>
+
+<ol>
+<li>
+  Useful
+<pre //静态链接的话要添加 依赖库dbghelp.lib，动态链接的话要链接dbghelp.dll>
+
+    #include [windows.h]
+    #include [dbghelp.h] 
+    #include [tchar.h]
+    
+    BOOL GetAppVersion( TCHAR *LibName, WORD *MajorVersion, WORD *MinorVersion, WORD *BuildNumber, WORD *RevisionNumber )
+    { 
+        DWORD dwHandle, dwLen; 
+        UINT BufLen; 
+        LPTSTR lpData;
+        VS_FIXEDFILEINFO *pFileInfo; 
+        dwLen = GetFileVersionInfoSize( LibName, &amp;dwHandle ); 
+        if (!dwLen)   
+            return FALSE; 
+        lpData = (LPTSTR) malloc (dwLen); 
+        if (!lpData)  
+            return FALSE; 
+        if( !GetFileVersionInfo( LibName, dwHandle, dwLen, lpData ) ) 
+        { 
+            free (lpData); 
+            return FALSE; 
+        } 
+        if( VerQueryValue( lpData, L"\\", (LPVOID *) &amp;pFileInfo, (PUINT)&amp;BufLen ) )  
+        {  
+            *MajorVersion = HIWORD(pFileInfo-&gt;dwFileVersionMS);  
+            *MinorVersion = LOWORD(pFileInfo-&gt;dwFileVersionMS);  
+            *BuildNumber = HIWORD(pFileInfo-&gt;dwFileVersionLS); 
+            *RevisionNumber = LOWORD(pFileInfo-&gt;dwFileVersionLS);  
+
+            free (lpData);
+            return TRUE;
+        } 
+        free (lpData); 
+        return FALSE;
+    }
+
+    LONG WINAPI MyUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *pExceptionPointers) 
+    { 
+        SetErrorMode( SEM_NOGPFAULTERRORBOX ); 
+
+        //收集信息 
+
+        CString strBuild; 
+        strBuild.Format(_T("Build: %s %s"), __DATE__, __TIME__); 
+        CString strError; 
+        HMODULE hModule; 
+        TCHAR szModuleName[MAX_PATH] = _T(""); 
+        GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS, (LPCWSTR)pExceptionPointers-&gt;ExceptionRecord-&gt;ExceptionAddress, &amp;hModule); 
+        GetModuleFileName(hModule, szModuleName, ARRAYSIZE(szModuleName)); 
+        strError.AppendFormat(_T("%s 0x%x , 0x%x , 0x%x."), szModuleName,pExceptionPointers-&gt;ExceptionRecord-&gt;ExceptionCode, pExceptionPointers-&gt;ExceptionRecord-&gt;ExceptionFlags, pExceptionPointers-&gt;ExceptionRecord-&gt;ExceptionAddress); 
+
+        WORD MajorVersion = 0; 
+        WORD MinorVersion = 0; 
+        WORD BuildNumber = 0; 
+        WORD RevisionNumber = 0;
+
+        TCHAR* szAppName = _tcsrchr(szModuleName, '\\');
+        szAppName++;
+
+        GetAppVersion(szModuleName, &amp;MajorVersion, &amp;MinorVersion, &amp;BuildNumber, &amp;RevisionNumber);
+
+        CString strVersion;
+        strVersion.Format (_T("v%hu.%hu.%hu.%hu"), MajorVersion, MinorVersion, BuildNumber, RevisionNumber);
+
+        //生成 mini crash dump 
+
+        BOOL bMiniDumpSuccessful; 
+        TCHAR szPath[MAX_PATH]; 
+        TCHAR szFileName[MAX_PATH]; 
+        //	TCHAR* szAppName = _T("Dump"); 
+        //	TCHAR* szVersion = _T("v1.0"); 
+        DWORD dwBufferSize = MAX_PATH; 
+        HANDLE hDumpFile; 
+        SYSTEMTIME stLocalTime; 
+        MINIDUMP_EXCEPTION_INFORMATION ExpParam; 
+        GetLocalTime( &amp;stLocalTime ); 
+        GetTempPath( dwBufferSize, szPath ); 
+        StringCchPrintf( szFileName, MAX_PATH, _T("%s%s"), szPath,  szAppName ); 
+        CreateDirectory( szFileName, NULL ); 
+        StringCchPrintf( szFileName, MAX_PATH, _T("%s%s\\%s-%04d%02d%02d-%02d%02d%02d-P%ld-T%ld.dmp"), 
+            szPath, szAppName, strVersion, 
+            stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay, 
+            stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond, 
+            GetCurrentProcessId(), GetCurrentThreadId()); 
+        hDumpFile = CreateFile(szFileName, GENERIC_READ|GENERIC_WRITE, 
+            FILE_SHARE_WRITE|FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0); 
+        //wprintf(_T("szFileName=%s\n"), szFileName);
+
+        MINIDUMP_USER_STREAM UserStream[2]; 
+        MINIDUMP_USER_STREAM_INFORMATION UserInfo; 
+        UserInfo.UserStreamCount = 1; 
+        UserInfo.UserStreamArray = UserStream; 
+        UserStream[0].Type = CommentStreamW; 
+        UserStream[0].BufferSize = strBuild.GetLength()*sizeof(TCHAR); 
+        UserStream[0].Buffer = strBuild.GetBuffer(); 
+        UserStream[1].Type = CommentStreamW; 
+        UserStream[1].BufferSize = strError.GetLength()*sizeof(TCHAR); 
+        UserStream[1].Buffer = strError.GetBuffer(); 
+
+        ExpParam.ThreadId = GetCurrentThreadId(); 
+        ExpParam.ExceptionPointers = pExceptionPointers; 
+        ExpParam.ClientPointers = TRUE; 
+
+        MINIDUMP_TYPE MiniDumpWithDataSegs = (MINIDUMP_TYPE)(MiniDumpNormal
+            | MiniDumpWithHandleData 
+            | MiniDumpWithUnloadedModules 
+            | MiniDumpWithIndirectlyReferencedMemory 
+            | MiniDumpScanMemory 
+            | MiniDumpWithProcessThreadData 
+            | MiniDumpWithThreadInfo); 
+        bMiniDumpSuccessful = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), 
+            hDumpFile, 
+            MiniDumpWithDataSegs,
+            &amp;ExpParam, NULL, NULL); 
+        // 上传mini dump 到自己服务器（TODO） 
+
+
+        return EXCEPTION_CONTINUE_SEARCH; //或者 EXCEPTION_EXECUTE_HANDLER 关闭程序 
+    } 
+
+    int _tmain(int argc, TCHAR* argv[])
+    {	
+        ::InitializeCriticalSection(&amp;gCsLogToFile);
+
+        if ( argc &gt; 1 &amp;&amp; lstrcmpi( argv[1], TEXT("install") ) == 0 )
+        {
+            InstallService();
+        }
+        else if ( argc &gt; 1 &amp;&amp; lstrcmpi( argv[1], TEXT("uninstall") ) == 0 )
+        {
+            UninstallService();
+        }
+        else
+        {
+            RunService();
+        }
+        DeleteCriticalSection(&amp;gCsLogToFile);
+        SetUnhandledExceptionFilter(MyUnhandledExceptionFilter); 
+        return 0;
+    }
+</pre>
+
+</ol>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>ProcessMonitor.cpp</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<pre>
+    // Register Process notification callback
+    PrepareHareware
+    {
+        status = PsSetCreateProcessNotifyRoutineEx(ProcessCreationNotifyEx, FALSE);
+    }
+    
+    =================================================================================
+    //Callback
+    VOID ProcessCreationNotifyEx(
+        _Inout_  PEPROCESS              Process,
+        _In_     HANDLE                 ProcessId,
+        _In_opt_ PPS_CREATE_NOTIFY_INFO CreateInfo
+	)
+    {
+        UNICODE_STRING  EmptyUnicodeString;
+        WDFDEVICE WdfDevice = OsGetDeviceObject();
+        PFILTER_EXTENSION FilterExt = FilterGetData(WdfDevice);
+        RtlInitUnicodeString(&amp;EmptyUnicodeString, L"");
+
+        RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Process Info: Process(0x%p), ProcessId(0x%p), CreateInfo(0x%p)", Process, ProcessId, CreateInfo));
+        if (CreateInfo)
+        {// Process create
+            RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Process Created: CreationStatus 0x%x", CreateInfo-&gt;CreationStatus));
+            RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("FileObject 0x%p", CreateInfo-&gt;FileObject));
+            if (RtlEqualUnicodeString(CreateInfo-&gt;ImageFileName, &amp;EmptyUnicodeString, FALSE))
+            {
+                RT_DEBUG(TRACE_LEVEL_ERROR, RTK_HAL, ("ImageFileName is NULL"));
+            }
+            else
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("The ImageFileName is: %wZ", CreateInfo-&gt;ImageFileName));
+            }
+
+            if (RtlEqualUnicodeString(CreateInfo-&gt;CommandLine, &amp;EmptyUnicodeString, FALSE))
+            {
+                RT_DEBUG(TRACE_LEVEL_ERROR, RTK_HAL, ("CommandLine is NULL"));
+            }
+            else
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("The CommandLine is: %wZ", CreateInfo-&gt;CommandLine));
+            }
+            ParseCmdLine(FilterExt, CreateInfo, ProcessId);
+        }
+        else
+        {// Process exit
+            RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Process Exit"));
+            if (FilterExt-&gt;EngineProcessID == ProcessId)
+            {
+                FilterExt-&gt;bEngine = FALSE;
+                FilterExt-&gt;EngineProcessID = 0;
+                RT_DEBUG(TRACE_LEVEL_WARNING, RTK_HAL, ("Engine Process Exit"));
+            }
+            else if (FilterExt-&gt;ItemProcessID == ProcessId)
+            {
+                FilterExt-&gt;bMonitor = FALSE;
+                FilterExt-&gt;ItemProcessID = 0;
+                RT_DEBUG(TRACE_LEVEL_WARNING, RTK_HAL, ("Monitor Process Exit"));
+            }
+            else
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Unknown Process Exit"));
+            }
+
+        }
+
+        if (FilterExt-&gt;bEngine)
+        {
+            if (0xFF != FilterExt-&gt;WhckType)
+            {
+                if (FilterExt-&gt;bMonitor)
+                {
+                    RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Send FC71 cmd to fw, WhckType(%d)", FilterExt-&gt;WhckType));
+                    SendWHCKNotificationToFW(WdfDevice, HCI_VENDOR_ENTER_WHCK_MODE, FilterExt-&gt;WhckType);
+                }
+                else
+                {
+                    RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Send FC72 cmd to fw, WhckType(%d)", FilterExt-&gt;WhckType));
+                    SendWHCKNotificationToFW(WdfDevice, HCI_VENDOR_EXIT_WHCK_MODE, FilterExt-&gt;WhckType);
+                    FilterExt-&gt;WhckType = 0xFF;
+                }
+            }
+            else
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Whck Type is 0x%x, do nothing", FilterExt-&gt;WhckType));
+            }
+        }
+        else
+        {
+            if ( FilterExt-&gt;bMonitor &amp;&amp; 0xFF != FilterExt-&gt;WhckType )
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Send FC72 cmd to fw, WhckType(%d)", FilterExt-&gt;WhckType));
+                SendWHCKNotificationToFW(WdfDevice, HCI_VENDOR_EXIT_WHCK_MODE, FilterExt-&gt;WhckType);
+            }
+            FilterExt-&gt;WhckType = 0xFF;
+            FilterExt-&gt;bEngine = FALSE;
+            FilterExt-&gt;bMonitor = FALSE;
+            FilterExt-&gt;ItemProcessID = 0;
+            FilterExt-&gt;EngineProcessID = 0;
+        }
+        RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("bEngine(%d), bMonitor(%d), WhckType(%d)", FilterExt-&gt;bEngine, FilterExt-&gt;bMonitor, FilterExt-&gt;WhckType));
+    }
+
+    VOID ParseCmdLine(PFILTER_EXTENSION FilterExt, PPS_CREATE_NOTIFY_INFO CreateInfo, HANDLE ProcessId)
+    {
+        WCHAR FileNameBuf[64] = { 0 };
+        WCHAR CmdLineBuf[128] = { 0 };
+        wcsncpy(FileNameBuf, CreateInfo-&gt;ImageFileName-&gt;Buffer, (CreateInfo-&gt;ImageFileName-&gt;Length &gt; 62 ? 62 : CreateInfo-&gt;ImageFileName-&gt;Length));
+        wcsncpy(CmdLineBuf, CreateInfo-&gt;CommandLine-&gt;Buffer, (CreateInfo-&gt;CommandLine-&gt;Length &gt; 126 ? 126 : CreateInfo-&gt;CommandLine-&gt;Length));
+        if (wcsstr(FileNameBuf, L"DTMAcmEngine.exe"))
+        {
+            FilterExt-&gt;bEngine = TRUE;
+            FilterExt-&gt;EngineProcessID = ProcessId;
+        }
+        else if (wcsstr(FileNameBuf, L"mjolnir") &amp;&amp; wcsstr(FileNameBuf, L".exe"))
+        {
+            FilterExt-&gt;bMonitor = TRUE;
+            //Convert to uppercases
+            _wcsupr(CmdLineBuf);
+            if (wcsstr(CmdLineBuf, L"-C SCO_HCT"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("SCO Testing..."));
+                FilterExt-&gt;WhckType = 0;
+            }
+            else if (wcsstr(CmdLineBuf, L"-C HCT"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("P2P Testing..."));
+                FilterExt-&gt;WhckType = 1;
+            }
+            else if (wcsstr(CmdLineBuf, L"-C BTHLOGO"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("2.1 LOGO Testing..."));
+                FilterExt-&gt;WhckType = 2;
+            }
+            else if (wcsstr(CmdLineBuf, L"-C LOGOLE_DUAL"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("LE Dual Mode LOGO Testing..."));
+                FilterExt-&gt;WhckType = 4;
+            }
+            else if (wcsstr(CmdLineBuf, L"-C LOGOLE") &amp;&amp; wcsstr(CmdLineBuf, L"-C LOGOLE_DUAL"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("LE LOGO Testing..."));
+                FilterExt-&gt;WhckType = 3;
+            }
+            else if (wcsstr(CmdLineBuf, L"-M"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("SUT Testing..."));
+                FilterExt-&gt;WhckType = 5;
+            }
+            else if (wcsstr(CmdLineBuf, L"-C LOGO_ROO"))
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Radio OnOff Testing..."));
+            }
+            else
+            {
+                RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Unknown WHCK Item, The CommandLine is: %wZ", CreateInfo-&gt;CommandLine));
+            }
+            FilterExt-&gt;ItemProcessID = ProcessId;
+            
+        }
+        else if (wcsstr(FileNameBuf, L"btserver.exe"))
+        {
+            RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("btserver.exe"));
+        }
+        else if (wcsstr(CmdLineBuf, L"cmd.exe")
+            &amp;&amp; wcsstr(CmdLineBuf, L"devfund_sleep_pnp_disableenable_with_io_beforeandafter_wlk_sysfund"))
+        {
+            FilterExt-&gt;bMonitor = TRUE;
+            FilterExt-&gt;WhckType = 6;
+            FilterExt-&gt;ItemProcessID = ProcessId;
+            RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Cmd with sleep pnp disableenable with io"));
+        }
+        else
+        {
+            RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("Unknown Process, The ImageFileName is: %wZ", CreateInfo-&gt;ImageFileName));
+        }
+
+        RT_DEBUG(TRACE_LEVEL_INFORMATION, RTK_HAL, ("bEngine(%d), bMonitor(%d), WhckType(%d)", FilterExt-&gt;bEngine, FilterExt-&gt;bMonitor, FilterExt-&gt;WhckType));
+    }
+    
+    // Unregister Callback
+    ReleaseHareware
+    {
+		status = PsSetCreateProcessNotifyRoutineEx(ProcessCreationNotifyEx, TRUE);
+    }
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Sumblime</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Vim mode</a>
+<li><a href="#toc_0.2">Ctags</a>
+<li><a href="#toc_0.3">C Build</a>
+<li><a href="#toc_0.4">C++ Build</a>
+<li><a href="#toc_0.5">Python3 Build</a>
+<li><a href="#toc_0.6">Keys</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Vim mode</h2>
+<ul>
+<li>
+  configuration       "ignored_packages": []
+
+</ul>
+
+<h2 id="toc_0.2">Ctags</h2>
+<ul>
+<li>
+  <a href="https://github.com/SublimeText/CTags">https://github.com/SublimeText/CTags</a>
+
+<li>
+  download zip and unzip it to "C:\Program Files (x86)\Sublime Text 2\Data\Packages"
+
+<li>
+  install package:    ctrl+shift+P   -&gt;  Install
+
+</ul>
+
+<h2 id="toc_0.3">C Build</h2>
+<p>
+在Sublime Text中, 点击 Tools -&gt; Build System -&gt; New Build System... 
+会弹出一个配置文件的模版将模版中的内容替换成结果:
+</p>
+<pre>
+    {
+         "cmd": ["gcc", "${file}", "-o", "${file_path}/${file_base_name}"],
+         "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+         "working_dir": "${file_path}",
+         "selector": "source.c",
+         "encoding": "cp936",
+         "shell": true,
+
+         "variants":
+         [
+              {
+                   "name": "Run",
+                   "cmd": ["${file_path}/${file_base_name}.exe"]
+              }
+         ]
+    }
+</pre>
+<p>
+保存为C_Build.sublime-build
+</p>
+
+<h2 id="toc_0.4">C++ Build</h2>
+<p>
+在Sublime Text中, 点击 Tools -&gt; Build System -&gt; New Build System... 
+输入如下内容，并将文件保存为C++Bulider.sublime-bulid。
+</p>
+<pre>
+    {
+         "cmd": ["g++", "${file}", "-o", "${file_path}/${file_base_name}"],
+         "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+         "working_dir": "${file_path}",
+         "selector": "source.c++",
+         "encoding": "cp936",
+         "shell": true,
+
+         "variants":
+         [
+              {
+                   "name": "Run",
+                   "cmd": [ "start", "${file_path}/${file_base_name}.exe"]
+              }
+         ]
+    }
+</pre>
+
+<h2 id="toc_0.5">Python3 Build</h2>
+<p>
+Copy from python build
+"shell": "true"     如果不添加此项， 在执行Python GUI程序时不会显示出界面
+</p>
+<pre>
+    {
+        "cmd": ["C:/Python34/python3.exe", "-u", "$file"],
+        "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+        "selector": "source.python",
+        "shell": "true" 
+    }
+</pre>
+
+<h2 id="toc_0.6">Keys</h2>
+<pre>
+    Ctrl+L 选择整行（按住-继续选择下行）
+    Ctrl+KK 从光标处删除至行尾
+    Ctrl+Shift+K 删除整行
+    Ctrl+Shift+D 复制光标所在整行，插入在该行之前
+    Ctrl+J 合并行（已选择需要合并的多行时）
+    Ctrl+KU 改为大写
+    Ctrl+KL 改为小写
+    Ctrl+D 选词 （按住-继续选择下个相同的字符串）
+    Ctrl+M 光标移动至括号内开始或结束的位置
+    Ctrl+Shift+M 选择括号内的内容（按住-继续选择父括号）
+    Ctrl+/ 注释整行（如已选择内容，同“Ctrl+Shift+/”效果）
+    Ctrl+Shift+/ 注释已选择内容
+    Ctrl+Space 自动完成（win与系统快捷键冲突，需修改）
+    Ctrl+Z 撤销
+    Ctrl+Y 恢复撤销
+    Ctrl+Shift+V 粘贴并自动缩进（其它兄弟写的，实测win系统自动缩进无效）
+    Ctrl+M 光标跳至对应的括号
+    Alt+. 闭合当前标签
+    Ctrl+Shift+A 选择光标位置父标签对儿
+    Ctrl+Shift+[ 折叠代码
+    Ctrl+Shift+] 展开代码
+    Ctrl+KT 折叠属性
+    Ctrl+K0 展开所有
+    Ctrl+U 软撤销
+    Ctrl+T 词互换
+    Tab 缩进
+    Shift+Tab 去除缩进
+    Ctrl+Shift+UP 与上行互换
+    Ctrl+Shift+DOWN 与下行互换
+    Ctrl+K Backspace 从光标处删除至行首
+    Ctrl+Enter 插入行后
+    Ctrl+Shift Enter 插入行前
+    F9 行排序（按a-z）
+</pre>
+<ul>
+<li>
+  [[<a href="http://blog.jobbole.com/82527/|常用的 16">http://blog.jobbole.com/82527/|常用的 16</a> 个 Sublime Text 快捷键]]
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

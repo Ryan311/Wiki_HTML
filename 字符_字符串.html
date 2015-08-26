@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>�ַ�_�ַ���</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">字符类型、字符指针类型、字符串字面值 </a>
+<ul>
+<li><a href="#toc_0.1.1">字符类型</a>
+<li><a href="#toc_0.1.2">字符, 字符串指针类型 </a>
+<li><a href="#toc_0.1.3">字符串字面值 </a>
+<li><a href="#toc_0.1.4">字符串处理函数总结</a>
+<ul>
+<li><a href="#toc_0.1.4.1">各种字符串处理函数库</a>
+</ul>
+<li><a href="#toc_0.1.5">字符（串）之间的转换</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">字符类型、字符指针类型、字符串字面值 </h2>
+<h3 id="toc_0.1.1">字符类型</h3>
+<ul>
+<li>
+  char, wchar_t, CHAR, WCHAR, TCHAR, UCHAR, BYTE, TBYTE
+    char            是C语言标准数据类型，字符型。通常由编译器决定一个char对象有多少个字节组成，一般是一字节。
+    wchar_t         是char的Unicode版本。相当于 unsigned short。一般两个字节。 linux下有时4字节， sizeof(wchar_t) = 4
+    CHAR            参照定义： typedef char CHAR;
+    WCHAR           参照定义： typedef wchar_t WHAR;
+    TCAHR           通用版字符类型：在ANSI编译方式下为 char ， 在Unicode 编译方式下为 wchar_t。
+    UCHAR           相当于unsigned char
+    BYTE            相当于unsigned char。在取得字符编码(00 - FF)时，非常有用。
+    TBYTE           通用版字符类型：在ANSI编译方式下为 char ， 在Unicode 编译方式下为 wchar_t。
+
+</ul>
+<blockquote>
+参照 tchar.h头文件定义:
+</blockquote>
+<pre>
+    // _UNICODE 版
+#ifndef	__TCHAR_DEFINED
+    typedef	wchar_t		_TCHAR;
+    typedef	wchar_t		_TSCHAR;
+    typedef	wchar_t		_TUCHAR;
+    typedef	wchar_t		_TXCHAR;
+#define  __TCHAR_DEFINED
+#endif
+    typedef	wchar_t		TCHAR;
+
+    //	非_UNICODE 版
+#ifndef	__TCHAR_DEFINED
+    typedef	char                 _TCHAR;
+    typedef	signed char          _TSCHAR;
+    typedef	unsigned char        _TUCHAR;
+    typedef	char                 _TXCHAR;
+#define	__TCHAR_DEFINED
+#endif
+    typedef	char		TCHAR;
+</pre>
+<blockquote>
+自适应：
+</blockquote>
+<pre>
+    // 字符定义总结如下: 
+        		非UNICODE               UNICODE
+    _TCHAR		char                    wchar_t
+    _TSCHAR		signed char             wchar_t
+    _TUCHAR		unsigned char           wchar_t
+    _TXCHAR		char                    wchar_t
+    TCHAR		char                    wchar_t
+</pre>
+    
+<h3 id="toc_0.1.2">字符, 字符串指针类型 </h3>
+<ul>
+<li>
+  PSTR，PWSTR，       通用版： PTSTR，PTCH          
+
+<li>
+  LPSTR，LPWSTR，     通用版： LPTSTR  , LPTCH
+
+</ul>
+<blockquote>
+typedef CHAR         *PSTR,    *LPSTR;
+typedef WCHAR        *PWSTR,   *LPWSTR;
+</blockquote>
+
+<ul>
+<li>
+  PCSTR，PCWSTR，     通用版：PCTSTR    
+
+<li>
+  LPCSTR，LPCWSTR，   通用版：LPCTSTR
+
+</ul>
+<blockquote>
+typedef CONST CHAR   *PCSTR,   *LPCSTR;
+typedef CONST WCHAR  *PCWSTR,  *LPCWSTR;
+</blockquote>
+
+<pre>
+    解释                           通用版               非UNICODE          UNICODE  
+    
+    字符定义                       TCHAR                CHAR               WCHAR  
+    字符指针                       PTCHAR               CHAR *             WCHAR *  
+    字符串指针                     LPTCH &amp; PTCH         LPSTR &amp; PSTR       LPWSTR &amp; PWSTR  
+    字符串指针                     LPTSTR &amp; PTSTR       LPSTR &amp; PSTR       LPWSTR &amp; PWSTR  
+    静态字符串指针                 LPCTSTR &amp; PCTSTR     LPCSTR &amp; PCSTR     LPCWSTR &amp; PCWSTR  
+</pre>
+    
+<h3 id="toc_0.1.3">字符串字面值 </h3>
+<p>
+参照tchar.h头文件如下定义：
+</p>
+<pre>
+    // _UNICODE 版
+#define	__T(x)		L ## x
+    //	非_UNICODE 版
+#define	__T(x)		x
+
+    // -----------------------------------------
+#define	 _T(x)            __T(x)
+#define  _TEXT(x)         __T(x)
+
+    // 总结如下：
+    // 字符串字面值表示：
+    // 非UNICODE:      " "
+    // UNICODE  :     L" "
+
+    // 字符串字面值表示，总结如下: 
+
+    通用        非UNICODE           UNICODE
+    __T(x)            x               L ## x
+    _T(x)             x               L ## x
+    _TEXT(x)          x               L ## x
+</pre>
+
+<h3 id="toc_0.1.4">字符串处理函数总结</h3>
+<p>
+标准c中的strcpy,strchr,strcat等只能用于ANSI字符串，不能正确处理Unicode字符串，因此也提供了一组补充函数，功能等价，但用于Unicode码。
+我们来看看string.h字符串头文件中是怎样处理char*和wchar_t*两个字符串版本的：
+</p>
+<blockquote>
+char        <strong>strcat(char</strong>,const char*);
+wchar_t <strong>wcschr(wchat_t</strong>,const wchar_t *)
+类似的还有strchr/wcschr，strcmp/wcscmp，strlen/wcslen...
+</blockquote>
+
+<p>
+ANSI            操作函数以str开头       strcpy
+Unicode         操作函数以wcs开头       wcscpy
+MBCS            操作函数以_mbs开头      _mbscpy
+ANSI/Unicode    操作函数以_tcs开头      _tcscpy（C运行期库）
+ANSI/Unicode    操作函数以lstr开头      lstrcpy（Windows函数）
+</p>
+
+<h4 id="toc_0.1.4.1">各种字符串处理函数库</h4>
+
+<ul>
+<li>
+  C运行库对字符串的处理：
+
+</ul>
+
+<p>
+str*系列:       C运行库早期使用strlen strcpy等str*系列函数对char类型的字符串进行处理。
+wcs*系列:       C编译器内置了wchar_t这个16位宽字节类型后，使用新的wcslen wcscpy等wcs*系列的函数对wchar_t类型的字符串进行处理。
+_tcs*系列:      C运行库定义了宏_tcslen _tcscpy等_tcs*系列的宏定义，_tcs*系列函数在编译时根据是否预定义了宏_UNICODE而确定是采用wcs*系列函数，否则采用str*系列函数。
+_tcs*_s系列:    C运行库的最新安全字符串函数，为了防止缓冲区溢出而定义的新函数。
+</p>
+
+<ul>
+<li>
+  Windows对字符串的处理：
+
+</ul>
+
+<p>
+Windows开发团队在winnt.h中定义了新的数据类型CHAR(char), WCHAR(wchar_t), TCHAR，TCHAR最终在编译时根据是否预定义了UNICODE宏而确定是CHAR还是WCHAR。
+</p>
+
+<p>
+lstr*a系列:     在windows操作系统的Kernel32.dll中定义，处理CHAR类型的字符串，其实是对lstr*w的一层包装。
+lstr*w系列:     在windows操作系统的Kernel32.dll中定义，处理WCHAR类型的字符串。
+lstr*系列:      lstr*系列函数也是在编译时才根据是否预定义了UNICODE宏来确定采用lstr*a系列函数，还是lstr*w系列函数。
+</p>
+
+<p>
+个人推荐用lstr*系列，因为这个是windows api，这样写出来的程序不用把C运行库链接进来。
+</p>
+
+<pre ///ANSI 和 UNICODE 的函数对应表>
+ANSI          UNICODE           通用
+
+(char.h)      (wchar.h)        (tchar.h)
+char           wchar_t         TCHAR
+char *         wchar_t *       PTCHAR (PTSTR,LPWSTR,PWSTR,WCHAR)
+printf         wprintf         _tprintf
+scanf          wscanf          _tscanf
+
+atoi           _wtoi           _ttoi
+atol           _wtol           _ttol
+itoa           _itow           _itot
+ltoa           _ltow           _ltot
+atof           _wtof           _tstof
+
+strlen         wcslen          _tcslen
+strcat         wcscat          _tcscat
+strcpy         wcscpy          _tcscpy
+strcmp         wcscmp          _tcscmp
+</pre>
+
+<h3 id="toc_0.1.5">字符（串）之间的转换</h3>
+<ul>
+<li>
+  使用_<em>ATL</em>_的字符串转换宏，可以实现不同类型的字符串转换。
+
+</ul>
+<blockquote>
+在宏名称里面，分别用A，W，T代表ANSI字符串，Unicode字符串，以及TCHAR字符串。 并分别用CA，CW，CT来代表相应的const字符串。
+</blockquote>
+<blockquote>
+对ANSI字符串进行转换操作的宏有A2W，A2T，A2CW，A2CT。
+对Unicode字符串进行转换操作的宏有W2A，W2T，W2CA，W2CT。
+对TCHAR字符串进行转换操作的宏有T2W，T2A，T2CW，T2CA。
+</blockquote>
+<blockquote>
+需要注意的是： 在使用以上宏的时候，必须在程序中定义如下宏，
+USES_CONVERSION;
+</blockquote>
+
+<ul>
+<li>
+  字符串与其他类型之间的转换, CRT函数:
+
+<ul>
+<li>
+  字符串和INT的相互转换
+        通过atoi，_wtoi，_ttoi可以分别把ANSI，Unicode和TCHAR字符串转换成INT。
+        通过_itoa，_itow，_itot可以分别把INT转换成ANSI，Unicode和TCHAR字符串。
+
+</ul>
+</ul>
+    
+<ul>
+<li>
+  字符串和LONG的相互转换
+        通过atol，_wtol，_ttol可以分别把ANSI，Unicode和TCHAR字符串转换成LONG
+        通过_ltoa，_ltow，_ltot可以分别把INT转换成ANSI，Unicode和TCHAR字符串。
+
+</ul>
+
+<ul>
+<li>
+  字符串和Long Long(i64)的相互转换
+        通过_atoi64，_wtoi64，_ttoi64可以分别把ANSI，Unicode和TCHAR字符串转换成long long
+        通过_i64toa，_i64tow，_i64tot可以分别把long long转换成ANSI，Unicode和TCHAR字符串。
+
+</ul>
+        
+<ul>
+<li>
+  字符串和DOUBLE的相互转换
+        通过atof，_wtof，_ttof可以分别把ANSI，Unicode和TCHAR字符串转换成DOUBLE
+        通过_fcvt 可以把DOUBLE数值转换为ANSI字符串。
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

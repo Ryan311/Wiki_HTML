@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Ubuntu</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Ubuntu</a>
+<ul>
+<li><a href="#toc_0.1.1">Tricks</a>
+</ul>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Ubuntu</h2>
+<h3 id="toc_0.1.1">Tricks</h3>
+<ul>
+<li>
+  查看Ubuntu版本  &gt;lsb_release -d
+
+<li>
+  显示或隐藏文件管理器侧边栏      F9 toggle/
+
+<li>
+  ubuntu unity, 已挂载的磁盘不显示在左边侧栏（启动器）
+<pre>
+    Ubuntu 默认总会将挂载的磁盘(硬盘分区)在桌面建立一捷径，Unity 桌面，则除了桌面外，还会在左边侧栏(Launcher)中也建一个捷径。
+
+    事实上，Launcher 上面已有了固定的软件、开启的软件的小图示，所以很容易就占着许多图示，因此不必要再让已挂载的磁盘的图示显示在Launcher 上。
+
+    若想移除（不再显示）已挂载磁盘的图示：
+
+    安装Compiz Config Settings Manager( ccsm)，打开终端(Ctrl - Alt - T)，贴上
+
+    sudo apt-get install compizconfig-settings-manager
+
+    安装后，打开终端，输入 ccsm
+
+    点Desktop(桌面) → 点Ubuntu Unity plugin → 点上方的Experimental → 最下方Show Devices 选择Never → 上一步→ 关闭。
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  ubuntu-tweak0.8.5在清理时会把/etc/X11/X误删除掉，重启后黑屏或停留在logo或startx失败
+<pre>
+    解决方法是：   在grup界面按e编辑，在Linux一午上加text，进入文本模式启动，在终端输入以下内容，创建新的软链接
+    sudo ln -s /usr/bin/Xorg /etc/X11/X
+    重启即可
+    将tweak换成0.8.3
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  自动挂载其它分区
+<pre>
+    修改/etc/fstab文件
+    sudo gedit /etc/fstab
+    每一行使用一个tab分成6列，分别为filesystem, mountpoint, type, options,dump, pass
+    分别表示:原来在文件系统的位置，加载点位置，类型，参数等，可以使用man fstab来查看各个参数的定义
+    将以下内容添加到/etc/fstab 文件尾部，保存，重启即可自动挂载其他分区了。
+
+#Entry for /dev/sda6 :
+    UUID=0004FF2F00048EBB   /media/sda6 ntfs-3g defaults,locale=en_US.UTF-8 0   0
+#Entry for /dev/sda7 :
+    UUID=00048FA50008DD3A   /media/sda7 ntfs-3g defaults,locale=en_US.UTF-8 0   0
+#Entry for /dev/sda8 :
+    UUID=000F3D290008D7EE   /media/sda8 ntfs-3g defaults,locale=en_US.UTF-8 0   0
+
+    也可以写成
+    /dev/sda6 /media/sda6 ntfs-3g defaults,locale=en_US.UTF-8 0   0
+    /dev/sda7 /media/sda7 ntfs-3g defaults,locale=en_US.UTF-8 0   0
+    /dev/sda8 /media/sda8 ntfs-3g defaults,locale=en_US.UTF-8 0   0
+</pre>
+
+<li>
+  Backup system
+
+<ul>
+<li>
+<a href="back.sh.html">back.sh</a> 
+
+<li>
+move back.sh to /home
+      <br> cd /home
+      <br> chmod +x back.sh
+      <br> ./back.s
+
+</ul>
+<li>
+  <a href="http://www.cnblogs.com/vimmer/articles/2645734.html">GoldenDict</a>
+
+<ul>
+<li>
+  sudo apt-get install goldendict goldendict-wordnet
+
+<li>
+  download dictionaries and unzip to a dir    <a href="http://abloz.com/huzheng/stardict-dic/zh_CN/">http://abloz.com/huzheng/stardict-dic/zh_CN/</a>
+
+<li>
+  open goldendict -&gt; edit this group -&gt; add online dict and local dict
+
+<li>
+  有道网页        <a href="http://dict.youdao.com/search?q=%GDWORD%&amp;ue=utf8">http://dict.youdao.com/search?q=%GDWORD%&amp;ue=utf8</a>
+
+<li>
+  本地词典        放到百度云里 ？？？
+
+</ul>
+<li>
+  Ubuntu加速
+
+<ul>
+<li>
+  Preload, 可以预先加载程序使用的库或二进制文件进内存，加快程序启动速度
+
+<ul>
+<li>
+  sudo apt-get install preload
+
+</ul>
+<li>
+  随机启动项
+
+<ul>
+<li>
+  sudo sed -i 's/NoDisplay=true/NoDisplay=false/g' /etc/xdg/autostart/*.desktop     修改随机启动服务的文件属性，显示隐藏的随机启动系统服务
+
+<li>
+  startup －> 修改
+
+</ul>
+</ul>
+<li>
+  Vim中文显示乱码
+
+<ul>
+<li>
+  Windows上默认是GBK编码，而vim默认是utf-8（gedit默认也是utf-8)，所以在vim上打开windows上的文件中文会显示乱码，只需要修改配置文件，使vim支持gbk编码就可以了。
+
+<li>
+  在vimrc中添加*set fileencoding=utf-8,gbk*
+
+</ul>
+<li>
+  Unity Configure
+
+<ul>
+<li>
+  sudo add-apt-repository  ppa:myunity/ppa
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install myunity
+
+</ul>
+<li>
+  Ubuntu Chrome 白屏
+
+<ul>
+<li>
+  sudo mkdir /etc/adobe
+
+<li>
+  echo "OverrideGPUValidation=true" &gt;~/mms.cfg
+
+<li>
+  sudo mv ~/mms.cfg /etc/adobe
+
+</ul>
+<li>
+  Ubuntu下玩魔兽
+
+<ul>
+<li>
+  安装Wine
+
+<li>
+  进入War3的目录
+
+<li>
+  wine War3.exe -opengl -window
+
+</ul>
+<li>
+  Uninstall Wine
+
+<ul>
+<li>
+  安装wine后会在系统中添加一些新的启动项,比如文本文件会以Notepad方式打开的选项
+
+<li>
+  卸载wine后这些东西仍然残留, 要想彻底删除需要将~/.local/share/applications目录下所有以wine开头的destop文件删除掉
+
+<li>
+  还要将该目录下的mimeinfo.cache删除掉, 里面引用了wine*文件, 重新登录一次就看不到残留内容了
+
+</ul>
+<li>
+  在线制作icon图标
+
+<ul>
+<li>
+  <a href="http://www.bitbug.net/">http://www.bitbug.net/</a>
+
+</ul>
+<li>
+  <a href="http://www.playonlinux.com/en">Playonlinux</a>
+
+<ul>
+<li>
+  还需要安装curl: sudo apt-get install curl
+
+</ul>
+<li>
+  Sysinfo显示系统硬件信息
+
+<ul>
+<li>
+  sudo apt-get install sysinfo
+
+<li>
+  &gt;sudo sysinfo
+
+</ul>
+<li>
+  我的机器是双显卡，Intel集成显卡和Ｎvidia Geforce620
+
+<ul>
+<li>
+  千万不要自己下Nvidia的显卡驱动来安装，重启后进不去Unity
+
+<li>
+  安装Bumblebee（大黄蜂）, 让它来安装nvidia驱动bumblebee-nvidia
+
+<ul>
+<li>
+  sudo add-apt-repository ppa:bumblebee/stable
+
+<li>
+  sudo add-apt-repository ppa:ubuntu-x-swatx/x-updates    //more drivers
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install bumblebee bumblebee-nvidia
+
+<li>
+  sudo reboot
+
+<li>
+  有时会发现重启后执行optirun glxinfo，显示如下错误
+<pre>
+            Optirun glxgears: Cannot access secondary GPU - error: [XORG] (EE) No devices detected
+</pre>
+
+<li>
+  解决方法是sudo gedit /etc/bumblebee/xorg.conf.nvidia, 加上BusID行
+<pre // BUSID可以由lspci, 查看3D Controller>
+            Section "Device"
+            Identifier  "DiscreteNvidia"
+            Driver      "nvidia"
+            VendorName  "NVIDIA Corporation"
+            BusID "PCI:02:00:0"
+</pre>
+
+</ul>
+<li>
+  测试 &gt;optirun glxgears  使用独显运行，可以看到3D效果
+
+<li>
+  独显运行chrome, &gt;optirun google-chrome，就可以显示webgl绘制的动画
+
+</ul>
+<li>
+  glxgears
+
+<ul>
+<li>
+  测试Linux是否可以顺利运行2D、3D的测试软件
+
+<li>
+  &gt;optirun　glxgears
+
+<li>
+  弹出窗口中有三个转动的齿轮，在terminal中会显示每５s转动多少栅，齿轮跑的越快说明显卡支持越好
+
+</ul>
+<li>
+  glxinfo
+
+<ul>
+<li>
+  查看当前的渲染引擎
+
+<li>
+  glxinfo | grep "OpenGL version"
+
+<li>
+  optirun glxinfo | grep "OpenGL version"
+
+</ul>
+<li>
+  Rhythmbox中文乱码
+
+<ul>
+<li>
+  Ubuntu使用的UTF-8字符集，而rhythmbox等播放器不可以调整MP3歌曲中所包含的ID3标签信息的字符集，造成乱码显示. mutagen可以批量修改MP3曲目中的ID3标签的字符集。
+
+<li>
+  sudo apt-get install python-mutagen
+
+<li>
+  mid3iconv -e GBK *.mp3
+
+<li>
+  find . -iname "*.mp3" -execdir mid3iconv -e gbk {} \; 
+
+</ul>
+<li>
+  Install JDK
+
+<ul>
+<li>
+  sudo apt-get install openjdk-7-jdk
+
+</ul>
+<li>
+  Ubuntu13.04 No sound
+
+<ul>
+<li>
+  sudo vim /etc/modprobe.d/alsa-base.conf
+
+<li>
+  add the following line at the end of the file:
+
+<ul>
+<li>
+  options snd-hda-intel model=3stack
+
+</ul>
+<li>
+  reboot
+
+</ul>
+<li>
+  开机运行程序
+
+<ul>
+<li>
+  Dash ==&gt; Startup Applications
+
+<li>
+  Add apps
+
+</ul>
+<li>
+  添加右键扩展
+
+<ul>
+<li>
+  添加右键菜单以管理 员打开：
+
+<ul>
+<li>
+  sudo apt-get install nautilus-gksu     
+
+</ul>
+<li>
+  添加右键菜单打开终端：
+
+<li>
+w To Install SysMonitor Indicator 0.4.6 On Ubuntu 14.04 Trusty Tahr
+
+<ul>
+<li>
+  sudo apt-get install nautilus-open-terminal
+
+</ul>
+<li>
+  添加右键菜单图片转换：
+
+<ul>
+<li>
+  sudo apt-get install nautilus-image-converter
+
+</ul>
+<li>
+  清理体系孤独库的软件:
+
+<ul>
+<li>
+  sudo apt-get install gtkorphan
+
+<li>
+  sudo gtkorphan
+
+</ul>
+</ul>
+<li>
+  Chromium    stable, 不会白屏
+
+<ul>
+<li>
+  sudo add-apt-repository ppa:chromium-daily/stable
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get chromium-browser
+
+</ul>
+<li>
+  在顶部状态栏显示CPU&amp;Mem&amp;网络信息
+
+<ul>
+<li>
+  Install SysMonitor Indicator 0.4.6 On Ubuntu 14.04 Trusty Tahr
+
+<ul>
+<li>
+  sudo add-apt-repository ppa:fossfreedom/indicator-sysmonitor
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install indicator-sysmonitor
+
+</ul>
+<li>
+  sudo apt-get install dstat
+
+<li>
+  indicator-sysmonitor =&gt; Preferences =&gt; Advanced 
+
+<li>
+  Customer Output: cpu: {cpu} mem: {mem} net: {net}
+
+</ul>
+<li>
+  MenuLibre: a menu editor that provides an easy-to-use interface
+
+<ul>
+<li>
+  sudo add-apt-repository ppa:menulibre-dev/devel
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install menulibre
+
+</ul>
+<li>
+  Screenlets: linux桌面小工具的开发框架
+
+<ul>
+<li>
+  sudo apt-add-repository ppa:screenlets/ppa
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install screenlets
+
+<li>
+  <a href="http://www.ibm.com/developerworks/cn/linux/l-script-linux-desktop-1/">http://www.ibm.com/developerworks/cn/linux/l-script-linux-desktop-1/</a>
+
+</ul>
+<li>
+  "Language support" icon missing in System Settings 
+
+<ul>
+<li>
+  sudo apt-get install language-selector-gnome 
+
+</ul>
+<li>
+  Install Java
+
+<ul>
+<li>
+  如果你在 Ubuntu 软件中心安装过 OpenJDK，请先使用如下命令将其删除：
+
+<ul>
+<li>
+  sudo apt-get purge openjdk*
+
+</ul>
+<li>
+  sudo add-apt-repository ppa:webupd8team/java
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install oracle-java9-installer
+
+</ul>
+<li>
+  Could not get lock /var/lib/dpkg/lock     
+
+<ul>
+<li>
+  sudo rm /var/cache/apt/archives/lock
+
+<li>
+  sudo rm /var/lib/dpkg/lock
+
+</ul>
+<li>
+  为知笔记
+
+<ul>
+<li>
+  从官方PPA仓库安装：
+<pre>
+        $ sudo add-apt-repository ppa:wiznote-team
+        $ sudo apt-get update
+        $ sudo apt-get install wiznote
+</pre>
+
+</ul>
+<li>
+  Ubuntu/Debian 修改文件关联打开程序
+<pre>
+        Ubuntu/Debian设置里面没有windows下的“文件夹选项”，不能直接修改文件关联。
+        如果对系统默认的打开程序不满意，想按文件类型MIME TYPE修改文件的默认打开
+        程序，需要手动修改下面的配置文件。 保存全局打开方式的文件：/etc/gnome/defaults.list
+        用户自定义的配置文件：~/.local/share/applications/mimeapps.list
+        全局配置无需修改，只要将相关内容复制到用户自定义文件修改即可。
+        
+        QtCreator
+        1)  已经存在的文件   .local/share/application/DigiaQt-qtcreator-community.desktop     
+        2)  修改文件     .local/share/application/mimeapps.list 2) 修改文件  .local/share/application/mimeapps.list 
+        3)  在文件尾部加入 
+            application/x-designer=DigiaQt-qtcreator-community.desktop
+            application/vnd.qt.qmakeprofile=DigiaQt-qtcreator-community.desktop
+            application/vnd.qt.xml.resource=DigiaQt-qtcreator-community.desktop
+            text/x-qml=DigiaQt-qtcreator-community.desktop
+            text/x-qt.qml=DigiaQt-qtcreator-community.desktop
+            text/x-qt.qbs=DigiaQt-qtcreator-community.desktop
+</pre>
+
+<li>
+  Ubuntu在Applications中显示的图标与程序的关联
+
+<ul>
+<li>
+  ~/.local/share/application/*.desktop    本地的应用图标， 这些文件包含图标与程序的对应信息
+
+<li>
+  /usr/share/applications/*.desktop       系统应用图标
+
+<li>
+  如果遇到图标存在但是打不开程序， 在这里查看一下对应的文件中程序的路径是否正确
+
+<li>
+  创建.desktop文件， 可以手动创建， 也可以用工具：
+
+<ul>
+<li>
+  安装gnome-panel:     sudo apt-get install gnome-panel 
+
+<li>
+  使用gnome-panel:     gnome-desktop-item-edit [选线] [路径] [指令]
+
+</ul>
+</ul>
+<li>
+  Unity and Compiz
+
+<ul>
+<li>
+  重置Compiz      dconf reset -f /org/compiz
+
+<li>
+  重启Unity       setsid unity
+
+</ul>
+<li>
+  硬件信息
+
+<ul>
+<li>
+  查看USB设备，使用lsusb命令
+
+<li>
+  查看本机硬件信息， hardinfo
+
+<ul>
+<li>
+  sudo apt-get install hardinfo
+
+</ul>
+<li>
+  sysinfo     同hardinfo, 轻量级
+
+<ul>
+<li>
+  sudo apt-get install sysinfo
+
+</ul>
+<li>
+  lspci   显示系统中所有PCI总线设备或连接到该总线上的所有设备的工具
+
+<ul>
+<li>
+  lspci -v
+
+<li>
+  lspci -vv
+
+<li>
+  lspci -vvv
+
+<li>
+  man lspci
+
+</ul>
+</ul>
+<li>
+  3D特效
+
+<ul>
+<li>
+  安装CCSM设置管理器, 在软件中心输入"compiz"， Install “CompizConfig Settings Manager“
+
+<li>
+  安装compiz特效插件： sudo apt-get install compiz-plugins-extra
+
+</ul>
+<li>
+  中文输入法 fcitx
+
+<ul>
+<li>
+  <a href="https://fcitx-im.org/wiki/Install_%28Ubuntu%29">https://fcitx-im.org/wiki/Install_%28Ubuntu%29</a>
+
+</ul>
+</ul>
+<hr />
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

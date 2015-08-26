@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>NTProcessInfo.h</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<pre>
+    //***********************************************************************/
+    // Header definitions to access NtQueryInformationProcess in NTDLL.DLL
+    //
+    // Copyright ?2007 Steven Moore (OrionScorpion).  All Rights Reserved.
+    //
+    // NOTES: PEB_LDR_DATA, RTL_USER_PROCESS_PARAMETERS and PEB struct are
+    //        defined in Winternl.h and Ntddk.h.  The specs below are from
+    //        Microsoft MSDN web site as of Jul 2007.  I locally specified
+    //        them below since they can change in future versions and may
+    //        not reflect current winternl.h or ntddk.h
+    //***********************************************************************/
+    #ifndef _ORIONSCORPION_NTPROCESSINFO_H_
+    #define _ORIONSCORPION_NTPROCESSINFO_H_
+    
+    #pragma once
+    
+    #include &lt;winternl.h&gt;
+    #include &lt;psapi.h&gt;
+    
+    #define STRSAFE_LIB
+    #include &lt;strsafe.h&gt;
+    
+    #pragma comment(lib, "strsafe.lib")
+    #pragma comment(lib, "rpcrt4.lib")
+    #pragma comment(lib, "psapi.lib")
+    
+    #ifndef NTSTATUS
+    #define LONG NTSTATUS
+    #endif
+    
+    // Unicode path usually prefix with '\\?\'
+    #define MAX_UNICODE_PATH	32767L
+
+    // Used in PEB struct
+    typedef ULONG smPPS_POST_PROCESS_INIT_ROUTINE;
+
+    // Used in PEB struct
+    typedef struct _smPEB_LDR_DATA {
+        BYTE Reserved1[8];
+        PVOID Reserved2[3];
+        LIST_ENTRY InMemoryOrderModuleList;
+    } smPEB_LDR_DATA, *smPPEB_LDR_DATA;
+
+    // Used in PEB struct
+    typedef struct _smRTL_USER_PROCESS_PARAMETERS {
+        BYTE Reserved1[16];
+        PVOID Reserved2[10];
+        UNICODE_STRING ImagePathName;
+        UNICODE_STRING CommandLine;
+    } smRTL_USER_PROCESS_PARAMETERS, *smPRTL_USER_PROCESS_PARAMETERS;
+
+    // Used in PROCESS_BASIC_INFORMATION struct
+    typedef struct _smPEB {
+        BYTE Reserved1[2];
+        BYTE BeingDebugged;
+        BYTE Reserved2[1];
+        PVOID Reserved3[2];
+        smPPEB_LDR_DATA Ldr;
+        smPRTL_USER_PROCESS_PARAMETERS ProcessParameters;
+        BYTE Reserved4[104];
+        PVOID Reserved5[52];
+        smPPS_POST_PROCESS_INIT_ROUTINE PostProcessInitRoutine;
+        BYTE Reserved6[128];
+        PVOID Reserved7[1];
+        ULONG SessionId;
+    } smPEB, *smPPEB;
+
+    // Used with NtQueryInformationProcess
+    typedef struct _smPROCESS_BASIC_INFORMATION {
+        LONG ExitStatus;
+        smPPEB PebBaseAddress;
+        ULONG_PTR AffinityMask;
+        LONG BasePriority;
+        ULONG_PTR UniqueProcessId;
+        ULONG_PTR InheritedFromUniqueProcessId;
+    } smPROCESS_BASIC_INFORMATION, *smPPROCESS_BASIC_INFORMATION;
+
+    // NtQueryInformationProcess in NTDLL.DLL
+    typedef NTSTATUS (NTAPI *pfnNtQueryInformationProcess)(
+        IN	HANDLE ProcessHandle,
+        IN	PROCESSINFOCLASS ProcessInformationClass,
+        OUT	PVOID ProcessInformation,
+        IN	ULONG ProcessInformationLength,
+        OUT	PULONG ReturnLength	OPTIONAL
+        );
+
+
+
+    typedef struct _smPROCESSINFO
+    {
+        DWORD	dwPID;
+        DWORD	dwParentPID;
+        DWORD	dwSessionID;
+        DWORD	dwPEBBaseAddress;
+        DWORD	dwAffinityMask;
+        LONG	dwBasePriority;
+        LONG	dwExitStatus;
+        BYTE	cBeingDebugged;
+        TCHAR	szImgPath[MAX_UNICODE_PATH];
+        TCHAR	szCmdLine[MAX_UNICODE_PATH];
+    } smPROCESSINFO;
+
+    HMODULE sm_LoadNTDLLFunctions(void);
+    void sm_FreeNTDLLFunctions(IN HMODULE hNtDll);
+    BOOL sm_EnableTokenPrivilege(IN LPCTSTR pszPrivilege);
+    BOOL sm_GetNtProcessInfo(IN const DWORD dwPID, OUT smPROCESSINFO *ppi);
+    BOOL GetNtProcessInfoViaPid(DWORD dwPID, smPROCESSINFO *ppi);
+
+    #endif	// _ORIONSCORPION_NTPROCESSINFO_H_
+        
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

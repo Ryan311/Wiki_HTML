@@ -43,30 +43,76 @@
     
 <div class="toc">
 <ul>
-<li><a href="#toc_0.1">Package Format</a>
-<li><a href="#toc_0.2">Bluetooth in 2014</a>
-<li><a href="#toc_0.3">BT4.2 Features</a>
-<li><a href="#toc_0.4">BLE in Win8+</a>
+<li><a href="#toc_0.1">Bluetooth Clock</a>
+<li><a href="#toc_0.2">BLUETOOTH Device Addressing</a>
+<li><a href="#toc_0.3">Packets</a>
+<li><a href="#toc_0.4">LMP</a>
+<li><a href="#toc_0.5">SDP</a>
+<li><a href="#toc_0.6">Bluetooth in 2014</a>
 </ul>
 </ul>
 </div>
-<h2 id="toc_0.1">Package Format</h2>
+
+<h2 id="toc_0.1">Bluetooth Clock</h2>
+<ul>
+<li>
+  Every Bluetooth device shall have a native clock that shall be derived from a free running reference clock
+
+<li>
+  If the clock is implemented with a counter, a 28-bit counter is required that shall wrap around at 2**28-1
+
+<li>
+  Four periods are important in the Bluetooth system: 
 <pre>
-    HCI Header
-        U16 Handle_Flag
-        U16 DataLength
-    L2cap Header
-        U16 Length
-        U16 Channel ID
-    PayLoad
-        Fix Channel
-            U8  Cmd
-                Parameter
-        Data Channel
-            Data Payload
+        312.5us &lt;--&gt; 3.2KHz
+        ------------------------
+        312.5 us    -&gt;      CLK0
+        625 us      -&gt;      CLK1    -&gt;  1 slot
+        1.25 ms     -&gt;      CLK2
+        1.28 s      -&gt;      CLK12  
 </pre>
 
-<h2 id="toc_0.2">Bluetooth in 2014</h2>
+<li>
+  A TDD scheme is used where master and slave alternately transmit
+    <img src="images/slot.jpg" />
+
+<li>
+  The master transmission shall always start at even numbered time slots (CLK1=0) 
+
+</ul>
+<p>
+#*   The slave transmission shall always start at odd numbered time slots (CLK1=1)
+</p>
+
+<h2 id="toc_0.2">BLUETOOTH Device Addressing</h2>
+<ul>
+<li>
+  Each Bluetooth device shall be allocated a unique 48-bit Bluetooth device address (BD_ADDR)
+    <img src="images/BD_Address.jpg" />
+
+<li>
+  Reserved Address
+
+<ul>
+<li>
+  A block of 64 contiguous LAPs is reserved for inquiry operations    0x9E8B00-0x9E8B3F
+
+<li>
+  One LAP common to all devices is reserved for general inquiry       0x9E8B33
+
+<li>
+  The remaining 63 LAPs are reserved for dedicated inquiry of specific classes of devices 
+
+</ul>
+</ul>
+
+<h2 id="toc_0.3"><a href="Packets.html">Packets</a></h2>
+
+<h2 id="toc_0.4"><a href="LMP.html">LMP</a></h2>
+
+<h2 id="toc_0.5"><a href="SDP.html">SDP</a></h2>
+
+<h2 id="toc_0.6">Bluetooth in 2014</h2>
 <ul>
 <li>
 LE Secure Connections - Host Functionality has been changed
@@ -155,42 +201,6 @@ This enhancement will not only increase the level of anonymity for the LE
 Peripheral, but also apply the same level of Privacy to the LE Central device. 
 
 </ul>
-</ul>
-
-<h2 id="toc_0.3">BT4.2 Features</h2>
-<ol>
-<li>
-  LE Data Packet Length Extension
-
-<li>
-  LE Secure Connections
-
-<li>
-  Link Layer Privacy
-
-<li>
-  Link Layer Extended Filter Policies
-
-</ol>
-
-<p>
-The term for ‘LE privacy v1.2’ is changed to Link Layer Privacy and Link Layer Extended Filter Policies.
-</p>
-
-<h2 id="toc_0.4">BLE in Win8+</h2>
-<ul>
-<li>
-  <a href="https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/home?searchTerm=Windows%208%2C%20Bluetooth%20LE%20and%20BluetoothFindFirstDevice%2FBluetoothFindNextDevice%2FBluetoothFindDeviceClose">https://social.msdn.microsoft.com/Forums/windowsdesktop/en-US/home?searchTerm=Windows%208%2C%20Bluetooth%20LE%20and%20BluetoothFindFirstDevice%2FBluetoothFindNextDevice%2FBluetoothFindDeviceClose</a>
-
-<li>
-  The Windows 8 Bluetooth GATT apis requires that the device be paired using the built-in UI and does not allow application to connect to an arbitrary Bluetooth LE device.
-
-<li>
-  Windows上BLE的缺点， 只能通过Buildin UI来scan， pairy设备， 不能将Classic Device和BLE Device区别开来
-
-<li>
-  对于BLE设备来说， 有很多情景并不需要配对，如iBeacon，它只支持Advertising，IPhone只需要Scan到它并从Advertising中得到信息就可以了。Windows中对类似iBeacon的应用就不能提供支持
-
 </ul>
 
 

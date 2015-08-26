@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>��ķ���Ȩ��</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+
+<ul>
+<li>
+  访问权限
+
+<ul>
+<li>
+  public 公共接口 ：向外界开放，可通过对象或类名访问
+
+<li>
+  protected 受保护的访问：只向子类开放访问权限 ，不可通过对象访问
+
+<li>
+  private私有 ：只有类成员可以访问，外界不可以通过任何形式访问
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  继承关系：
+
+<ul>
+<li>
+  public继承：父类成员的访问权限在子类中不变，仍为自己原来的权限。
+
+<li>
+  protected继承：父类的public成员访问权限在子类中变为protected; 父类的protected成员和private成员在子类权限维持原来的权限不变
+
+<li>
+  private继承：父类的所有成员访问权限在子类中变为private
+
+</ul>
+</ul>
+    
+<p>
+其中，public继承是is-a的关系，可以用父类的指针或者引用指向子类的对象；
+protected和private继承没有is-a的关系，只表示“组合”或者“拥有”的关系，不可以用父类的指针或引用指向子类对象。
+</p>
+
+<p>
+C++对象模型中，子类对象的内存空间中包含父类的部分，当用父类指针指向一个子类的对象实时，这个指针可以访问的是相应的父类那部分的内存；
+在protected和private继承的情况下，父类的内存部分是私有的，不对外开放的，所以，protected和private继承时，不可以用父类的指针或引用指向子类对象。
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

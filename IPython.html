@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>IPython</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<h2 id="toc_0.1">IPython</h2>
+<ul>
+<li>
+  <a href="http://ipython.org/install.html">http://ipython.org/install.html</a>
+
+</ul>
+
+<h3 id="toc_0.1.1"><a href="http://www.pythonforbeginners.com/basics/ipython-a-short-introduction/">IPython</a></h3>
+<ul>
+<li>
+  Tab completion              " very useful
+
+<li>
+  Using Python debugger
+
+<li>
+  Profiles
+
+<li>
+  QT-based
+
+</ul>
+ 
+<h2 id="toc_0.2">Useful Command</h2>
+<ul>
+<li>
+  %edit
+
+<ul>
+<li>
+  ?%edit  查看使用方法
+
+<li>
+  %edit -p | _    打开上次编辑的临时文件
+
+<li>
+  %edit _Number   打开之前编辑过的文件
+
+</ul>
+<li>
+  %time       计算运行脚本所用的时间
+
+<li>
+  %timeit     运行多次， 计算平均运行时间 
+
+<ul>
+<li>
+  %timeit -n 100  []      指定运行次数
+
+</ul>
+<li>
+  %memit      运行多次， 计算平均占用的内存
+
+<ul>
+<li>
+  %memit -r 3 []      指定运行次数
+
+</ul>
+<li>
+  %prun       See how long it took each function in a script to run
+
+</ul>
+
+<h2 id="toc_0.3">IPython shortcuts for line_profiler and memory_profiler</h2>
+<ul>
+<li>
+  <a href="http://www.huyng.com/posts/python-performance-analysis/">http://www.huyng.com/posts/python-performance-analysis/</a>
+
+<li>
+  <a href="http://itindex.net/detail/50507-python-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90">http://itindex.net/detail/50507-python-%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90</a>
+
+<li>
+  %load_ext memory_profiler
+
+<li>
+  %load_ext line_profiler
+
+<li>
+  %mprun -f yourprogram func()
+
+<li>
+  %lprun -f yourprogram func()
+
+</ul>
+
+<h2 id="toc_0.4"><a href="http://yangzetian.github.io/2013/02/08/ipython-notebook-interactive-computing-new-era/">IPython-notebook</a></h2>
+<pre>
+IPython Notebook 是一种新兴的交互式数据分析与记录工具，它定义了一种全新的计算文件格式，其中包含了代码，
+代码说明以及每一步的计算输出(数值或图片等)，也就是说这一个文件完整记录了计算过程中的所有相关信息。此外，
+该文件还可以嵌入网络视频，图片， 公式等众多副文本格式，实为交互计算，记录思维，传播思想的好帮手。
+</pre>
+<ul>
+<li>
+  &gt; sudo ipython notebook
+
+<li>
+  &gt; sudo ipython notebook --pylab
+
+<li>
+  &gt; sudo ipython notebook --pylab inline
+
+<li>
+  As ipython notebook kernel must run as root while chrome can't run as root
+
+<li>
+  modify /usr/bin/google-chrome, add <strong>--user-data-dir</strong> in the end of last line
+
+</ul>
+
+<h2 id="toc_0.5">Windows Install line_profiler for ipython</h2>
+<ul>
+<li>
+  pip install cython
+
+<li>
+  pip install line_profiler
+
+<li>
+  pip install memory_profiler
+
+<li>
+  If error happened: "error: Unable to find vcvarsall.bat", follow this
+<pre>
+        1.  Install mingw32
+        2.  Add mingw32's bin directory to your environment variables
+            Append C:\Programs\MinGW\bin;C:\Programs\MinGW\msys\1.0\bin; to the PATH
+        3.  Edit (create if it doesn't exist) the distutils.cfg file located at C:\Python26\Lib\distutils\distutils.cfg to be:
+                [build]
+                compiler=mingw32
+</pre>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

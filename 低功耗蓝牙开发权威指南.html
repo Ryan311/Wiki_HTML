@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>�͹�����������Ȩ��ָ��</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">低功耗蓝牙 </a>
+<ul>
+<li><a href="#toc_1.1">低功耗体现在哪些方面</a>
+<li><a href="#toc_1.2">凡事皆有状态 </a>
+<ul>
+<li><a href="#toc_1.2.1">综述</a>
+</ul>
+<li><a href="#toc_1.3">[[控制器]](Controller)</a>
+<li><a href="#toc_1.4">[[主机_控制器接口]](HCI)</a>
+<li><a href="#toc_1.5">主机(Host)</a>
+<li><a href="#toc_1.6">应用(App)</a>
+</ul>
+</ul>
+</div>
+
+<p>
+作者： Robin Heydon
+</p>
+
+<h1 id="toc_1">低功耗蓝牙 </h1>
+<h2 id="toc_1.1">低功耗体现在哪些方面</h2>
+<p>
+1. 在低功耗蓝牙中， 一个设备如果想被发现就必须每隔几秒发送三次短消息； 而如果它想发现打算与之通信的设备， 在广播短消息之后该设备应该立即进行侦听
+在寻找其它设备时， 设备将打开它的接收器并侦听其他设备的传输。 三次传输分别利用了三个不同的频率进行， 以提高鲁棒性， 选择三是在鲁棒性和低功耗之间来平衡。
+</p>
+
+<p>
+2. 选择哪些设备执行发送、哪些设备执行接收时也要做考虑。 要搜寻一个正在发送的设备可能需要花费很长的一段时间， 并因此耗费大量能量， 因此这类操作当交
+给那些能量储备更多的设备。在低功耗蓝牙中， 可发现设备执行数据的发送， 而寻找其它设备的设备执行接收。 这正好是和经典蓝牙相反的!!!
+</p>
+
+<p>
+3. 使用短报文, 原因有三。 1) 通过使用高效率编码， 短分组可以使用更少的能量和更快的发送相同数据的数据。2) 限制设备只可使用短报文， 控制器消除了在一次
+数据传输中需要不断校准无线电的需求。3) 短期、间歇性而非长期、取电令设备可以从一个纽扣电池获得更多的能量。
+</p>
+
+<p>
+4. 内存需求小， 价格和能耗少(ram需要持续供电)。 在链路层保持较短分组有助于减少无线电发送和接收数据包时对内存的需求； 属性协议层不需要处理任何长度大于23字节的数据报文， 在状态转换时不
+要求存储任何状态信息。 低功耗蓝牙只有一个协议--属性协议来支持名称发现、服务发现、读取和写入信息， 以实现不同的用例， 比传统蓝牙使用多个协议开销少很多。
+</p>
+
+<p>
+5. 所有层都采用非对称设计， 让能源更少的设备负担更少的事情。
+1)  物理层：有两类无线电， 接收器和发射器。 一个设备可以两个都有， 或只有一个。 假设一个设备有接收器， 另一个有发射器， 二者构成的网络称为非对称网络
+2)  链路层：设备被分为advertiser、scanner、master、slave。 advertiser和scanner显然是非对称的。 master和slave是两个设备连接后的角色， 从设备无法发起任何
+复杂的操作， 而主设备则必须负责微微网的定时， 自适应跳频集合设置、加密以及一些其他的复杂操作。从设备只要完成要求的操作， 可以非常简单， 实现了低成本、低内存和低功耗。
+3)  属性协议层： 存在两类设备， 称为客户端和服务器。 服务器保存数据， 客户端向其发送请求以获得数据。 客户端的工具比较辛苦， 能耗更高
+4)  安全架构：非对称密码分配方案， 由从设备提供密钥， 将其交给主设备并由后者保存。主设备因而担负起保存链路绑定信息的重任， 从设备则无需记忆相关信息。
+</p>
+
+<h2 id="toc_1.2">凡事皆有状态 </h2>
+<ul>
+<li>
+  低功耗蓝牙背后有个基本的概念：任何事物都有状态， 状态可以是任何东西：当前的温度、设备里电池的状态，设备名称或是对测量温度的地点的描述。它通过属性服务器上的属性协议对外公开。
+
+<li>
+  状态： “可读”， “可写”， “可通知”
+
+</ul>
+
+<h3 id="toc_1.2.1"><a href="综述.html">综述</a></h3>
+<h2 id="toc_1.3">[[控制器]](Controller)</h2>
+<h2 id="toc_1.4">[[主机_控制器接口]](HCI)</h2>
+<h2 id="toc_1.5"><a href="主机.html">主机</a>(Host)</h2>
+<h2 id="toc_1.6"><a href="应用.html">应用</a>(App)</h2>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>
