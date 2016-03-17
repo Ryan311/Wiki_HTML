@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Decorator</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Decorator:</a>
+<li><a href="#toc_0.2">内置的装饰器</a>
+<li><a href="#toc_0.3">functools模块</a>
+</ul>
+</ul>
+</div>
+
+<p>
+<a href="http://www.cnblogs.com/huxi/archive/2011/03/01/1967600.html">Python装饰器与面向切面编程</a>
+</p>
+
+<h2 id="toc_0.1">Decorator:</h2>
+<p>
+<br>装饰器的作用就是为已经存在的对象添加额外的功能
+</p>
+
+<pre class = "brush: python">
+#-*- coding: UTF-8 -*-
+import time
+ 
+def foo():
+    print 'in foo()'
+ 
+# 定义一个计时器，传入一个，并返回另一个附加了计时功能的方法
+def timeit(func):
+     
+    # 定义一个内嵌的包装函数，给传入的函数加上计时功能的包装
+    def wrapper():
+        start = time.clock()
+        func()
+        end =time.clock()
+        print 'used:', end - start
+     
+    # 将包装后的函数返回
+    return wrapper
+ 
+foo = timeit(foo)
+foo()
+
+</pre>
+
+<p>
+*语法糖*:
+</p>
+<pre class = "brush: python">
+import time
+ 
+def timeit(func):
+    def wrapper():
+        start = time.clock()
+        func()
+        end =time.clock()
+        print 'used:', end - start
+    return wrapper
+ 
+@timeit
+def foo():
+    print 'in foo()'
+ 
+foo()
+</pre>
+
+<h2 id="toc_0.2">内置的装饰器</h2>
+<p>
+内置的装饰器有三个，分别是staticmethod、classmethod和property，作用分别是把类中定义的实例方法变成静态方法、类方法和类属性
+<br>用处不大
+</p>
+
+<h2 id="toc_0.3">functools模块</h2>
+<p>
+functools模块提供了两个装饰器:
+</p>
+<ul>
+<li>
+  wraps(wrapped[, assigned][, updated])
+
+<li>
+  total_ordering(cls)
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>WinRT</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+
+<p>
+什么是WinRT？    WinRT是微软为了方便开发者编写Metro风格的程序而提供的一个开发平台。
+</p>
+
+<p>
+<img src="images/WinRT.jpg" />
+</p>
+
+<pre>
+    WinRT is the new API for writing Metro applications on Windows 8. 
+    Unlike traditional Windows APIs, which were C based, WinRT is a COM based C++ API and designed from the beginning to be object oriented.
+
+    WinRT isn’t another abstraction layer; it’s a new runtime sitting directly on top of the Windows Kernel Services just like the good old 
+    Win32 API as shown in the above figure that allows developers to write Metro style applications for Windows 8, using a variety of languages 
+    including C++ (with WRL or  with Component Extensions – C++/CX), the managed languages C# and VB.NET, as well as JavaScript. 
+    In the above figure, right on top of NT kernel (like Win32) is WinRT. 
+</pre>
+
+<ul>
+<li>
+  Language projections： 可以看成是介乎WinRT API和编程者的一个接口层，引入这一层有以下几种目的  
+
+<ul>
+<li>
+  屏蔽上层编程语言差异，使得编程者可以使用C#/VB，C++ ，JavaScript等任意语言无差别（或者说差别很小）的调用底层WinRT API  
+
+<li>
+  效率问题，使用COM进行交互，调用开销一直是个问题，Language projections通过某些机制有效地降低了交互开销。
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  Metro支持三种开发模式：
+
+<ul>
+<li>
+  如果你有Web前台开发功底，你可以选择HTML5+CSS3+JavaScript进行开发；
+
+<li>
+  如果你熟悉Silverlight或WPF开发，可以选择XAML+C#/VB.NET/C++进行开发；
+
+<li>
+  如果你比较关注渲染性能，当然可以选择C++和DirectX进行开发。
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  WinRT API Reference
+
+<ul>
+<li>
+  <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/hh920511(v=vs.85).aspx#windows_runtime_classes">https://msdn.microsoft.com/en-us/library/windows/desktop/hh920511(v=vs.85).aspx#windows_runtime_classes</a>
+
+<li>
+  <a href="https://msdn.microsoft.com/en-us/library/windows/apps/br211377.aspx">https://msdn.microsoft.com/en-us/library/windows/apps/br211377.aspx</a>
+
+<li>
+  <a href="http://www.codeproject.com/Articles/262151/Visual-Cplusplus-and-WinRT-Metro-Some-fundamentals">http://www.codeproject.com/Articles/262151/Visual-Cplusplus-and-WinRT-Metro-Some-fundamentals</a>
+
+<li>
+  <a href="http://www.codeproject.com/Articles/328551/Part-Introduction-to-WinRT-the-new-Windows-Runti">http://www.codeproject.com/Articles/328551/Part-Introduction-to-WinRT-the-new-Windows-Runti</a>
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

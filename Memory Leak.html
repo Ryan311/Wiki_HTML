@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
     <title>Memory Leak</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -149,7 +149,6 @@ f:\btsw\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\os_windows.c(309)+0x13
 <p>
 但从上面看到， 在RtkBtfilter中， 我们包装了ExAllocatePoolWithTag这个函数用来分配内存， 所以用ln就没有用了， 我们想要知道在哪个函数中调用了OsAllocateRawMemory。
 </p>
-
  
 <p>
 直接通过Windbg命令无法找到内存分配位置， 需要在调用OsAllocateRawMemory时加入一些信息。
@@ -162,50 +161,29 @@ Driver中， 实际分配函数是OsAllocateExtraMemory， Extra表示在分配�
 <pre>
 RT_STATUS
 OsAllocateExtraMemory(
-
     OUT RT_VOID** ppBuffer,
-
     IN RT_U32 BufferLen,
-
     IN RT_MEMORY_TYPE Type,
-
     IN RT_U32 LineNum,      
-
-IN RT_S8* FuncStr
-
-//可以看到将Line Number， function name作为参数传到了分配函数
+    IN RT_S8* FuncStr
+    //可以看到将Line Number， function name作为参数传到了分配函数
     )
 {
-     .............
-
+    .............
     RawLen = BufferLen + sizeof(MEM_HEAD);     每次分配会多出一个Mem_Head结构
-
     OsAllocateRawMemory(&amp;pRawBuffer, RawLen, Type);
-
     if (NULL == pRawBuffer)
-
     {
-
         //since caller will send its debug message out, so set RTK_OS instead of RTK_ERROR
-
         RT_DEBUG(TRACE_LEVEL_ERROR,RTK_OS,("OS: Allocat Memory Error"));
-
         return Ret;
-
     }
-
     pMemHead = (MEM_HEAD*)(pRawBuffer);
-
     OsZeroMemory(pMemHead, sizeof(MEM_HEAD));
-
     pMemHead-&gt;LineNum = LineNum;                                          将LineNumber和FucName保存在这块内存的头部， 结构是Mem_Head
-
     OsCopyMemory(pMemHead-&gt;FuncName, FuncStr, FUNCTION_NAME_LENGTH);
-
     *ppBuffer = (RT_U8*)(pRawBuffer) + sizeof(MEM_HEAD);   
-
     return RT_STATUS_SUCCESS;
-
 }
 </pre>
  

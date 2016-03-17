@@ -43,13 +43,23 @@
     
 <div class="toc">
 <ul>
-<li><a href="#toc_0.1">Build</a>
-<li><a href="#toc_0.2">Tools</a>
+<li><a href="#toc_0.1">BlueZ</a>
+<li><a href="#toc_0.2">Build</a>
+<li><a href="#toc_0.3">Tools</a>
 </ul>
 </ul>
 </div>
 
-<h2 id="toc_0.1">Build</h2>
+<h2 id="toc_0.1">BlueZ</h2>
+<ul>
+<li>
+  KernelMode part：   被编译为.ko模块
+
+<li>
+  UserMode part：     各Profile， 通过IO与Kernel Mode通信
+
+</ul>
+<h2 id="toc_0.2">Build</h2>
 <ul>
 <li>
   下载Source Code并解压
@@ -68,7 +78,7 @@
 
 </ul>
     
-<h2 id="toc_0.2">Tools</h2>
+<h2 id="toc_0.3">Tools</h2>
 <ul>
 <li>
   hciconfig

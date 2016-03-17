@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>NumPy</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">ndarray对象属性有： </a>
+<li><a href="#toc_0.2">创建ndarray的函数:</a>
+<li><a href="#toc_0.3">通用函数(ufunc)</a>
+<li><a href="#toc_0.4">形状操作</a>
+<li><a href="#toc_0.5">复制和视图 </a>
+<li><a href="#toc_0.6">函数和方法(method)总览</a>
+<li><a href="#toc_0.7">广播法则(rule)</a>
+<li><a href="#toc_0.8">花哨的索引和索引技巧 </a>
+<li><a href="#toc_0.9">矩阵类 </a>
+</ul>
+</ul>
+</div>
+
+<p>
+tutorial:   <a href="http://blog.csdn.net/lsjseu/article/details/20359201?utm_source=tuicool&amp;utm_medium=referral">http://blog.csdn.net/lsjseu/article/details/20359201?utm_source=tuicool&amp;utm_medium=referral</a>
+</p>
+
+<p>
+Install:     sudo pip install numpy
+</p>
+
+<p>
+约定    import numpy as np
+</p>
+
+<p>
+面向数组的编程和思维方式:
+<br>NumPy的主要对象是同种元素的多维数组。这是一个所有的元素都是一种类型、通过一个正整数元组索引的元素表格(通常是元素是数字)。
+<br>在NumPy中维度(dimensions)叫做轴(axes)，轴的个数叫做秩(rank)。
+</p>
+
+<h2 id="toc_0.1">ndarray对象属性有： </h2>
+<table>
+<tr>
+<td>
+ndarray.ndim
+</td>
+<td>
+数组轴的个数，在python的世界中，轴的个数被称作秩 
+</td>
+</tr>
+<tr>
+<td>
+ndarray.shape
+</td>
+<td>
+数组的维度。指示数组在每个维度上大小的整数元组。如一个n排m列的矩阵，它的shape属性将是(2,3)
+</td>
+</tr>
+<tr>
+<td>
+ndarray.size
+</td>
+<td>
+数组元素的总个数，等于shape属性中元组元素的乘积。 
+</td>
+</tr>
+<tr>
+<td>
+ndarray.dtype
+</td>
+<td>
+一个用来描述数组中元素类型的对象，可以通过创造或指定dtype使用标准Python类型。另外NumPy提供它自己的数据类型。 
+</td>
+</tr>
+<tr>
+<td>
+ndarray.itemsize
+</td>
+<td>
+数组中每个元素的字节大小。如一个元素类型为float64的数组itemsiz属性值为8(=64/8)
+</td>
+</tr>
+<tr>
+<td>
+ndarray.data
+</td>
+<td>
+包含实际数组元素的缓冲区，通常我们不需要使用这个属性，因为我们总是通过索引来使用数组中的元素。 
+</td>
+</tr>
+</table>
+
+<h2 id="toc_0.2">创建ndarray的函数:</h2>
+<table>
+<tr>
+<td>
+array
+</td>
+<td>
+将输入数据(列表、元组、数组或其他序列类型)转换为ndarray
+</td>
+</tr>
+<tr>
+<td>
+asarray
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+arange
+</td>
+<td>
+类似于内置的range， 但返回的是一个ndarray而不是列表 
+</td>
+</tr>
+<tr>
+<td>
+ones, ones_like
+</td>
+<td>
+创建全1数组
+</td>
+</tr>
+<tr>
+<td>
+zeros, zeros_like
+</td>
+<td>
+创建全0数组
+</td>
+</tr>
+<tr>
+<td>
+empty, empty_like
+</td>
+<td>
+创建新数组， 只分配内存空间但不填充任何值 
+</td>
+</tr>
+<tr>
+<td>
+eye, identity
+</td>
+<td>
+创建一个正方的N*N单位矩阵
+</td>
+</tr>
+</table>
+
+<h2 id="toc_0.3">通用函数(ufunc)</h2>
+<p>
+在NumPy里这些函数作用按数组的元素运算，产生一个数组作为输出。
+</p>
+<blockquote>
+sin,cos, exp, all, alltrue, any, apply along axis, argmax, argmin, argsort, average, bincount, ceil, clip, conj, conjugate, corrcoef, cov, cross, cumprod, cumsum, diff, dot, floor, inner, inv, lexsort, max, maximum, mean, median, min, minimum, nonzero, outer, prod, re, round, sometrue, sort, std, sum, trace, transpose, var, vdot, vectorize, where
+</blockquote>
+
+<h2 id="toc_0.4">形状操作</h2>
+<ul>
+<li>
+ 更改数组的形状
+
+<ul>
+<li>
+  ravel()展平的数组元素
+
+<li>
+  reshape函数改变参数形状并返回它
+
+<li>
+  resize函数改变数组自身。
+
+</ul>
+<li>
+ 组合(stack)不同的数组
+
+<ul>
+<li>
+  hstack , vstack, column_stack , row_stack , concatenate , c_ , r_ 
+
+</ul>
+<li>
+ 分割数组(split)   
+
+<ul>
+<li>
+  hsplit将数组沿着它的水平轴分割
+
+<li>
+  vsplit沿着纵向的轴分割
+
+<li>
+  array split允许指定沿哪个轴分割。   
+
+</ul>
+</ul>
+
+<h2 id="toc_0.5">复制和视图 </h2>
+<ul>
+<li>
+  完全不拷贝
+
+</ul>
+<blockquote>
+&gt;&gt;&gt; a = arange(12)
+&gt;&gt;&gt; b = a            # no new object is created
+&gt;&gt;&gt; b is a           # a and b are two names for the same ndarray object
+True
+</blockquote>
+    
+<ul>
+<li>
+  视图(view)和浅复制
+
+<ul>
+<li>
+  不同的数组对象分享同一个数据。视图方法创造一个新的数组对象指向同一数据。
+
+<li>
+  切片数组返回它的一个视图
+
+</ul>
+</ul>
+<blockquote>
+&gt;&gt;&gt; c = a.view()
+&gt;&gt;&gt; c is a
+False
+&gt;&gt;&gt; c.base is a                        # c is a view of the data owned by a
+True
+&gt;&gt;&gt; c.flags.owndata
+False
+</blockquote>
+    
+<ul>
+<li>
+  深复制
+
+<ul>
+<li>
+  完全复制数组和它的数据
+
+<li>
+  &gt;&gt;&gt; d = a.copy()
+
+</ul>
+</ul>
+      
+<h2 id="toc_0.6">函数和方法(method)总览</h2>
+<ul>
+<li>
+  创建数组
+
+</ul>
+<p>
+arange, array, copy, empty, empty_like, eye, fromfile, fromfunction, identity, linspace, logspace, mgrid, ogrid, ones, ones_like, r , zeros, zeros_like 
+</p>
+
+<ul>
+<li>
+  转化
+
+</ul>
+<p>
+astype, atleast 1d, atleast 2d, atleast 3d, mat 
+</p>
+
+<ul>
+<li>
+  操作
+
+</ul>
+<p>
+array split, column stack, concatenate, diagonal, dsplit, dstack, hsplit, hstack, item, newaxis, ravel, repeat, reshape, resize, squeeze, swapaxes, take, transpose, vsplit, vstack 
+</p>
+
+<ul>
+<li>
+  询问
+
+</ul>
+<p>
+all, any, nonzero, where 
+</p>
+
+<ul>
+<li>
+  排序
+
+</ul>
+<p>
+argmax, argmin, argsort, max, min, ptp, searchsorted, sort 
+</p>
+
+<ul>
+<li>
+  运算
+
+</ul>
+<p>
+choose, compress, cumprod, cumsum, inner, fill, imag, prod, put, putmask, real, sum 
+</p>
+
+<ul>
+<li>
+  基本统计
+
+</ul>
+<p>
+cov, mean(均值), std, var 
+</p>
+
+<ul>
+<li>
+  基本线性代数
+
+</ul>
+<p>
+cross, dot, outer, svd, vdot
+</p>
+
+<h2 id="toc_0.7">广播法则(rule)</h2>
+<ul>
+<li>
+  广播法则能使通用函数有意义地处理不具有相同形状的输入。
+
+<li>
+  广播第一法则是，如果所有的输入数组维度不都相同，一个“1”将被重复地添加在维度较小的数组上直至所有的数组拥有一样的维度。
+
+<li>
+  广播第二法则确定长度为1的数组沿着特殊的方向表现地好像它有沿着那个方向最大形状的大小。对数组来说，沿着那个维度的数组元素的值理应相同。
+
+<li>
+  应用广播法则之后，所有数组的大小必须匹配。更多细节可以从这个文档找到。
+
+</ul>
+
+<h2 id="toc_0.8">花哨的索引和索引技巧 </h2>
+<p>
+NumPy比普通Python序列提供更多的索引功能。除了索引整数和切片，正如我们之前看到的，数组可以被整数数组和布尔数组索引。
+</p>
+<ul>
+<li>
+  通过数组索引(也称花式索引 Fancy indexing)
+
+<ul>
+<li>
+  np.ix_      将两个一维数组转换成一个用于选取矩形区域的索引器
+
+</ul>
+<li>
+  通过布尔数组索引
+
+</ul>
+
+<h2 id="toc_0.9">矩阵类 </h2>
+<ul>
+<li>
+  NumPy提供了两个基本的对象：一个N维数组对象和一个通用函数对象。其它对象都是建构在它们之上的。
+
+<li>
+  特别的，矩阵是继承自NumPy数组对象的二维数组对象。
+
+</ul>
+<blockquote>
+&gt;&gt;&gt; A = arange(12)
+&gt;&gt;&gt; A
+array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11])
+&gt;&gt;&gt; A.shape = (3,4)
+&gt;&gt;&gt; M = mat(A.copy())   
+</blockquote>
+
+<p>
+== 随机数生成== 
+numpy.random模块对Python内置的random进行了补充， 增加了一些高效生成多种概率分布的样本值的函数。
+</p>
+<ul>
+<li>
+  seed        确定随机数生成器的种子
+
+<li>
+  permutation 返回一个序列的随机排列或返回一个随机排列的范围
+<pre // from sklearn>
+    &gt;&gt;&gt; np.random.seed(0)
+    &gt;&gt;&gt; indices = np.random.permutation(len(iris_X))
+    &gt;&gt;&gt; iris_X_train = iris_X[indices[:-10]]
+    &gt;&gt;&gt; iris_y_train = iris_y[indices[:-10]]
+    &gt;&gt;&gt; iris_X_test  = iris_X[indices[-10:]]
+    &gt;&gt;&gt; iris_y_test  = iris_y[indices[-10:]]
+</pre>
+
+<li>
+  shuffle     对一个序列就地随机排列
+
+<li>
+  rand        产生均匀分布的样本值
+
+<li>
+  randint     从给定的上下限范围内随机选取整数
+
+<li>
+  randn       产生正态分布的样本值(平均值为0， 标准差为1)
+
+<li>
+  normal      产生正态(高斯)分布的样本值
+
+<li>
+  binominal   产生二项分布的样本值
+
+<li>
+  beta        产生Beta分布的样本值
+
+<li>
+  chisquare   产生卡方分布的样本值
+
+<li>
+  gamma       产生Gamma分布的样本值
+
+<li>
+  uniform     产生在(0, 1)中均匀分布的样本值
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

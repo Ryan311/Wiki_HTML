@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Python��ʡ(����)</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">内建方法检查或访问对象的属性 </a>
+<li><a href="#toc_0.2">访问对象的元数据</a>
+<li><a href="#toc_0.3">inspect模块</a>
+</ul>
+</ul>
+</div>
+
+<p>
+<a href="http://www.cnblogs.com/huxi/archive/2011/01/02/1924317.html">http://www.cnblogs.com/huxi/archive/2011/01/02/1924317.html</a>
+</p>
+
+
+<p>
+反射机制用于实现在运行时获取未知对象的信息.
+应用例子：当我们需要实现一个通用的DBM框架时，可能需要对数据对象的字段赋值，但我们无法预知用到这个框架的数据对象都有些什么字段
+</p>
+
+<h2 id="toc_0.1">内建方法检查或访问对象的属性 </h2>
+<ul>
+<li>
+  dir([obj]):
+
+<ul>
+<li>
+  调用这个方法将返回包含obj大多数属性名的列表（会有一些特殊的属性不包含在内）。obj的默认值是当前的模块对象。
+
+</ul>
+<li>
+  hasattr(obj, attr):
+
+<ul>
+<li>
+  这个方法用于检查obj是否有一个名为attr的值的属性，返回一个布尔值。
+
+</ul>
+<li>
+  getattr(obj, attr):
+
+<ul>
+<li>
+  调用这个方法将返回obj中名为attr值的属性的值，例如如果attr为'bar'，则返回obj.bar。
+
+</ul>
+<li>
+  setattr(obj, attr, val):
+
+<ul>
+<li>
+  调用这个方法将给obj的名为attr的值的属性赋值为val。例如如果attr为'bar'，则相当于obj.bar = val。
+<pre class = "brush:python">
+cat = Cat('kitty')
+ 
+print cat.name # 访问实例属性
+cat.sayHi() # 调用实例方法
+ 
+print dir(cat) # 获取实例的属性名，以列表形式返回
+if hasattr(cat, 'name'): # 检查实例是否有这个属性
+    setattr(cat, 'name', 'tiger') # same as: a.name = 'tiger'
+print getattr(cat, 'name') # same as: print a.name
+ 
+getattr(cat, 'sayHi')() # same as: cat.sayHi()
+</pre>
+
+</ul>
+</ul>
+
+<h2 id="toc_0.2">访问对象的元数据</h2>
+<p>
+特定对象的一些特殊属性
+</p>
+<pre>
+    在types模块中定义了全部的Python内置类型，结合内置方法isinstance()就可以确定对象的具体类型了。
+        isinstance(object, classinfo):
+    检查object是不是classinfo中列举出的类型，返回布尔值。classinfo可以是一个具体的类型，也可以是多个类型的元组或列表。
+</pre>
+<ul>
+<li>
+  模块(module)
+
+<ul>
+<li>
+  _<em>doc</em>_: 文档字符串。如果模块没有文档，这个值是None。
+
+<li>
+  *_<em>name</em>_: 始终是定义时的模块名；即使你使用import .. as 为它取了别名，或是赋值给了另一个变量名。
+
+<li>
+  *_<em>dict</em>_: 包含了模块里可用的属性名-属性的字典；也就是可以使用模块名.属性名访问的对象。
+
+<li>
+  _<em>file</em>_: 包含了该模块的文件路径。需要注意的是内建的模块没有这个属性，访问它会抛出异常！
+
+</ul>
+<li>
+  类(class)
+
+<ul>
+<li>
+  _<em>doc</em>_: 文档字符串。如果类没有文档，这个值是None。
+
+<li>
+  *_<em>name</em>_: 始终是定义时的类名。
+
+<li>
+  *_<em>dict</em>_: 包含了类里可用的属性名-属性的字典；也就是可以使用类名.属性名访问的对象。
+
+<li>
+  _<em>module</em>_: 包含该类的定义的模块名；需要注意，是字符串形式的模块名而不是模块对象。
+
+<li>
+  *_<em>bases</em>_: 直接父类对象的元组；但不包含继承树更上层的其他类，比如父类的父类
+
+</ul>
+<li>
+   实例(instance)
+
+<ul>
+<li>
+  *_<em>dict</em>_: 包含了可用的属性名-属性字典。
+
+<li>
+  *_<em>class</em><em>: 该实例的类对象。对于类Cat，cat.</em><em>class</em>_ == Cat 为 True。
+
+</ul>
+<li>
+  内建函数和方法(built-in functions and methods)
+
+<ul>
+<li>
+  _<em>doc</em>_: 函数或方法的文档。
+
+<li>
+  _<em>name</em>_: 函数或方法定义时的名字。
+
+<li>
+  _<em>self</em>_: 仅方法可用，如果是绑定的(bound)，则指向调用该方法的类（如果是类方法）或实例（如果是实例方法），否则为None。
+
+<li>
+  *_<em>module</em>_: 函数或方法所在的模块名。
+
+</ul>
+<li>
+  函数(function)
+
+<ul>
+<li>
+  _<em>doc</em>_: 函数的文档；另外也可以用属性名func_doc。
+
+<li>
+  _<em>name</em>_: 函数定义时的函数名；另外也可以用属性名func_name。
+
+<li>
+  *_<em>module</em>_: 包含该函数定义的模块名；同样注意，是模块名而不是模块对象。
+
+<li>
+  *_<em>dict</em>_: 函数的可用属性；另外也可以用属性名func_dict。
+
+<li>
+  不要忘了函数也是对象，可以使用函数.属性名访问属性（赋值时如果属性不存在将新增一个），或使用内置函数has/get/setattr()访问。不过，在函数中保存属性的意义并不大。
+
+<li>
+  func_defaults: 这个属性保存了函数的参数默认值元组；因为默认值总是靠后的参数才有，所以不使用字典的形式也是可以与参数对应上的。
+
+<li>
+  func_code: 这个属性指向一个该函数对应的code对象，code对象中定义了其他的一些特殊属性，将在下文中另外介绍。
+
+<li>
+  func_globals: 这个属性指向定义函数时的全局命名空间。
+
+<li>
+  *func_closure: 这个属性仅当函数是一个闭包时有效，指向一个保存了所引用到的外部函数的变量cell的元组，如果该函数不是一个内部函数，则始终为None。
+
+</ul>
+<li>
+  方法(method)
+
+<ul>
+<li>
+  _<em>doc</em>_: 与函数相同。
+
+<li>
+  _<em>name</em>_: 与函数相同。
+
+<li>
+  *_<em>module</em>_: 与函数相同。
+
+<li>
+  im_func: 使用这个属性可以拿到方法里实际的函数对象的引用。另外如果是2.6以上的版本，还可以使用属性名_<em>func</em>_。
+
+<li>
+  im_self: 如果是绑定的(bound)，则指向调用该方法的类（如果是类方法）或实例（如果是实例方法），否则为None。如果是2.6以上的版本，还可以使用属性名_<em>self</em>_。
+
+<li>
+  im_class: 实际调用该方法的类，或实际调用该方法的实例的类。注意不是方法的定义所在的类，如果有继承关系的话。
+
+</ul>
+<li>
+  生成器(generator)
+
+<ul>
+<li>
+  <em>iter</em>_: 仅仅是一个可迭代的标记。
+
+<li>
+  gi_code: 生成器对应的code对象。
+
+<li>
+  gi_frame: 生成器对应的frame对象。
+
+<li>
+  gi_running: 生成器函数是否在执行。生成器函数在yield以后、执行yield的下一行代码前处于frozen状态，此时这个属性的值为0。
+
+<li>
+  next|close|send|throw: 这是几个可调用的方法，并不包含元数据信息，如何使用可以查看生成器的相关文档。 
+
+</ul>
+<li>
+  代码块(code)
+
+<ul>
+<li>
+  co_argcount: 普通参数的总数，不包括*参数和**参数。
+
+<li>
+  co_names: 所有的参数名（包括*参数和**参数）和局部变量名的元组。
+
+<li>
+  co_varnames: 所有的局部变量名的元组。
+
+<li>
+  co_filename: 源代码所在的文件名。
+
+<li>
+  co_flags:  这是一个数值，每一个二进制位都包含了特定信息。
+
+</ul>
+<li>
+  栈帧(frame)
+
+<ul>
+<li>
+  f_back: 调用栈的前一帧。
+
+<li>
+  f_code: 栈帧对应的code对象。
+
+<li>
+  f_locals: 用在当前栈帧时与内建函数locals()相同，但你可以先获取其他帧然后使用这个属性获取那个帧的locals()。
+
+<li>
+  f_globals: 用在当前栈帧时与内建函数globals()相同，但你可以先获取其他帧……。
+
+</ul>
+<li>
+  追踪(traceback)
+
+<ul>
+<li>
+  tb_next: 追踪的下一个追踪对象。
+
+<li>
+  tb_frame: 当前追踪对应的栈帧。
+
+<li>
+  tb_lineno: 当前追踪的行号。
+
+</ul>
+</ul>
+
+<h2 id="toc_0.3">inspect模块</h2>
+<p>
+inspect模块提供了一系列函数用于帮助使用自省。
+</p>
+
+<ul>
+<li>
+  检查对象类型
+
+<ul>
+<li>
+  is{module|class|function|method|builtin}(obj): 检查对象是否为模块、类、函数、方法、内建函数或方法。
+
+<li>
+  isroutine(obj): 用于检查对象是否为函数、方法、内建函数或方法等等可调用类型。用这个方法会比多个is*()更方便，不过它的实现仍然是用了多个is*()。 
+
+</ul>
+<li>
+  获取对象信息
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

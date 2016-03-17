@@ -52,6 +52,93 @@
 </div>
 
 <h2 id="toc_0.1">Ubuntu</h2>
+<ul>
+<li>
+  PPA:    <a href="https://launchpad.net/ubuntu/+ppas?">https://launchpad.net/ubuntu/+ppas?</a>
+
+</ul>
+<p>
+直接在ubuntu源中下载到的软件不一定是最新版本， 可以手动加载软件的PPA源， 来下载最新的版本， 例如：
+<br>1. 找到ipython的PPA， ppa:jtaylor/ipython
+<br>2. 通过apt-get添加该PPA并安装
+</p>
+<pre>
+    sudo apt-add-repository ppa:jtaylor/ipython
+    sudo apt-get update
+    sudo apt-get install ipython
+</pre>
+<ul>
+<li>
+  apt-get
+
+<ul>
+<li>
+  sudo apt-get install **** Fail --&gt; E: Unable to correct problems, you have held broken packages.   
+<pre // Fix it and then install again>
+        sudo apt-get install --fix-broken
+        sudo apt-get autoclean
+        sudo apt-get autoremove
+</pre>
+
+<li>
+  常用的APT命令参数
+
+<ul>
+<li>
+  apt-cache search package 搜索软件包
+
+<li>
+  apt-cache show package  获取包的相关信息，如说明、大小、版本等
+
+<li>
+  sudo apt-get install package 安装包
+
+<li>
+  sudo apt-get install package --reinstall   重新安装包
+
+<li>
+  sudo apt-get -f install   修复安装
+
+<li>
+  sudo apt-get remove package 删除包
+
+<li>
+  sudo apt-get remove package --purge 删除包，包括配置文件等
+
+<li>
+  sudo apt-get update  更新源
+
+<li>
+  sudo apt-get upgrade 更新已安装的包
+
+<li>
+  sudo apt-get dist-upgrade 升级系统
+
+<li>
+  apt-cache depends package 了解使用该包依赖那些包
+
+<li>
+  apt-cache rdepends package 查看该包被哪些包依赖
+
+<li>
+  sudo apt-get build-dep package 安装相关的编译环境
+
+<li>
+  apt-get source package  下载该包的源代码
+
+<li>
+  sudo apt-get clean &amp;&amp; sudo apt-get autoclean 清理无用的包
+
+<li>
+  sudo apt-get check 检查是否有损坏的依赖
+
+<li>
+  sudo apt-get autoremove 删除系统不再使用的独立软件
+
+</ul>
+</ul>
+</ul>
+
 <h3 id="toc_0.1.1">Tricks</h3>
 <ul>
 <li>
@@ -60,6 +147,103 @@
 <li>
   显示或隐藏文件管理器侧边栏      F9 toggle/
 
+<li>
+  Ubuntu14.04备份
+
+<ul>
+<li>
+  <a href="http://www.cnblogs.com/stemon/p/5041205.html">http://www.cnblogs.com/stemon/p/5041205.html</a>
+
+<li>
+  备份
+<pre>
+        第一步：打开一个终端，并运行 sudo su（回车后要求输入密码）
+        第二步：继续在终端中输入 cd /(注意中间有一个空格)
+        第三步：（开始备份系统）
+        在终端中输入：
+            #tar cvpzf Ubuntu.tgz -–exclude=/proc –-exclude=/lost+found –-exclude=/Ubuntu.tgz –-exclude=/mnt –-exclude=/sys –-exclude=/media /
+        
+        ‘tar’ 是用来备份的程序
+        c - 新建一个备份文档
+        v - 详细模式， tar程序将在屏幕上实时输出所有信息。
+        p - 保存许可，并应用到所有文件。
+        z - 采用‘gzip’压缩备份文件，以减小备份文件体积。
+        f - 说明备份文件存放的路径， Ubuntu.tgz 是本例子中备份文件名。
+        “/”是我们要备份的目录，在这里是整个文件系统。
+        
+        Bzip2来压缩文件，Bzip2比gzip的压缩率高，但是速度慢一些:
+            #tar cvpjf Ubuntu.tar.bz2 –-exclude=/proc –-exclude=/lost+found –-exclude=/Ubuntu.tar.bz2 –-exclude=/mnt –-exclude=/sys –-exclude=/media /
+</pre>
+
+<li>
+  还原
+<pre>
+        切换到root用户，并把文件“Ubuntu.tgz”拷贝到分区的根目录下。
+        在 Linux中有一件很美妙的事情，就是你可以在一个运行的系统中恢复系统，而不需要用boot-cd来专门引导。
+        当然，如果你的系统已经挂掉不能启动了， 你可以用Live CD来启动，效果是一样的。
+        
+        使用下面的命令来恢复系统：
+            tar xvpfz Ubuntu.tgz -C /
+
+        如果你的档案文件是使用Bzip2压缩的，应该用：
+            tar xvpfj Ubuntu.tar.bz2 -C /
+        
+        参数x是告诉tar程序解压缩备份文件。 -C 参数是指定tar程序解压缩到的目录。
+        创建你剔除的目录：
+            mkdir /proc /lost+found /mnt /sys /media
+</pre>
+
+</ul>
+<li>
+  terminal命令行提示符太长， 修改.bashrc， 加入
+
+<ul>
+<li>
+  export PS1='\u@\w\$ '
+
+<li>
+  保存后， source .bashrc
+
+</ul>
+<li>
+  gedit: <a href="https://wiki.gnome.org/Apps/Gedit">https://wiki.gnome.org/Apps/Gedit</a>
+
+<ul>
+<li>
+  安装插件， sudo apt-get install gedit-plugins
+
+<li>
+  进行个性化配置， 打造Python IDE,   <a href="http://www.douban.com/note/90973541/">http://www.douban.com/note/90973541/</a>
+
+<li>
+  How to write a gedit plugin：   <a href="https://wiki.gnome.org/Apps/Gedit/PluginsHowTos">https://wiki.gnome.org/Apps/Gedit/PluginsHowTos</a>
+
+</ul>
+<li>
+  文本比较工具， 类似Windows下的Beyond Compare
+
+<ul>
+<li>
+  diffuse:    sudo apt-get install diffuse
+
+<li>
+  meld:   sudo apt-get install meld
+
+</ul>
+<li>
+  smartgit --- git GUI
+
+<ul>
+<li>
+  sudo add-apt-repository ppa:eugenesan/ppa
+
+<li>
+  sudo apt-get update
+
+<li>
+  sudo apt-get install smartgithg
+
+</ul>
 <li>
   ubuntu unity, 已挂载的磁盘不显示在左边侧栏（启动器）
 <pre>
@@ -685,6 +869,37 @@ w To Install SysMonitor Indicator 0.4.6 On Ubuntu 14.04 Trusty Tahr
 <ul>
 <li>
   <a href="https://fcitx-im.org/wiki/Install_%28Ubuntu%29">https://fcitx-im.org/wiki/Install_%28Ubuntu%29</a>
+
+</ul>
+<li>
+  打字训练
+
+<ul>
+<li>
+  sudo apt-get install typespeed
+
+<li>
+  sudo apt-get install kTouch
+
+</ul>
+<li>
+  Kid loves it
+
+<ul>
+<li>
+  sudo apt-get install tuxpaint
+
+<li>
+  sudo apt-get install tuxtype
+
+<li>
+  sudo apt-get install tuxmath
+
+<li>
+  sudo apt-get install GCompris
+
+<li>
+  InkScape    画图软件
 
 </ul>
 </ul>

@@ -48,11 +48,12 @@
 <li><a href="#toc_0.1.1">字符类型</a>
 <li><a href="#toc_0.1.2">字符, 字符串指针类型 </a>
 <li><a href="#toc_0.1.3">字符串字面值 </a>
-<li><a href="#toc_0.1.4">字符串处理函数总结</a>
+<li><a href="#toc_0.1.4">BSTR</a>
+<li><a href="#toc_0.1.5">字符串处理函数总结</a>
 <ul>
-<li><a href="#toc_0.1.4.1">各种字符串处理函数库</a>
+<li><a href="#toc_0.1.5.1">各种字符串处理函数库</a>
 </ul>
-<li><a href="#toc_0.1.5">字符（串）之间的转换</a>
+<li><a href="#toc_0.1.6">字符（串）之间的转换</a>
 </ul>
 </ul>
 </ul>
@@ -174,7 +175,45 @@ typedef CONST WCHAR  *PCWSTR,  *LPCWSTR;
     _TEXT(x)          x               L ## x
 </pre>
 
-<h3 id="toc_0.1.4">字符串处理函数总结</h3>
+
+<h3 id="toc_0.1.4">BSTR</h3>
+<ul>
+<li>
+  BSTR    "Basic String"的简称
+
+</ul>
+<p>
+微软在 COM/OLE 中定义的标准字符串数据类型。对于 C++，Windows 头文件 wtypes.h中定义如下： 
+</p>
+<blockquote>
+typedef wchar_t WCHAR; 
+typedef WCHAR OLECHAR; 
+typedef OLECHAR __RPC_FAR *BSTR; 
+</blockquote>
+
+<p>
+标准 BSTR 是一个有长度前缀和null结束符的OLECHAR 数组。
+BSTR 的前4字节是一个表示字符串长度的前缀。BSTR 长度域的值是字符串的字 节数，并且不包括0结束符。由于是Unicode串，所以字符数是字节数的一半。
+COM 提供了两个 BSTR 分配用的 API：SysAllocString / SysReallocString
+</p>
+
+<ul>
+<li>
+  _bstr_t Class
+
+</ul>
+<p>
+_bstr_t是微软C++ COM扩展的一部分。_bstr_t 封装了BSTR数据类型。
+_bstr_t 通过 SysAllocString and SysFreeString 等BSTR APIs管理资源的分配和释放。_bstr_t 提供了内部引用计数来减少额外负担。 
+</p>
+
+
+<p>
+百度文库：BSTR详解
+</p>
+
+
+<h3 id="toc_0.1.5">字符串处理函数总结</h3>
 <p>
 标准c中的strcpy,strchr,strcat等只能用于ANSI字符串，不能正确处理Unicode字符串，因此也提供了一组补充函数，功能等价，但用于Unicode码。
 我们来看看string.h字符串头文件中是怎样处理char*和wchar_t*两个字符串版本的：
@@ -193,7 +232,7 @@ ANSI/Unicode    操作函数以_tcs开头      _tcscpy（C运行期库）
 ANSI/Unicode    操作函数以lstr开头      lstrcpy（Windows函数）
 </p>
 
-<h4 id="toc_0.1.4.1">各种字符串处理函数库</h4>
+<h4 id="toc_0.1.5.1">各种字符串处理函数库</h4>
 
 <ul>
 <li>
@@ -249,7 +288,7 @@ strcpy         wcscpy          _tcscpy
 strcmp         wcscmp          _tcscmp
 </pre>
 
-<h3 id="toc_0.1.5">字符（串）之间的转换</h3>
+<h3 id="toc_0.1.6">字符（串）之间的转换</h3>
 <ul>
 <li>
   使用_<em>ATL</em>_的字符串转换宏，可以实现不同类型的字符串转换。

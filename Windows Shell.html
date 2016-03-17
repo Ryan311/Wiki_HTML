@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Windows Shell</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Reference</a>
+<li><a href="#toc_0.2">Creating Context Menu Handlers</a>
+<li><a href="#toc_0.3">Launching Applications</a>
+<li><a href="#toc_0.4">Implementing Control Panel Items</a>
+<li><a href="#toc_0.5">Implementing a Custom File Format</a>
+<li><a href="#toc_0.6">Shell functions</a>
+</ul>
+</ul>
+</div>
+
+<h2 id="toc_0.1">Reference</h2>
+<ul>
+<li>
+  <a href="https://msdn.microsoft.com/en-us/library/bb773177%28v=vs.85%29.aspx">MSDN</a>
+
+<li>
+  <a href="http://blog.csdn.net/chchzh/article/details/2211475#comments">Windows Shell 编程</a>
+
+<li>
+  Windows+Shell扩展编程完全指南.chm
+
+<li>
+  Visual C++ Windows Shell Programming.pdf
+
+</ul>
+
+<h2 id="toc_0.2">Creating Context Menu Handlers</h2>
+<ul>
+<li>
+  IShellExtInit
+
+<ul>
+<li>
+  Exposes a method that initializes Shell extensions for property sheets, shortcut menus, and drag-and-drop handlers 
+
+<li>
+  Implement IShellExtInit when you are writing a handler based on the IContextMenu or IShellPropSheetExt interface.
+
+<li>
+  Note that Shell extensions based on other interfaces do not use this method of initialization.  只有在实现了上面两个接口时才需要该接口
+
+<li>
+  Method: Initialize      --&gt; second parameter,   A pointer to an IDataObject interface object that can be used to retrieve the objects being acted upon.
+
+</ul>
+<li>
+  IContextMenu
+
+<ul>
+<li>
+  Exposes methods that either create or merge a shortcut menu associated with a Shell object.
+
+<li>
+  Methods:
+
+<ul>
+<li>
+  GetCommandString 	Gets information about a shortcut menu command, including the help string and the language-independent, or canonical, name for the command.
+
+<li>
+  InvokeCommand 	    Carries out the command associated with a shortcut menu item.  
+
+<li>
+  QueryContextMenu 	Adds commands to a shortcut menu.
+
+</ul>
+</ul>
+<li>
+  How to create context menu project
+
+<ul>
+<li>
+  MSDN Sample: ATL Windows Shell context menu handler (ATLShellExtContextMenuHandler), follow the description.html
+
+</ul>
+</ul>
+
+<h2 id="toc_0.3"><a href="https://msdn.microsoft.com/en-us/library/bb776886%28v=vs.85%29.aspx">Launching Applications</a></h2>
+<h2 id="toc_0.4"><a href="https://msdn.microsoft.com/en-us/library/cc144185%28v=vs.85%29.aspx">Implementing Control Panel Items</a></h2>
+<h2 id="toc_0.5"><a href="https://msdn.microsoft.com/en-us/library/ff521657%28v=vs.85%29.aspx">Implementing a Custom File Format</a></h2>
+
+<h2 id="toc_0.6">Shell functions</h2>
+<ul>
+<li>
+  DragQueryFile   <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/bb776408%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/desktop/bb776408%28v=vs.85%29.aspx</a>
+
+<ul>
+<li>
+  Retrieves the names of dropped files that result from a successful drag-and-drop operation.     鼠标选中文件
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Python Debug</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">pdb</a>
+</ul>
+</div>
+
+<p>
+Doc:    <a href="http://www.ibm.com/developerworks/cn/linux/l-cn-pythondebugger/">http://www.ibm.com/developerworks/cn/linux/l-cn-pythondebugger/</a>
+</p>
+
+<h1 id="toc_1">pdb</h1>
+<p>
+pdb 是 python 自带的一个包，为 python 程序提供了一种交互的源代码调试功能，
+<br>主要特性包括设置断点、单步调试、进入函数调试、查看当前代码、查看栈片段、动态改变变量的值等。
+<br>IPython也集成了pdb， 并提供增强的功能
+</p>
+
+<table>
+<tr>
+<td>
+命令
+</td>
+<td>
+解释
+</td>
+</tr>
+<tr>
+<td>
+break 或 b
+</td>
+<td>
+设置断点	设置断点
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+continue 或 c
+</td>
+<td>
+继续执行程序
+</td>
+</tr>
+<tr>
+<td>
+list 或 l
+</td>
+<td>
+查看当前行的代码段 
+</td>
+</tr>
+<tr>
+<td>
+step 或 s
+</td>
+<td>
+进入函数
+</td>
+</tr>
+<tr>
+<td>
+return 或 r
+</td>
+<td>
+执行代码直到从当前函数返回 
+</td>
+</tr>
+<tr>
+<td>
+exit 或 q
+</td>
+<td>
+中止并退出 
+</td>
+</tr>
+<tr>
+<td>
+next 或 n
+</td>
+<td>
+执行下一行 
+</td>
+</tr>
+<tr>
+<td>
+pp
+</td>
+<td>
+打印变量的值 
+</td>
+</tr>
+<tr>
+<td>
+help
+</td>
+<td>
+帮助
+</td>
+</tr>
+</table>
+
+
+<p>
+pdb.set_trace   在程序中设置硬断点
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
     <title>Windows SetupAPI</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -43,7 +43,19 @@
     
 <div class="toc">
 <ul>
-<li><a href="#toc_0.1">通过Device Interface class查看设备并打开</a>
+<li><a href="#toc_1">Project:    BTDevManager</a>
+<ul>
+<li><a href="#toc_1.1">判断设备当前状态， Disabled、Enabled、YellowBang</a>
+<li><a href="#toc_1.2">Enable、Disable设备</a>
+</ul>
+<li><a href="#toc_2">查找系统中BLE设备</a>
+<ul>
+<li><a href="#toc_2.1">查找指定设备并打开</a>
+<li><a href="#toc_2.2">Example</a>
+<ul>
+<li><a href="#toc_2.2.1">Open device using device interface which is found by GUID</a>
+<li><a href="#toc_2.2.2">Finds the Device instance of the DevNode with the matching DriverName.</a>
+</ul>
 </ul>
 </ul>
 </div>
@@ -52,7 +64,305 @@
 msdn:   <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff550855%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff550855%28v=vs.85%29.aspx</a>
 </p>
 
-<h2 id="toc_0.1">通过Device Interface class查看设备并打开</h2>
+<p>
+Device Information Sets
+<a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff541247%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff541247%28v=vs.85%29.aspx</a>
+</p>
+
+<h1 id="toc_1">Project:    BTDevManager</h1>
+<h2 id="toc_1.1">判断设备当前状态， Disabled、Enabled、YellowBang</h2>
+<ul>
+<li>
+  枚举Bluetooth类的所有设备， EnumDeviceAndGetDeviceState
+
+<li>
+  穷举每个设备（SetupDiEnumDeviceInfo）， 并获得每个设备的HardwareHID（GetDevMultiSz(hDevInfo, &amp;DevInfoData, SPDRP_HARDWAREID)）， 并判断
+
+<li>
+  获得设备的Status， 并判断设备状态
+<pre>
+	if(CM_Get_DevNode_Status(&amp;dwDevStatus,&amp;dwProblem,DevInfoData.DevInst,0)!=CR_SUCCESS)
+	{
+		return FALSE;
+	}
+	return ((dwDevStatus &amp; DN_DISABLEABLE) &amp;&amp; (dwProblem != CM_PROB_HARDWARE_DISABLED));    //Disabled
+	    or
+	return ((dwDevStatus &amp; DN_HAS_PROBLEM) &amp;&amp; (dwProblem == CM_PROB_FAILED_POST_START));    //YellowBang
+</pre>
+
+</ul>
+<h2 id="toc_1.2">Enable、Disable设备</h2>
+<p>
+也可看devcon源代码
+</p>
+
+<h1 id="toc_2">查找系统中BLE设备</h1>
+<ul>
+<li>
+  所有的LE设备在Properties里都有Friendly name属性， Hardware ID属性为BTHLE\DEV_{Address}
+
+<li>
+  将有Friendly Name属性的设备对应地址返回
+<pre>
+    BOOL CGuardKeyInportDemoDlg::GetBtDeviceInfo(GUID guid, map&lt;CString, CString&gt; &amp;deviceMap)
+    {
+        HDEVINFO         deviceInfo = INVALID_HANDLE_VALUE;
+        BOOL             status = TRUE;
+        ULONG            deviceIndex;
+        SP_DEVINFO_DATA  deviceInfoData;
+        BOOL             bResult = FALSE;
+        LPTSTR           buf = NULL;
+        BOOL             done = FALSE;
+
+        //
+        // Examine all present devices to see if any match the given DriverName
+        //
+        deviceInfo = SetupDiGetClassDevs(&amp;BT_CLASS,
+            NULL,
+            NULL,
+            DIGCF_PRESENT);
+
+        if (deviceInfo == INVALID_HANDLE_VALUE)
+        {
+            status = FALSE;
+            goto Done;
+        }
+
+        deviceIndex = 0;
+        deviceInfoData.cbSize = sizeof(deviceInfoData);
+
+        while (done == FALSE)
+        {
+            //
+            // Get devinst of the next device
+            //
+
+            status = SetupDiEnumDeviceInfo(deviceInfo,
+                    deviceIndex,
+                    &amp;deviceInfoData);
+
+            deviceIndex++;
+
+            if (!status)
+            {
+                //
+                // This could be an error, or indication that all devices have been
+                // processed. Either way the desired device was not found.
+                //
+                done = TRUE;
+                break;
+            }
+
+            //
+            // Get the Hardware ID
+            //
+            bResult = GetDeviceProperty(deviceInfo,
+                &amp;deviceInfoData,
+                SPDRP_HARDWAREID,
+                &amp;buf);
+
+            if (bResult == TRUE &amp;&amp; buf != NULL)
+            {
+                CString HardwareID = buf;
+                //MessageBox(HardwareID);
+                int pos = HardwareID.Find(L"BTHLE\\Dev");
+                if (pos != -1)
+                {
+                    CString Adress = HardwareID.Right(pos + 12);
+                    free(buf);
+                    buf = NULL;
+                    //
+                    // Get the friendly name
+                    //
+                    bResult = GetDeviceProperty(deviceInfo,
+                        &amp;deviceInfoData,
+                        SPDRP_FRIENDLYNAME,
+                        &amp;buf);
+
+                    // If the DriverName value matches, return the DeviceInstance
+                    //
+                    if (bResult == TRUE &amp;&amp; buf != NULL)
+                    {
+                        CString fname = buf;
+                        //MessageBox(fname);
+                        //break;
+                        deviceMap[Adress] = fname;
+                    }
+                }
+                //MessageBox(friendName);
+            }
+
+            if (buf != NULL)
+            {
+                free(buf);
+                buf = NULL;
+            }
+        }
+    Done:
+        if (deviceInfo != INVALID_HANDLE_VALUE)
+        {
+            SetupDiDestroyDeviceInfoList(deviceInfo);
+        }
+        return status;
+    }
+</pre>
+
+</ul>
+<p>
+获得设备的属性函数,  所有属性见： <a href="https://msdn.microsoft.com/en-us/library/ff551967%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/ff551967%28v=vs.85%29.aspx</a>
+</p>
+<pre>
+    BOOL CGuardKeyInportDemoDlg::GetDeviceProperty(
+        _In_    HDEVINFO         DeviceInfoSet,
+        _In_    PSP_DEVINFO_DATA DeviceInfoData,
+        _In_    DWORD            Property,
+        _Outptr_  LPTSTR        *ppBuffer
+        )
+    {
+        BOOL bResult;
+        DWORD requiredLength = 0;
+        DWORD lastError;
+
+        if (ppBuffer == NULL)
+        {
+            return FALSE;
+        }
+
+        *ppBuffer = NULL;
+
+        bResult = SetupDiGetDeviceRegistryProperty(DeviceInfoSet,
+            DeviceInfoData,
+            Property,
+            NULL,
+            NULL,
+            0,
+            &amp;requiredLength);
+        lastError = GetLastError();
+
+        if ((requiredLength == 0) || (bResult != FALSE &amp;&amp; lastError != ERROR_INSUFFICIENT_BUFFER))
+        {
+            return FALSE;
+        }
+
+        *ppBuffer = (LPTSTR)malloc(requiredLength);
+
+        if (*ppBuffer == NULL)
+        {
+            return FALSE;
+        }
+
+        bResult = SetupDiGetDeviceRegistryProperty(DeviceInfoSet,
+            DeviceInfoData,
+            Property,
+            NULL,
+            (PBYTE)*ppBuffer,
+            requiredLength,
+            &amp;requiredLength);
+        if (bResult == FALSE)
+        {
+            free(*ppBuffer);
+            *ppBuffer = NULL;
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+</pre>
+
+<ul>
+<li>
+  根据Service UUID找出所有的Device Interface 
+<pre>
+    int CGuardKeyInportDemoDlg::GetPairedDevList(GUID guid, set&lt;CString&gt; &amp;devPath)
+    {
+        HRESULT hr = E_FAIL;
+        HDEVINFO hDevInfo = SetupDiGetClassDevs(&amp;guid, NULL, NULL, DIGCF_PRESENT | DIGCF_INTERFACEDEVICE);
+        ULONG iDevIndex = 0;
+        while (1) {
+            SP_DEVICE_INTERFACE_DATA deviceInfoData;
+            deviceInfoData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+            if (SetupDiEnumDeviceInterfaces(hDevInfo, 0, &amp;guid, iDevIndex, &amp;deviceInfoData))
+            {
+                DWORD cbRequired = 0;
+                SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                    &amp;deviceInfoData,
+                    0,
+                    0,
+                    &amp;cbRequired,
+                    0);
+                if (ERROR_INSUFFICIENT_BUFFER == GetLastError())
+                {
+                    PSP_DEVICE_INTERFACE_DETAIL_DATA pdidd = (PSP_DEVICE_INTERFACE_DETAIL_DATA)LocalAlloc(LPTR, cbRequired);
+
+                    if (pdidd)
+                    {
+                        pdidd-&gt;cbSize = sizeof(*pdidd);
+                        if (SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                            &amp;deviceInfoData,
+                            pdidd,
+                            cbRequired,
+                            &amp;cbRequired,
+                            0))
+                        {
+                            CString csDevicePath = pdidd-&gt;DevicePath;
+                            devPath.insert(csDevicePath);
+                        }
+                        LocalFree(pdidd);
+                    }
+                }
+            }
+            else if (GetLastError() == ERROR_NO_MORE_ITEMS) //No more items
+            {
+                break;
+            }
+            iDevIndex++;
+        }
+        SetupDiDestroyDeviceInfoList(hDevInfo);
+        return iDevIndex;
+    }
+</pre>
+
+<li>
+  根据以上两个集合， 找出Address::Name::DevicePath对应关系
+<pre>
+    set&lt;CString&gt; pList;	// map&lt; address, friendly name &gt;
+	map&lt;CString, CString&gt; maList;	// map&lt; address, friendly name &gt;
+	map&lt;CString, CString&gt;::iterator mitr;
+	set&lt;CString&gt;::iterator sitr;
+	GetBtDeviceInfo(BT_CLASS, maList);
+	GetPairedDevList(COM_SERVICE, pList);
+	
+	m_DevList.DeleteAllItems();
+	for (sitr = pList.begin(); sitr != pList.end(); ++sitr)
+	{
+		CString Name;
+		CString Address;
+		CString Path;
+		Path = *sitr;
+		//MessageBox(Path);
+		for (mitr = maList.begin(); mitr != maList.end(); ++mitr)
+		{
+			Address = mitr-&gt;first;
+			Name = mitr-&gt;second;
+			Address.MakeLower();
+			Path.MakeLower();
+			//MessageBox(Name);
+			//MessageBox(Address);
+			int pos = Path.Find(Address);
+			if (pos != -1)
+			{
+				m_DevList.InsertItem(0, _T(""), 0);
+				m_DevList.SetItemText(0, COL_NAME, mitr-&gt;second);
+				m_DevList.SetItemText(0, COL_ADRESS, mitr-&gt;first);
+				m_DevList.SetItemText(0, COL_PATH, *sitr);
+			}
+		}
+	}
+</pre>
+
+</ul>
+
+<h2 id="toc_2.1">查找指定设备并打开</h2>
 <ul>
 <li>
   SetupDiGetClassDevs
@@ -84,225 +394,316 @@ msdn:   <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff550
 
 <ul>
 <li>
-   free all SP_DEVINFO_DATA structures in a device information set
+  free all SP_DEVINFO_DATA structures in a device information set
 
 </ul>
 <li>
-  Example
-<pre>
-    //
-    // guid是Device Interface Class， 每个LE设备配对后， LEEnum枚举一个PDO， 加载PDO后会为该设备提供一下Device Interface
-    // Device Interface Name为   BTHLEDevice#{GUID}_BDADDR_#****** 
-    //
-    HANDLE OpenLeInterface(ULONGLONG ullBtAddr, GUID guid)
-    {
-        HANDLE hOut = INVALID_HANDLE_VALUE;
-        HRESULT hr = E_FAIL;
-        
-        //
-        // Create a device information set composed of all present devices associated with device interface GUID 
-        //
-        HDEVINFO hDevInfo = SetupDiGetClassDevs(&amp;guid, NULL, NULL, DIGCF_PRESENT|DIGCF_INTERFACEDEVICE);
-        ULONG iDevIndex = 0;
-        while(1){
-            SP_DEVICE_INTERFACE_DATA deviceInfoData;
-            deviceInfoData.cbSize = sizeof (SP_DEVICE_INTERFACE_DATA);
-            //  enumerate the device interfaces in a device information set
-            if(SetupDiEnumDeviceInterfaces(hDevInfo, 0, &amp;guid, iDevIndex, &amp;deviceInfoData))
-            {
-                DWORD cbRequired = 0;
-                //
-                // get required buffer size
-                //
-                SetupDiGetDeviceInterfaceDetail(hDevInfo,
-                    &amp;deviceInfoData,
-                    0,
-                    0,
-                    &amp;cbRequired,
-                    0);
-                if (ERROR_INSUFFICIENT_BUFFER == GetLastError())
-                {
-                    PSP_DEVICE_INTERFACE_DETAIL_DATA pdidd = (PSP_DEVICE_INTERFACE_DETAIL_DATA)LocalAlloc(LPTR, cbRequired);
+  SetupDiGetDeviceRegistryProperty
 
-                    if (pdidd)
-                    {
-                        pdidd-&gt;cbSize = sizeof(*pdidd);
-                        //
-                        // get the interface name
-                        //
-                        if (SetupDiGetDeviceInterfaceDetail(hDevInfo,
-                            &amp;deviceInfoData,
-                            pdidd,
-                            cbRequired,
-                            &amp;cbRequired,
-                            0))
-                        {
-                            //CString csDev(_T("668E28F99733"));
-                            //csDev.Format(_T("%I64x"), ullBtAddr);
-                            CString csDevicePath = pdidd-&gt;DevicePath;
-                            //csDev.MakeLower();
-                            //csDevicePath.MakeLower();
-                            //if (csDevicePath.Find(csDev) != -1)
-                            {
-                                hOut= 
-                                    CreateFile(pdidd-&gt;DevicePath,   //A NULL-terminated string that contains the device interface path
-                                    GENERIC_READ | GENERIC_WRITE,
-                                    FILE_SHARE_READ | FILE_SHARE_WRITE,
-                                    NULL,
-                                    OPEN_EXISTING,
-                                    FILE_ATTRIBUTE_NORMAL,
-                                    NULL);
-                                LocalFree(pdidd);
-                                break;
-                            }
-                            
-                        }
-                        LocalFree(pdidd);
-                    }
-                }	 
-            }
-            else if(GetLastError() == ERROR_NO_MORE_ITEMS) //No more items
-            {
-                break;
-            }
-            iDevIndex++;
-        }
-        SetupDiDestroyDeviceInfoList(hDevInfo);
-        return hOut; 
-    }
-</pre>
+<ul>
+<li>
+  查找设备属性值:   在Device Properties -&gt; Details -&gt; (Property, Value)
 
 <li>
-  Finds the Device instance of the DevNode with the matching DriverName.
+  见例子2
 <pre>
-    /*****************************************************************************
+        BOOL SetupDiGetDeviceRegistryProperty(
+          _In_      HDEVINFO         DeviceInfoSet,
+          _In_      PSP_DEVINFO_DATA DeviceInfoData,
+          _In_      DWORD            Property,
+          _Out_opt_ PDWORD           PropertyRegDataType,
+          _Out_opt_ PBYTE            PropertyBuffer,
+          _In_      DWORD            PropertyBufferSize,
+          _Out_opt_ PDWORD           RequiredSize
+        );
+</pre>
 
-      DriverNameToDeviceInst()
+</ul>
+</ul>
 
-      Finds the Device instance of the DevNode with the matching DriverName.
-      Returns FALSE if the matching DevNode is not found and TRUE if found
 
-    *****************************************************************************/
-    BOOL 
-    DriverNameToDeviceInst(
-        _In_reads_bytes_(cbDriverName) PCHAR DriverName,
-        _In_ size_t cbDriverName,
-        _Out_ HDEVINFO *pDevInfo,
-        _Out_writes_bytes_(sizeof(SP_DEVINFO_DATA)) PSP_DEVINFO_DATA pDevInfoData
+<h2 id="toc_2.2">Example</h2>
+<h3 id="toc_2.2.1">Open device using device interface which is found by GUID</h3>
+<ul>
+<li>
+  Sample from MSDN:   Usbsamp Sample
+<pre>
+        //
+        // guid是Device Interface Class， 每个LE设备配对后， LEEnum枚举一个PDO， 加载PDO后会为该设备提供一下Device Interface
+        // Device Interface Name为   BTHLEDevice#{GUID}_BDADDR_#****** 
+        //
+        HANDLE OpenLeInterface(ULONGLONG ullBtAddr, GUID guid)
+        {
+            HANDLE hOut = INVALID_HANDLE_VALUE;
+            HRESULT hr = E_FAIL;
+            
+            //
+            // Create a device information set composed of all present devices associated with device interface GUID 
+            //
+            HDEVINFO hDevInfo = SetupDiGetClassDevs(&amp;guid, NULL, NULL, DIGCF_PRESENT|DIGCF_INTERFACEDEVICE);
+            ULONG iDevIndex = 0;
+            while(1){
+                SP_DEVICE_INTERFACE_DATA deviceInfoData;
+                deviceInfoData.cbSize = sizeof (SP_DEVICE_INTERFACE_DATA);
+                //  enumerate the device interfaces in a device information set
+                if(SetupDiEnumDeviceInterfaces(hDevInfo, 0, &amp;guid, iDevIndex, &amp;deviceInfoData))
+                {
+                    DWORD cbRequired = 0;
+                    //
+                    // get required buffer size
+                    //
+                    SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                        &amp;deviceInfoData,
+                        0,
+                        0,
+                        &amp;cbRequired,
+                        0);
+                    if (ERROR_INSUFFICIENT_BUFFER == GetLastError())
+                    {
+                        PSP_DEVICE_INTERFACE_DETAIL_DATA pdidd = (PSP_DEVICE_INTERFACE_DETAIL_DATA)LocalAlloc(LPTR, cbRequired);
+
+                        if (pdidd)
+                        {
+                            pdidd-&gt;cbSize = sizeof(*pdidd);
+                            //
+                            // get the interface name
+                            //
+                            if (SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                                &amp;deviceInfoData,
+                                pdidd,
+                                cbRequired,
+                                &amp;cbRequired,
+                                0))
+                            {
+                                //CString csDev(_T("668E28F99733"));
+                                //csDev.Format(_T("%I64x"), ullBtAddr);
+                                CString csDevicePath = pdidd-&gt;DevicePath;
+                                //csDev.MakeLower();
+                                //csDevicePath.MakeLower();
+                                //if (csDevicePath.Find(csDev) != -1)
+                                {
+                                    hOut= 
+                                        CreateFile(pdidd-&gt;DevicePath,   //A NULL-terminated string that contains the device interface path
+                                        GENERIC_READ | GENERIC_WRITE,
+                                        FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                        NULL,
+                                        OPEN_EXISTING,
+                                        FILE_ATTRIBUTE_NORMAL,
+                                        NULL);
+                                    LocalFree(pdidd);
+                                    break;
+                                }
+                                
+                            }
+                            LocalFree(pdidd);
+                        }
+                    }	 
+                }
+                else if(GetLastError() == ERROR_NO_MORE_ITEMS) //No more items
+                {
+                    break;
+                }
+                iDevIndex++;
+            }
+            SetupDiDestroyDeviceInfoList(hDevInfo);
+            return hOut; 
+        }
+</pre>
+
+</ul>
+<h3 id="toc_2.2.2">Finds the Device instance of the DevNode with the matching DriverName.</h3>
+<ul>
+<li>
+  Sample from MSDN:   USBView sample application
+<pre>
+        /*****************************************************************************
+
+          DriverNameToDeviceInst()
+
+          Finds the Device instance of the DevNode with the matching DriverName.
+          Returns FALSE if the matching DevNode is not found and TRUE if found
+
+        *****************************************************************************/
+        BOOL 
+        DriverNameToDeviceInst(
+            _In_reads_bytes_(cbDriverName) PCHAR DriverName,
+            _In_ size_t cbDriverName,
+            _Out_ HDEVINFO *pDevInfo,
+            _Out_writes_bytes_(sizeof(SP_DEVINFO_DATA)) PSP_DEVINFO_DATA pDevInfoData
+            )
+        {
+            HDEVINFO         deviceInfo = INVALID_HANDLE_VALUE;
+            BOOL             status = TRUE;
+            ULONG            deviceIndex;
+            SP_DEVINFO_DATA  deviceInfoData;
+            BOOL             bResult = FALSE;
+            PCHAR            pDriverName = NULL;
+            PSTR             buf = NULL;
+            BOOL             done = FALSE;
+
+            if (pDevInfo == NULL)
+            {
+                return FALSE;
+            }
+
+            if (pDevInfoData == NULL)
+            {
+                return FALSE;
+            }
+
+            memset(pDevInfoData, 0, sizeof(SP_DEVINFO_DATA));
+
+            *pDevInfo = INVALID_HANDLE_VALUE;
+
+            // Use local string to guarantee zero termination
+            pDriverName = (PCHAR) ALLOC((DWORD) cbDriverName + 1);
+            if (NULL == pDriverName)
+            {
+                status = FALSE;
+                goto Done;
+            }
+            StringCbCopyN(pDriverName, cbDriverName + 1, DriverName, cbDriverName);
+
+            //
+            // We cannot walk the device tree with CM_Get_Sibling etc. unless we assume
+            // the device tree will stabilize. Any devnode removal (even outside of USB)
+            // would force us to retry. Instead we use Setup API to snapshot all
+            // devices.
+            //
+
+            // Examine all present devices to see if any match the given DriverName
+            //
+            deviceInfo = SetupDiGetClassDevs(NULL,
+                    NULL,
+                    NULL,
+                    DIGCF_ALLCLASSES | DIGCF_PRESENT);
+
+            if (deviceInfo == INVALID_HANDLE_VALUE)
+            {
+                status = FALSE;
+                goto Done;
+            }
+
+            deviceIndex = 0;
+            deviceInfoData.cbSize = sizeof(deviceInfoData);
+
+            while (done == FALSE)
+            {
+                //
+                // Get devinst of the next device
+                //
+                status = SetupDiEnumDeviceInfo(deviceInfo,
+                                               deviceIndex,
+                                               &amp;deviceInfoData);
+                deviceIndex++;
+                if (!status)
+                {
+                    //
+                    // This could be an error, or indication that all devices have been
+                    // processed. Either way the desired device was not found.
+                    //
+                    done = TRUE;
+                    break;
+                }
+
+                //
+                // Get the DriverName value
+                //
+                bResult = GetDeviceProperty(deviceInfo,
+                                            &amp;deviceInfoData,
+                                            SPDRP_DRIVER,
+                                            &amp;buf);
+                
+                // If the DriverName value matches, return the DeviceInstance
+                //
+                if (bResult == TRUE &amp;&amp; buf != NULL &amp;&amp; _stricmp(pDriverName, buf) == 0)
+                {
+                    done = TRUE;
+                    *pDevInfo = deviceInfo;
+                    CopyMemory(pDevInfoData, &amp;deviceInfoData, sizeof(deviceInfoData));
+                    FREE(buf);
+                    break;
+                }
+                if(buf != NULL)
+                {
+                    FREE(buf);
+                    buf = NULL;
+                }
+            }
+
+        Done:
+            if (bResult == FALSE)
+            {
+                if (deviceInfo != INVALID_HANDLE_VALUE)
+                {
+                    SetupDiDestroyDeviceInfoList(deviceInfo);
+                }
+            }
+            if (pDriverName != NULL)
+            {
+                FREE(pDriverName);
+            }
+            return status;
+        }
+        
+
+
+    _Success_(return == TRUE)
+    BOOL
+    GetDeviceProperty(
+        _In_    HDEVINFO         DeviceInfoSet,
+        _In_    PSP_DEVINFO_DATA DeviceInfoData,
+        _In_    DWORD            Property,
+        _Outptr_  LPTSTR        *ppBuffer
         )
     {
-        HDEVINFO         deviceInfo = INVALID_HANDLE_VALUE;
-        BOOL             status = TRUE;
-        ULONG            deviceIndex;
-        SP_DEVINFO_DATA  deviceInfoData;
-        BOOL             bResult = FALSE;
-        PCHAR            pDriverName = NULL;
-        PSTR             buf = NULL;
-        BOOL             done = FALSE;
+        BOOL bResult;
+        DWORD requiredLength = 0;
+        DWORD lastError;
 
-        if (pDevInfo == NULL)
+        if (ppBuffer == NULL)
         {
             return FALSE;
         }
 
-        if (pDevInfoData == NULL)
+        *ppBuffer = NULL;
+
+        bResult = SetupDiGetDeviceRegistryProperty(DeviceInfoSet,
+                                                   DeviceInfoData,
+                                                   Property ,
+                                                   NULL,
+                                                   NULL,
+                                                   0,
+                                                   &amp;requiredLength);
+        lastError = GetLastError();
+
+        if ((requiredLength == 0) || (bResult != FALSE &amp;&amp; lastError != ERROR_INSUFFICIENT_BUFFER))
         {
             return FALSE;
         }
 
-        memset(pDevInfoData, 0, sizeof(SP_DEVINFO_DATA));
+        *ppBuffer = ALLOC(requiredLength);
 
-        *pDevInfo = INVALID_HANDLE_VALUE;
-
-        // Use local string to guarantee zero termination
-        pDriverName = (PCHAR) ALLOC((DWORD) cbDriverName + 1);
-        if (NULL == pDriverName)
+        if (*ppBuffer == NULL)
         {
-            status = FALSE;
-            goto Done;
-        }
-        StringCbCopyN(pDriverName, cbDriverName + 1, DriverName, cbDriverName);
-
-        //
-        // We cannot walk the device tree with CM_Get_Sibling etc. unless we assume
-        // the device tree will stabilize. Any devnode removal (even outside of USB)
-        // would force us to retry. Instead we use Setup API to snapshot all
-        // devices.
-        //
-
-        // Examine all present devices to see if any match the given DriverName
-        //
-        deviceInfo = SetupDiGetClassDevs(NULL,
-                NULL,
-                NULL,
-                DIGCF_ALLCLASSES | DIGCF_PRESENT);
-
-        if (deviceInfo == INVALID_HANDLE_VALUE)
-        {
-            status = FALSE;
-            goto Done;
+            return FALSE;
         }
 
-        deviceIndex = 0;
-        deviceInfoData.cbSize = sizeof(deviceInfoData);
-
-        while (done == FALSE)
+        bResult = SetupDiGetDeviceRegistryProperty(DeviceInfoSet,
+                                                    DeviceInfoData,
+                                                    Property ,
+                                                    NULL,
+                                                    (PBYTE) *ppBuffer,
+                                                    requiredLength,
+                                                    &amp;requiredLength);
+        if(bResult == FALSE)
         {
-            //
-            // Get devinst of the next device
-            //
-            status = SetupDiEnumDeviceInfo(deviceInfo,
-                                           deviceIndex,
-                                           &amp;deviceInfoData);
-            deviceIndex++;
-            if (!status)
-            {
-                //
-                // This could be an error, or indication that all devices have been
-                // processed. Either way the desired device was not found.
-                //
-                done = TRUE;
-                break;
-            }
-
-            //
-            // Get the DriverName value
-            //
-            bResult = GetDeviceProperty(deviceInfo,
-                                        &amp;deviceInfoData,
-                                        SPDRP_DRIVER,
-                                        &amp;buf);
-            
-            // If the DriverName value matches, return the DeviceInstance
-            //
-            if (bResult == TRUE &amp;&amp; buf != NULL &amp;&amp; _stricmp(pDriverName, buf) == 0)
-            {
-                done = TRUE;
-                *pDevInfo = deviceInfo;
-                CopyMemory(pDevInfoData, &amp;deviceInfoData, sizeof(deviceInfoData));
-                FREE(buf);
-                break;
-            }
-            if(buf != NULL)
-            {
-                FREE(buf);
-                buf = NULL;
-            }
+            FREE(*ppBuffer);
+            *ppBuffer = NULL;
+            return FALSE;
         }
 
-    Done:
-        if (bResult == FALSE)
-        {
-            if (deviceInfo != INVALID_HANDLE_VALUE)
-            {
-                SetupDiDestroyDeviceInfoList(deviceInfo);
-            }
-        }
-        if (pDriverName != NULL)
-        {
-            FREE(pDriverName);
-        }
-        return status;
+        return TRUE;
     }
 </pre>
 

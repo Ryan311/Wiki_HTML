@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
     <title>Driver Debug</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -47,6 +47,11 @@
 <li><a href="#toc_2">Tools for INF Files</a>
 <li><a href="#toc_3">Tools for Changing Boot Optins for Driver Testing and Debugging</a>
 <li><a href="#toc_4">Tools for Building Drivers</a>
+<li><a href="#toc_5">Tools for Signing Driver</a>
+<li><a href="#toc_6">Tools for Testing Drivers</a>
+<li><a href="#toc_7">Tools for Verifying Drivers</a>
+<li><a href="#toc_8">Tools for Software Tracing</a>
+<li><a href="#toc_9">Tools for Debugging Drivers</a>
 </ul>
 </div>
 
@@ -96,9 +101,6 @@ The Windows Driver Kit (WDK) 8.1 and WDK 8 introduced a major change to the envi
 <li>
   BinPlace is useful for manipulating symbol files.
 
-<li>
-
-
 </ul>
 <li>
   Nmake2MsBuild
@@ -123,6 +125,250 @@ The Windows Driver Kit (WDK) 8.1 and WDK 8 introduced a major change to the envi
 
 <li>
   Important:  It does not change source files and only converts the project and solutions files. By default, the tool saves a backup copy of the original files.
+
+<li>
+  &gt; ProjectUpgradeTool.exe  G:\SVNWorkspace\trunk\HostSW\win7-inbox-driver\RtkFilter
+
+</ul>
+<li>
+  Devenv
+
+<ul>
+<li>
+  vs2012 
+
+<ul>
+<li>
+  打开VS2012 x86 Native Tools Command Prompt Cmd， 在该环境下调用devenv.exe来Build Driver
+
+</ul>
+<li>
+  VS2013 &amp; VS2015
+
+<ul>
+<li>
+  VS2013没有 VS2013 x86 Native Tools Command Prompt Cmd， 但也保留了相同的环境配置C:\Program Files\Microsoft Visual Studio 12.0\Common7\Tools\VsDevCmd.bat
+
+<li>
+  创建Cmd的快捷方式， 并将目标修改为 %comspec% /k ""C:\Program Files\Microsoft Visual Studio 12.0\Common7\Tools\VsDevCmd.bat"
+
+<li>
+  双击， 并在此环境下运行Build脚本就可以了， 也是调用Devenv来Build Driver。
+
+</ul>
+</ul>
+</ul>
+<h1 id="toc_5">Tools for Signing Driver</h1>
+<ul>
+<li>
+  Inf2Cat  生成目标平台上的cat档
+
+<ul>
+<li>
+  Inf2Cat (Inf2Cat.exe) is a command-line tool that determines whether a driver package's INF file can be digitally-signed for a specified list of Windows versions. If so, Inf2Cat generates the unsigned catalog files that apply to the specified Windows versions. 
+
+<li>
+  Inf2Cat.exe /driver:. /os:8_x86 ==&gt; Windows 8 x86 Edition
+
+<li>
+  Inf2Cat.ext /driver:. /os:6_3_X86 ==&gt; Windows 8.1 x86 Edition
+
+</ul>
+</ul>
+
+<h1 id="toc_6">Tools for Testing Drivers</h1>
+<ul>
+<li>
+  Devcon
+
+<ul>
+<li>
+  enable, disable, install, configure, remove devices ; add and remove Driver Packages
+
+<li>
+  Examples:  <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff544746%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff544746%28v=vs.85%29.aspx</a>
+
+</ul>
+<li>
+  Device Fundamentals Tests       同HCK
+
+<ul>
+<li>
+  CHOAS
+
+<li>
+  Coverage
+
+<li>
+  CPUStress
+
+<li>
+  I/O
+
+<li>
+  Reboot
+
+<li>
+  Sleep
+
+<li>
+  DriverInstall
+
+<li>
+  Penetration
+
+<li>
+  PnP
+
+</ul>
+<li>
+  PnPUtil     在C:\Windows\system32的工具
+
+<ul>
+<li>
+  Adds a driver package to the driver store.
+
+<li>
+  Deletes a driver package from the driver store.
+
+<li>
+  pnputil -e  -&gt;  Enumerates the driver packages(not include inbox) that are currently in the driver store. 
+
+</ul>
+<li>
+  PoolMon     Memory Pool Monitor, 用来检测Memory Leak
+
+<ul>
+<li>
+  displays data that the operating system collects about memory allocations from the system paged and nonpaged kernel pools, 
+
+<li>
+  The data is grouped by pool allocation tag.
+
+</ul>
+</ul>
+
+<h1 id="toc_7">Tools for Verifying Drivers</h1>
+<ul>
+<li>
+  Static Driver Verifier
+
+<li>
+  Driver Verifier
+
+<li>
+  Wdf Verifier
+
+<li>
+  WdfTester
+
+<ul>
+<li>
+  WdfFiTester tests the capability of the KMDF driver to handle these injected failures correctly. 
+
+<li>
+  <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff556118%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff556118%28v=vs.85%29.aspx</a>
+
+</ul>
+</ul>
+
+<h1 id="toc_8">Tools for Software Tracing</h1>
+<ul>
+<li>
+  TraceView
+
+<li>
+  Tracelog
+
+<li>
+  Tracepdb
+
+<li>
+  Tracefmt
+
+<li>
+  WPP
+
+<li>
+  ETW
+
+</ul>
+
+<h1 id="toc_9">Tools for Debugging Drivers</h1>
+<ul>
+<li>
+  Conditional Compilation and the Build Environment
+
+<ul>
+<li>
+  DBG preprocessor constant: Debug config 1; Release Config 0
+
+<li>
+  作用routines： ASSERT, ASSERTMSG, KdBreakPoint, KdBreakPointWithStatus, KdPrint, KdPrintEx
+
+<li>
+  在代码中使用上面的函数或宏时， 只有在Debug Version中才有效， Release时没有作用
+
+</ul>
+<li>
+  Breaking Into the Debugger
+
+<ul>
+<li>
+  User Mode Break Routines：  VOID DebugBreak(VOID);
+
+<li>
+  Kernel Mode Break Routines： 
+
+<ul>
+<li>
+  DbgBreakPoint, DbgBreakPointWithStatus  --&gt; breaks into the debugger
+
+<li>
+  KdBreakPoint, KdBreakPointWithStatus    --&gt; only available in checked build environment
+
+<li>
+  Conditional break macros:   ASSERT, ASSERTMSG   --&gt; tests a logical expression, available in checked build environment 
+
+<li>
+  Conditional break macros:   NT_ASSERT, NT_ASSERTMSG
+
+</ul>
+</ul>
+<li>
+  Sending Output to the Debugger
+
+<ul>
+<li>
+  User Mode Output Routines:  VOID OutputDebugString(LPCTSTR lpOutputString);     //可将UserMode App的输出log显示在DebugView上
+
+<li>
+  Kernel Mode Output Routines:
+
+<ul>
+<li>
+  DbgPrint, DbgPrintEx
+
+<li>
+  KdPrint, KdPrintEx  --&gt; only available in checked build environment
+
+</ul>
+</ul>
+<li>
+  DbgPrint Buffer and the Debugger
+
+<ul>
+<li>
+  When the DbgPrint, DbgPrintEx, vDbgPrintEx, vDbgPrintExWithPrefix, KdPrint, or KdPrintEx routine transmits a message to the debugger, the formatted string is sent to the DbgPrint buffer. 
+
+<li>
+  Any single call to DbgPrint, DbgPrintEx, vDbgPrintEx, vDbgPrintExWithPrefix, KdPrint, or KdPrintEx transmits only 512 bytes of information. Any output longer than the 512 bytes is lost. 
+
+<li>
+  The DbgPrint buffer itself can hold up to 4 KB of data on a free build of Windows, and up to 32 KB of data on a checked build of Windows
+
+<li>
+  !dbgprint  --&gt; view the contents of the DbgPrint buffer in Windbg
 
 </ul>
 </ul>

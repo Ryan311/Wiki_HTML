@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Supervised learning</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Supervised learning</a>
+<ul>
+<li><a href="#toc_1.1">Nearest neighbor and the curse of dimensionality</a>
+<li><a href="#toc_1.2">Linear regression</a>
+<li><a href="#toc_1.3">Support vector machines (SVMs)</a>
+</ul>
+</ul>
+</div>
+
+<h1 id="toc_1">Supervised learning</h1>
+<ul>
+<li>
+  The problem solved in supervised learning:
+
+</ul>
+<p>
+Supervised learning consists in learning the link between two datasets: 
+<br>the observed data X and an external variable y that we are trying to predict, 
+<br>usually called “target” or “labels”. Most often, y is a 1D array of length n_samples.
+</p>
+
+<p>
+All supervised estimators in scikit-learn implement a fit(X, y) method to fit the model 
+<br>and a predict(X) method that, given unlabeled observations X, returns the predicted labels y.
+</p>
+
+<ul>
+<li>
+  classification and regression
+
+</ul>
+<p>
+If the prediction task is to classify the observations in a set of finite labels, in other words 
+<br>to “name” the objects observed, the task is said to be a classification task. On the other hand, 
+<br>if the goal is to predict a continuous target variable, it is said to be a regression task.
+</p>
+
+<h2 id="toc_1.1">Nearest neighbor and the curse of dimensionality</h2>
+<ul>
+<li>
+  KNN
+<pre class = "brush: python">
+&gt;&gt;&gt; import numpy as np
+&gt;&gt;&gt; from sklearn import datasets
+&gt;&gt;&gt; iris = datasets.load_iris()
+&gt;&gt;&gt; iris_X = iris.data
+&gt;&gt;&gt; iris_y = iris.target
+&gt;&gt;&gt; np.unique(iris_y)
+
+&gt;&gt;&gt; # Split iris data in train and test data
+&gt;&gt;&gt; # A random permutation, to split the data randomly
+&gt;&gt;&gt; np.random.seed(0)
+&gt;&gt;&gt; indices = np.random.permutation(len(iris_X))
+&gt;&gt;&gt; iris_X_train = iris_X[indices[:-10]]
+&gt;&gt;&gt; iris_y_train = iris_y[indices[:-10]]
+&gt;&gt;&gt; iris_X_test  = iris_X[indices[-10:]]
+&gt;&gt;&gt; iris_y_test  = iris_y[indices[-10:]]
+&gt;&gt;&gt; # Create and fit a nearest-neighbor classifier
+&gt;&gt;&gt; from sklearn.neighbors import KNeighborsClassifier
+&gt;&gt;&gt; knn = KNeighborsClassifier()
+&gt;&gt;&gt; knn.fit(iris_X_train, iris_y_train) 
+KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+           metric_params=None, n_jobs=1, n_neighbors=5, p=2,
+           weights='uniform')
+&gt;&gt;&gt; knn.predict(iris_X_test)
+array([1, 2, 1, 0, 0, 0, 2, 1, 2, 0])
+&gt;&gt;&gt; iris_y_test
+array([1, 1, 1, 0, 0, 0, 2, 1, 2, 0])
+</pre>
+
+</ul>
+
+<h2 id="toc_1.2">Linear regression</h2>
+<pre class = "brush: python">
+&gt;&gt;&gt; from sklearn import datasets
+&gt;&gt;&gt; diabetes = datasets.load_diabetes()
+&gt;&gt;&gt; diabetes_X_train = diabetes.data[:-20]
+&gt;&gt;&gt; diabetes_X_test  = diabetes.data[-20:]
+&gt;&gt;&gt; diabetes_y_train = diabetes.target[:-20]
+&gt;&gt;&gt; diabetes_y_test  = diabetes.target[-20:]
+
+&gt;&gt;&gt; from sklearn import linear_model
+&gt;&gt;&gt; regr = linear_model.LinearRegression()
+&gt;&gt;&gt; regr.fit(diabetes_X_train, diabetes_y_train)
+LinearRegression(copy_X=True, fit_intercept=True, n_jobs=1, normalize=False)
+&gt;&gt;&gt; print(regr.coef_)
+[   0.30349955 -237.63931533  510.53060544  327.73698041 -814.13170937
+  492.81458798  102.84845219  184.60648906  743.51961675   76.09517222]
+
+&gt;&gt;&gt; # The mean square error
+&gt;&gt;&gt; np.mean((regr.predict(diabetes_X_test)-diabetes_y_test)**2)
+2004.56760268...
+
+&gt;&gt;&gt; # Explained variance score: 1 is perfect prediction
+&gt;&gt;&gt; # and 0 means that there is no linear relationship
+&gt;&gt;&gt; # between X and Y.
+&gt;&gt;&gt; regr.score(diabetes_X_test, diabetes_y_test) 
+0.5850753022690...
+</pre>
+
+<h2 id="toc_1.3">Support vector machines (SVMs)</h2>
+<ul>
+<li>
+  kernels:
+
+<ul>
+<li>
+  Linear kernel:  svc = svm.SVC(kernel = 'linear')
+
+<li>
+  Polynomial kernel:  svc = svm.SVC(kernel='poly', degree=3)
+
+<li>
+  RBF kernel(Radial Basis Function):  svc = svm.SVC(kernel='rbf')
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

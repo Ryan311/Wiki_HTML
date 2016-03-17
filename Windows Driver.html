@@ -43,15 +43,54 @@
     
 <div class="toc">
 <ul>
-<li><a href="#toc_1">Device and Driver Installation</a>
-<li><a href="#toc_2">Driver Support Routines</a>
+<li><a href="#toc_1">DriverEntry中第二个参数是驱动在注册表中参数所存放的位置， Why？ </a>
+<li><a href="#toc_2">power concept</a>
+<li><a href="#toc_3">Device and Driver Installation</a>
 <ul>
-<li><a href="#toc_2.1">Unicode String in Driver</a>
+<li><a href="#toc_3.1">Driver-Driver and Driver-Application Communication</a>
+</ul>
+<li><a href="#toc_4">Driver Support Routines</a>
+<ul>
+<li><a href="#toc_4.1">Unicode String in Driver</a>
 </ul>
 </ul>
 </div>
 
-<h1 id="toc_1">Device and Driver Installation</h1>
+<h1 id="toc_1">DriverEntry中第二个参数是驱动在注册表中参数所存放的位置， Why？ </h1>
+<p>
+每个驱动都是以一个类似服务的形式存在的， 在系统注册表的HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services树下总有一个和驱动名字相同的
+<br>子树用来描述这个驱动的一些基本信息， 并提供一个可使用的存储空间供驱动存放自己的特有信息。之所以在注册表中提供了这么一个地方来供驱动存储信息
+<br>是因为很多驱动加载得非常早， 甚至仅仅易于Windows内核， 这时候文件系统还没有建立， 驱动程序如果需要在此时享有自己可操作的存储空间（记录一些参数）
+<br>， 除了注册表外没有其他任何地方可以使用。
+</p>
+
+<p>
+Windows在启动时加载了一个最小的文件系统， 分析磁盘并将注册表HKEY_LOCAO_MACHINE\SYSTEM树下的所有内容读入到内存里， 这样就保证了这一部分的注册表内容
+<br>在Windwos内核刚加载之后就是可以读/写的。Windows系统在启动过程中适当的时候将这棵子树的内容和磁盘上的注册表进行同步， 之后的注册表操作就和一般的
+<br>注册表操作别无二致了。
+</p>
+
+<h1 id="toc_2">power concept</h1>
+<pre>
+设备的电源状态用D0-D3来标识。D0是正常状态，D1-D2是休眠状态，但深度有差别，D3是断电状态。其中D3还分Hot和Cold两种子状态。
+1）	在D3Hot状态下，设备的功能已丧失但仍有外部或总线供电，使得设备本身还能被系统检测到。
+和设备相连的控制器设备认为此设备还连接着，只要控制 器上有设备连接着，控制器就要处于工作状态。
+2）	但在D3Cold状态下，系统已检测不到设备，这可能是由于设备的已经断电了，或者系统本身已经处于休眠状态 而导致的。
+和设备连接的控制器，已经不认为设备和自己连着，在其它条件满足的情况下，控制器可以进入完全的休眠状态。
+</pre>
+<ul>
+<li>
+  Windows 始终支持这两个D3子状态，但仅当整个计算机退出 S0（工作）系统电源状态进入睡眠或休眠状态（通常S3 或 S4）时，Windows 7及早期版本的Windows才支持D3cold子状态。
+
+<li>
+  从Windows 8开始，设备可以进入D3cold电源子状态，即使当系统处于 S0 电源状态
+
+<li>
+  
+
+</ul>
+
+<h1 id="toc_3">Device and Driver Installation</h1>
 <ul>
 <li>
   Document:
@@ -102,7 +141,9 @@
 </ul>
 </ul>
 
-<h1 id="toc_2"><a href="http://msdn.microsoft.com/en-us/library/windows/hardware/ff544200%28v=vs.85%29.aspx">Driver Support Routines</a></h1>
+<h2 id="toc_3.1"><a href="http://blogs.msdn.com/b/iliast/archive/2007/10/06/driver-driver-and-driver-application-communication.aspx">Driver-Driver and Driver-Application Communication</a></h2>
+
+<h1 id="toc_4"><a href="http://msdn.microsoft.com/en-us/library/windows/hardware/ff544200%28v=vs.85%29.aspx">Driver Support Routines</a></h1>
 <ul>
 <li>
   INF:    Device Information File     <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff547402%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff547402%28v=vs.85%29.aspx</a>
@@ -176,9 +217,17 @@
 </pre>
 
 </ul>
+<li>
+  Driver中设置动态断点， 当程序跑到该处时去连接调试器
+
+<ul>
+<li>
+  DbgBreakPoint()
+
+</ul>
 </ul>
 
-<h2 id="toc_2.1">Unicode String in Driver</h2>
+<h2 id="toc_4.1">Unicode String in Driver</h2>
 <ul>
 <li>
   structure

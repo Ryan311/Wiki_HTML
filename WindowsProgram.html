@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
     <title>WindowsProgram</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -46,19 +46,26 @@
 <li><a href="#toc_1">Basic</a>
 <li><a href="#toc_2">topic</a>
 <ul>
-<li><a href="#toc_2.1">Useful Function</a>
-<li><a href="#toc_2.2">Windows Driver</a>
-<li><a href="#toc_2.3">Driver Debug</a>
-<li><a href="#toc_2.4">Windows API</a>
-<li><a href="#toc_2.5">Windows Service</a>
-<li><a href="#toc_2.6">Windows Hook</a>
-<li><a href="#toc_2.7">Tool help Library</a>
-<li><a href="#toc_2.8">Windows Shell</a>
-<li><a href="#toc_2.9">Windows SetupAPI</a>
-<li><a href="#toc_2.10">Windows Strings</a>
-<li><a href="#toc_2.11">Windows Version</a>
-<li><a href="#toc_2.12">Bluetooth API</a>
-<li><a href="#toc_2.13">Device Notification</a>
+<li><a href="#toc_2.1">Windows program Experience</a>
+<li><a href="#toc_2.2">Windows Coding Style</a>
+<li><a href="#toc_2.3">Win32 PE File Format</a>
+<li><a href="#toc_2.4">Useful Function</a>
+<li><a href="#toc_2.5">Windows Driver</a>
+<li><a href="#toc_2.6">Driver Debug</a>
+<li><a href="#toc_2.7">Windows API</a>
+<li><a href="#toc_2.8">Windows Service</a>
+<li><a href="#toc_2.9">Windows Hook</a>
+<li><a href="#toc_2.10">Tool help Library</a>
+<li><a href="#toc_2.11">Windows Shell</a>
+<li><a href="#toc_2.12">Windows SetupAPI</a>
+<li><a href="#toc_2.13">Windows Strings</a>
+<li><a href="#toc_2.14">Windows Version</a>
+<li><a href="#toc_2.15">Bluetooth API</a>
+<li><a href="#toc_2.16">Device Notification</a>
+<li><a href="#toc_2.17">Public and Private Symbols</a>
+<li><a href="#toc_2.18">Windows Security and Identity</a>
+<li><a href="#toc_2.19">Windows Audio</a>
+<li><a href="#toc_2.20">Windows Registry Functions</a>
 </ul>
 </ul>
 </div>
@@ -109,26 +116,38 @@ Private Symbols:
     and line number information are not always required for debugging, 
     although they are useful for a more in-depth debugging session. These are called private symbols.
 
-A symbol file that contains both private and public symbols is called a full symbol file. A symbol file that contains 
-public symbols alone is called a stripped symbol file. 
+A symbol file that contains both private and public symbols is called a full symbol file. 
+A symbol file that contains public symbols alone is called a stripped symbol file. 
+
+Current Symbol File System:
+    In the current system, there are always two files: the executable file and a .pdb file. 
+    The .pdb file contains all the symbols.
+    The executable file contains a pointer to the .pdb file.
 </pre>
 
 </ul>
 
 <h1 id="toc_2">topic</h1>
-<h2 id="toc_2.1"><a href="Useful Function.html">Useful Function</a></h2>
-<h2 id="toc_2.2"><a href="Windows Driver.html">Windows Driver</a></h2>
-<h2 id="toc_2.3"><a href="Driver Debug.html">Driver Debug</a></h2>
-<h2 id="toc_2.4"><a href="Windows API.html">Windows API</a></h2>
-<h2 id="toc_2.5"><a href="Windows Service.html">Windows Service</a></h2>
-<h2 id="toc_2.6"><a href="Windows Hook.html">Windows Hook</a></h2>
-<h2 id="toc_2.7"><a href="Tool help Library.html">Tool help Library</a></h2>
-<h2 id="toc_2.8"><a href="Windows Shell.html">Windows Shell</a></h2>
-<h2 id="toc_2.9"><a href="Windows SetupAPI.html">Windows SetupAPI</a></h2>
-<h2 id="toc_2.10"><a href="Windows Strings.html">Windows Strings</a></h2>
-<h2 id="toc_2.11"><a href="Windows Version.html">Windows Version</a></h2>
-<h2 id="toc_2.12"><a href="Bluetooth API.html">Bluetooth API</a></h2>
-<h2 id="toc_2.13"><a href="Device Notification.html">Device Notification</a></h2>
+<h2 id="toc_2.1"><a href="Windows program Experience.html">Windows program Experience</a></h2>
+<h2 id="toc_2.2"><a href="Windows Coding Style.html">Windows Coding Style</a></h2>
+<h2 id="toc_2.3"><a href="Win32 PE File Format.html">Win32 PE File Format</a></h2>
+<h2 id="toc_2.4"><a href="Useful Function.html">Useful Function</a></h2>
+<h2 id="toc_2.5"><a href="Windows Driver.html">Windows Driver</a></h2>
+<h2 id="toc_2.6"><a href="Driver Debug.html">Driver Debug</a></h2>
+<h2 id="toc_2.7"><a href="Windows API.html">Windows API</a></h2>
+<h2 id="toc_2.8"><a href="Windows Service.html">Windows Service</a></h2>
+<h2 id="toc_2.9"><a href="Windows Hook.html">Windows Hook</a></h2>
+<h2 id="toc_2.10"><a href="Tool help Library.html">Tool help Library</a></h2>
+<h2 id="toc_2.11"><a href="Windows Shell.html">Windows Shell</a></h2>
+<h2 id="toc_2.12"><a href="Windows SetupAPI.html">Windows SetupAPI</a></h2>
+<h2 id="toc_2.13"><a href="Windows Strings.html">Windows Strings</a></h2>
+<h2 id="toc_2.14"><a href="Windows Version.html">Windows Version</a></h2>
+<h2 id="toc_2.15"><a href="Bluetooth API.html">Bluetooth API</a></h2>
+<h2 id="toc_2.16"><a href="Device Notification.html">Device Notification</a></h2>
+<h2 id="toc_2.17"><a href="Public and Private Symbols.html">Public and Private Symbols</a></h2>
+<h2 id="toc_2.18"><a href="Windows Security and Identity.html">Windows Security and Identity</a></h2>
+<h2 id="toc_2.19"><a href="Windows Audio.html">Windows Audio</a></h2>
+<h2 id="toc_2.20"><a href="Windows Registry Functions.html">Windows Registry Functions</a></h2>
 
 
    <hr />

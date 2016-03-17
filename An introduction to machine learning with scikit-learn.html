@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>An introduction to machine learning with scikit-learn</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Training set and testing set</a>
+<li><a href="#toc_0.2">Example dataset</a>
+<li><a href="#toc_0.3">Learning and Predicting</a>
+</ul>
+</ul>
+</div>
+
+<p>
+<a href="http://scikit-learn.org/stable/tutorial/basic/tutorial.html">http://scikit-learn.org/stable/tutorial/basic/tutorial.html</a>
+</p>
+
+<h2 id="toc_0.1">Training set and testing set</h2>
+<pre>
+    Machine learning is about learning some properties of a data set and applying them to new data. This is why a common practice in machine
+learning to evaluate an algorithm is to split the data at hand into two sets, one that we call the training set on which we learn data properties
+and one that we call the testing set on which we test these properties.
+</pre>
+
+<h2 id="toc_0.2">Example dataset</h2>
+<p>
+scikit-learn comes with a few standard datasets
+</p>
+<ul>
+<li>
+  the <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">iris</a> and <a href="http://archive.ics.uci.edu/ml/datasets/Pen-Based+Recognition+of+Handwritten+Digits">digits</a> datasets for classification
+
+<li>
+  the <a href="http://archive.ics.uci.edu/ml/datasets/Housing">boston</a> house prices dataset for regression.
+<pre class = "brush: python">
+    &gt;&gt;&gt; from sklearn import datasets
+    &gt;&gt;&gt; iris = datasets.load_iris()
+    &gt;&gt;&gt; digits = datasets.load_digits()
+</pre>
+
+</ul>
+
+<p>
+A dataset is a dictionary-like object that holds all the data and some metadata about the data. 
+<br>This data is stored in the .data member, which is a n_samples, n_features array
+</p>
+
+<h2 id="toc_0.3">Learning and Predicting</h2>
+<ul>
+<li>
+  digits
+<pre class = "brush: python">
+# support vector classification(SVM)
+&gt;&gt;&gt; from sklearn import svm
+&gt;&gt;&gt; clf = svm.SVC(gamma=0.001, C=100.)
+# clf is a classifier, it must learn from the model
+&gt;&gt;&gt; clf.fit(digits.data[:-1], digits.target[:-1])  
+SVC(C=100.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma=0.001, kernel='rbf',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+# predict new values
+&gt;&gt;&gt; clf.predict(digits.data[-1:])
+array([8])
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  iris
+<pre class = "brush: python">
+&gt;&gt;&gt; from sklearn import svm
+&gt;&gt;&gt; from sklearn import datasets
+&gt;&gt;&gt; clf = svm.SVC()
+&gt;&gt;&gt; iris = datasets.load_iris()
+&gt;&gt;&gt; X, y = iris.data, iris.target
+&gt;&gt;&gt; clf.fit(X, y)  
+SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='rbf',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False)
+
+# using pickle to maintain classifier
+&gt;&gt;&gt; import pickle
+&gt;&gt;&gt; s = pickle.dumps(clf)
+&gt;&gt;&gt; clf2 = pickle.loads(s)
+&gt;&gt;&gt; clf2.predict(X[0:1])
+array([0])
+&gt;&gt;&gt; y[0]
+0
+
+# using joblib instead of pickle, but can only save to file
+&gt;&gt;&gt; from sklearn.externals import joblib
+&gt;&gt;&gt; joblib.dump(clf, 'filename.pkl') 
+# using it in another process
+&gt;&gt;&gt; clf = joblib.load('filename.pkl')
+</pre>
+
+</ul>
+
+<ul>
+<li>
+  <a href="http://scikit-learn.org/stable/auto_examples/classification/plot_digits_classification.html#example-classification-plot-digits-classification-py">Recognizing hand-written digits</a>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

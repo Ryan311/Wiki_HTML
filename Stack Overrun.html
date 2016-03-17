@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
     <title>Stack Overrun</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -143,22 +143,21 @@ fffff880054a7790 RtkBtfilter!__security_cookie = 0x0000f8832ce065cd
 
 <pre>
 0: kd&gt; uf RtkBtfilter!LeBuildEIR
-
 RtkBtfilter!LeBuildEIR [e:\svnworkspace\trunk\hostsw\win7-inbox-driver\rtkfilter\generic\filter_le_process.c @ 3631]:
- 3631 fffff880`0548bc30 48895c2408      mov     qword ptr [rsp+8],rbx
- 3631 fffff880`0548bc35 55              push    rbp
- 3631 fffff880`0548bc36 56              push    rsi
- 3631 fffff880`0548bc37 57              push    rdi
- 3631 fffff880`0548bc38 4154            push    r12
- 3631 fffff880`0548bc3a 4155            push    r13
- 3631 fffff880`0548bc3c 4156            push    r14
- 3631 fffff880`0548bc3e 4157            push    r15
- 3631 fffff880`0548bc40 488dac2400fdffff lea     rbp,[rsp-300h]          rbp指针
- 3631 fffff880`0548bc48 4881ec00040000   sub     rsp,400h             rsp指针
- 3631 fffff880`0548bc4f 488b053abb0100 
-                            mov     rax,qword ptr [RtkBtfilter!__security_cookie (fffff880`054a7790)]
- 3631 fffff880`0548bc56 4833c4          xor     rax,rsp
- 3631 fffff880`0548bc59 488985f0020000  mov     qword ptr [rbp+2F0h],rax
+3631 fffff880`0548bc30 48895c2408      mov     qword ptr [rsp+8],rbx
+3631 fffff880`0548bc35 55              push    rbp
+3631 fffff880`0548bc36 56              push    rsi
+3631 fffff880`0548bc37 57              push    rdi
+3631 fffff880`0548bc38 4154            push    r12
+3631 fffff880`0548bc3a 4155            push    r13
+3631 fffff880`0548bc3c 4156            push    r14
+3631 fffff880`0548bc3e 4157            push    r15
+3631 fffff880`0548bc40 488dac2400fdffff lea     rbp,[rsp-300h]          rbp指针
+3631 fffff880`0548bc48 4881ec00040000   sub     rsp,400h             rsp指针
+3631 fffff880`0548bc4f 488b053abb0100 
+                        mov     rax,qword ptr [RtkBtfilter!__security_cookie (fffff880`054a7790)]
+3631 fffff880`0548bc56 4833c4          xor     rax,rsp
+3631 fffff880`0548bc59 488985f0020000  mov     qword ptr [rbp+2F0h],rax
 </pre>
 
 <p>
@@ -172,7 +171,7 @@ RtkBtfilter!LeBuildEIR [e:\svnworkspace\trunk\hostsw\win7-inbox-driver\rtkfilter
 </pre>
 
 <p>
-[rbp+2F0]的位置放入了一个值， 是Cookie 异或 rsp,  Rsp已知   RSP = fffff880`0a56f540
+[rbp+2F0]的位置放入了一个值， 是Cookie异或rsp,  Rsp已知RSP = fffff880`0a56f540
 </p>
 <blockquote>
 则    【rsp+2f0】 =  fffff880`0a56f930
@@ -259,7 +258,7 @@ fffff880`0a56f94a  00 00 00 00 00 00 00 c1-49 05 80 f8 ff ff 00 00  ........I...
 根据EIR_DATA的定义， 我们列出每个元素的有效数据
 </p>
 <pre>
-[0]:    0x04 0x09
+[0]:  0x04 0x09
 [1]:  0x03 0x19 0x40 0x02
 [2]:  0x02 0x01 0x06
 [3]:  0x02 0x0a 0x04

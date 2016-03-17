@@ -49,19 +49,40 @@
 <li><a href="#toc_1.2">Build-in functions</a>
 <li><a href="#toc_1.3">os</a>
 <li><a href="#toc_1.4">sys</a>
-<li><a href="#toc_1.5">sets</a>
-<li><a href="#toc_1.6">json</a>
-<li><a href="#toc_1.7">string</a>
-<ul>
-<li><a href="#toc_1.7.1">translate</a>
-<li><a href="#toc_1.7.2">case</a>
+<li><a href="#toc_1.5">contextlib</a>
+<li><a href="#toc_1.6">csv</a>
+<li><a href="#toc_1.7">sets</a>
+<li><a href="#toc_1.8">mashal</a>
+<li><a href="#toc_1.9">pickle,cpickle</a>
+<li><a href="#toc_1.10">json</a>
+<li><a href="#toc_1.11">lxml</a>
+<li><a href="#toc_1.12">urllib2</a>
+<li><a href="#toc_1.13">requests</a>
+<li><a href="#toc_1.14">sqlite3</a>
+<li><a href="#toc_1.15">pymongo</a>
+<li><a href="#toc_1.16">string</a>
+<li><a href="#toc_1.17">struct</a>
+<li><a href="#toc_1.18">random</a>
 </ul>
-<li><a href="#toc_1.8">struct</a>
-<li><a href="#toc_1.9">random</a>
-</ul>
-<li><a href="#toc_2">Third Party</a>
+<li><a href="#toc_2">Internet Programming</a>
+<li><a href="#toc_3">Web Programming</a>
 <ul>
-<li><a href="#toc_2.1">hachoir</a>
+<li><a href="#toc_3.1">urlparse</a>
+<li><a href="#toc_3.2">urllib</a>
+<li><a href="#toc_3.3">urllib2</a>
+<li><a href="#toc_3.4">requests</a>
+<li><a href="#toc_3.5">xml</a>
+<li><a href="#toc_3.6">lxml</a>
+</ul>
+<li><a href="#toc_4">Data Base</a>
+<ul>
+<li><a href="#toc_4.1">sqlite3</a>
+<li><a href="#toc_4.2">pymongo</a>
+</ul>
+<li><a href="#toc_5">Third Party</a>
+<ul>
+<li><a href="#toc_5.1">hachoir</a>
+<li><a href="#toc_5.2">Scrapy</a>
 </ul>
 </ul>
 </div>
@@ -72,8 +93,28 @@
   The principal built-in types are _<em>numerics, sequences, mappings, files, classes, instances and exceptions</em>_
 
 <li>
-  
+  string object and unicode object
 
+<ul>
+<li>
+  string object是由characters组成的sequence，而unicode object是Unicode code units组成的sequence。
+
+<li>
+  string里的character是有多种编码方式的，比如单字节的ASCII，双字节的GB2312等等，再比如UTF-8
+
+<li>
+  Unicode code unit是一个16-bit或者32-bit的数值，每个数值代表一个unicode符号。在python里，16-bit的unicode，对应的是ucs2编码。32-bit对应的是ucs4编码
+
+<li>
+  print(string)的时候，如果string是按当前环境编码方式编码的，可以正常输出，不会乱码；如果string不是当前编码的，就会乱码。而print(unicode)是不会乱码的。why？应为print(unicode)的时候，会把unicode先转成当前编码，然后再输出。 
+
+<li>
+  string转unicode或者unicode转string: string和unicode都有decode()和encode()方法。decode是string2unicode，encode自然就是unicode2string。
+
+<li>
+  &gt;&gt;&gt;import sys &gt;&gt;&gt; sys.getdefaultencoding()     --&gt; 缺省编码方式
+
+</ul>
 </ul>
 <h2 id="toc_1.2">Build-in functions</h2>
 <ul>
@@ -86,15 +127,39 @@
 <li>
   range, xrange   -&gt; range产生一个list， xrange产生一个xrange object， 功能相同，
 
+<ul>
 <li>
-                     但如果数据很大， xrange效率会更高， 因为他不会维护一个大的列表， 测试：
+  但如果数据很大， xrange效率会更高， 因为他不会维护一个大的列表， 测试：
 
 <li>
-                     %timeit random.shuffle(range(10000), 10)
+  %timeit random.shuffle(range(10000), 10)
 
 <li>
-                     %timeit random.shuffle(xrange(1000), 10)
+  %timeit random.shuffle(xrange(1000), 10)
 
+</ul>
+<li>
+  zip 返回一个元组的列表， 每个元组都是列表的第i个元素的， 元组个数为列表最小的那个参数
+
+<ul>
+<li>
+  zip(*[]) == unzip   相当于将每个元素拆分， 然后再合并
+
+<li>
+  x = [1,2,3]; b = [2,3,4]; zipped = zip(x, y) : [(1,2), (2,3), (3,4)]
+
+<li>
+  lst = [[1,2,3], [2,3,4]]; zipped = zip(*lst) : [(1,2), (2,3), (3,4)]
+
+</ul>
+<li>
+  filter
+
+<ul>
+<li>
+  filter(str.digit, targetStr) --&gt; 从targetStr中提取数字
+
+</ul>
 </ul>
 <h2 id="toc_1.3">os</h2>
 <ul>
@@ -144,10 +209,101 @@
   sys.getwindowsversion()     -&gt; 获得当前Windows Version
 
 </ul>
-<h2 id="toc_1.5">sets</h2>
-<h2 id="toc_1.6">json</h2>
-<h2 id="toc_1.7">string</h2>
-<h3 id="toc_1.7.1">translate</h3>
+<h2 id="toc_1.5">contextlib</h2>
+<ul>
+<li>
+   contextlib.contextmanager(func)
+
+<li>
+   contextlib.nested(mgr1[, mgr2[, ...]])
+
+<li>
+   contextlib.closing(thing)
+
+</ul>
+<h2 id="toc_1.6">csv</h2>
+<ul>
+<li>
+  Commo Separated Values: The csv module implements classes to read and write tabular data in CSV format
+
+<li>
+  csv.reader  读入分隔符文件
+
+<li>
+  csv.writer  输出分隔符文件
+
+</ul>
+<h2 id="toc_1.7">sets</h2>
+<h2 id="toc_1.8">mashal</h2>
+<h2 id="toc_1.9">pickle,cpickle</h2>
+<h2 id="toc_1.10">json</h2>
+<ul>
+<li>
+  JavaScipt Object Notation   HTTP请求在Web浏览器和其他应用程序之间发送数据的标准格式之一
+
+<li>
+  json.loads  将JSON字符串转换成Python形式
+
+<li>
+  json.dumps  将Python对象转换成JSON格式
+
+</ul>
+<p>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+</p>
+<h2 id="toc_1.11">lxml</h2>
+<ul>
+<li>
+  <a href="http://lxml.de/">http://lxml.de/</a>     不是标准库
+
+<li>
+  用来读写HTML和XML格式数据的库
+
+<li>
+  lxml.html   处理HTML
+
+<li>
+  lxml.objectify  处理XML
+
+</ul>
+<h2 id="toc_1.12">urllib2</h2>
+<ul>
+<li>
+  Python's standard lib for HTTP
+
+<li>
+  The urllib2 module defines functions and classes which help in opening URLs (mostly HTTP) in a complex world — basic and digest authentication, redirections, cookies and more.
+
+</ul>
+<h2 id="toc_1.13">requests</h2>
+<ul>
+<li>
+  <a href="http://cn.python-requests.org/zh_CN/latest/">http://cn.python-requests.org/zh_CN/latest/</a>
+
+<li>
+  Python’s standard urllib2 module provides most of the HTTP capabilities you need, but the API is thoroughly broken. 
+
+<li>
+  The Requests package is recommended for a higher-level http client interface.
+
+</ul>
+<h2 id="toc_1.14">sqlite3</h2>
+<ul>
+<li>
+  SQLite是一款嵌入式的数据库
+
+</ul>
+<h2 id="toc_1.15">pymongo</h2>
+<ul>
+<li>
+ NoSQL数据库 
+
+</ul>
+<h2 id="toc_1.16">string</h2>
+<ul>
+<li>
+  translate
+
 <ul>
 <li>
   table = string.maketrans(from, to)
@@ -159,7 +315,9 @@
   allchar = string.maketrans('','')
 
 </ul>
-<h3 id="toc_1.7.2">case</h3>
+<li>
+  case
+
 <ul>
 <li>
   string.upper()
@@ -174,8 +332,20 @@
   string.title()
 
 </ul>
-<h2 id="toc_1.8">struct</h2>
-<h2 id="toc_1.9">random</h2>
+<li>
+  fill zero
+
+<ul>
+<li>
+  string.zfill(width)
+
+<li>
+  '12'.zfill(5)  -&gt; '00012'
+
+</ul>
+</ul>
+<h2 id="toc_1.17">struct</h2>
+<h2 id="toc_1.18">random</h2>
 <ul>
 <li>
   random.getstate   random.setstate   -&gt; 可以保存产生随机数的状态， 产生相同的随机数
@@ -203,9 +373,82 @@
 
 </ul>
 
+<h1 id="toc_2">Internet Programming</h1>
 
-<h1 id="toc_2">Third Party</h1>
-<h2 id="toc_2.1">hachoir</h2>
+<h1 id="toc_3">Web Programming</h1>
+<p>
+针对Web应用程序的开发， 包括Web客户端和服务器
+<br>Web客户端和服务器交互的语言是标准协议HTTP， HTTP是TCP/IP的上层协议。
+<br>它的职责是通过发送、接收HTTP消息来处理客户端的请求， 它属于无状态协议， 它不跟踪从一个客户端到另一个客户端的请求信息
+<br>使用cookie保存客户端的客户状态信息
+</p>
+<h2 id="toc_3.1">urlparse</h2>
+<p>
+用来操作URL字符串
+</p>
+<ul>
+<li>
+  urlparse.urlparse(url)  分拆
+
+<li>
+  urlparse.urlunparse()   合并
+
+<li>
+  urlparse.urljoin()      拼接
+
+</ul>
+<h2 id="toc_3.2">urllib</h2>
+<p>
+提供在给定的URL地址下载数据的功能
+</p>
+<h2 id="toc_3.3">urllib2</h2>
+<p>
+处理更复杂的URL打开总量
+</p>
+<h2 id="toc_3.4">requests</h2>
+<h2 id="toc_3.5">xml</h2>
+<ul>
+<li>
+  Python’s interfaces for processing XML are grouped in the xml package.
+
+<li>
+  xml.etree.ElementTree: the ElementTree API, a simple and lightweight XML processor
+
+<li>
+  xml.dom: the DOM API definition
+
+</ul>
+<h2 id="toc_3.6">lxml</h2>
+<ul>
+<li>
+  用来读写HTML和XML格式数据的库, 基于xml.etree.ElementTree
+
+<li>
+  lxml.html   处理HTML
+
+<li>
+  lxml.objectify  处理XML
+
+</ul>
+
+<h1 id="toc_4">Data Base</h1>
+<h2 id="toc_4.1">sqlite3</h2>
+<ul>
+<li>
+  SQLite是一款嵌入式的数据库
+
+</ul>
+<h2 id="toc_4.2">pymongo</h2>
+<ul>
+<li>
+ NoSQL数据库 
+
+</ul>
+
+
+
+<h1 id="toc_5">Third Party</h1>
+<h2 id="toc_5.1">hachoir</h2>
 <ul>
 <li>
   <a href="https://bitbucket.org/haypo/hachoir/wiki/Home">https://bitbucket.org/haypo/hachoir/wiki/Home</a>
@@ -234,6 +477,15 @@
   <a href="http://www.thehackeruniversity.com/2014/02/02/python-hachoir-tutorial">http://www.thehackeruniversity.com/2014/02/02/python-hachoir-tutorial</a>
 
 </ul>
+</ul>
+<h2 id="toc_5.2">Scrapy</h2>
+<ul>
+<li>
+  <a href="http://scrapy.org/">http://scrapy.org/</a>
+
+<li>
+  An open source and collaborative framework for extracting the data you need from websites. In a fast, simple, yet extensible way.
+
 </ul>
 
 

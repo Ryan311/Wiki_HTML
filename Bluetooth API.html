@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Bluetooth API</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">从Bluetooth Enumerator手动枚举PDO</a>
+</ul>
+</div>
+
+<p>
+MSDN SDK:   <a href="https://msdn.microsoft.com/en-us/library/aa362761%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/aa362761%28v=vs.85%29.aspx</a>
+<br>MSDN Bluetooth Device:   <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff536768%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff536768%28v=vs.85%29.aspx</a>
+</p>
+
+<p>
+Bluetooth API
+<table>
+<tr>
+<td>
+Bthddi.h
+</td>
+<td>
+WDK, Driver
+</td>
+<td>
+L2cap Interface
+</td>
+</tr>
+<tr>
+<td>
+BthSdpddi.h
+</td>
+<td>
+WDK, Driver
+</td>
+<td>
+SDP Interface
+</td>
+</tr>
+<tr>
+<td>
+Bthioctl.h
+</td>
+<td>
+WDK, Driver or APP
+</td>
+<td>
+IOCTL_BTH_HCI_VENDOR_COMMAND, Send Verder Cmd to Radios
+</td>
+</tr>
+<tr>
+<td>
+Bluetoothapis.h
+</td>
+<td>
+UserMode Desktop APP
+</td>
+<td>
+Library: BthProps.lib
+</td>
+</tr>
+<tr>
+<td>
+Bthsdpdef.h
+</td>
+<td>
+UserMode Desktop APP
+</td>
+<td>
+include by Bluetoothapis.h
+</td>
+</tr>
+<tr>
+<td>
+BluetoothLEApis.h
+</td>
+<td>
+UserMode App and UMDF
+</td>
+<td>
+LE GATT
+</td>
+</tr>
+</table>
+</p>
+
+<h1 id="toc_1">从Bluetooth Enumerator手动枚举PDO</h1>
+<ul>
+<li>
+  BluetoothSetLocalServiceInfo:    A user-mode API that is used only by profile driver developers to trigger the installation of a local service that is described by the service GUID in pClassGuid.
+
+<li>
+  WDK Sample -&gt; Bluetooth Echo L2CAP Profile Driver -&gt; bthsrvinst
+
+<li>
+  通过向Enumerator传递一个GUID， 枚举出一个PDO， 用于安装Bluetooth Profile Driver。 
+
+<li>
+  SDP也是这样工作， 做SDP搜索后， 知道远端支持哪些服务后， 会为每个服务枚举出一个PDO
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

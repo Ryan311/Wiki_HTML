@@ -46,28 +46,37 @@
 <li><a href="#toc_1">git</a>
 <ul>
 <li><a href="#toc_1.1">Install or Update</a>
-<li><a href="#toc_1.2">Create a local repository</a>
-<li><a href="#toc_1.3">Remote Repositories</a>
-<li><a href="#toc_1.4">Differences</a>
-<li><a href="#toc_1.5">Other</a>
-<li><a href="#toc_1.6">ssh</a>
-<li><a href="#toc_1.7">work with two computers</a>
-<li><a href="#toc_1.8">Exercise on line</a>
+<li><a href="#toc_1.2">Basic</a>
+<li><a href="#toc_1.3">Help</a>
+<li><a href="#toc_1.4">Create a local repository and trace new file</a>
+<li><a href="#toc_1.5">Status and State</a>
+<li><a href="#toc_1.6">Differences</a>
+<li><a href="#toc_1.7">Undo</a>
+<li><a href="#toc_1.8">Version Revert</a>
+<li><a href="#toc_1.9">rm file</a>
+<li><a href="#toc_1.10">branch, merge, stash</a>
+<li><a href="#toc_1.11">rebase</a>
+<li><a href="#toc_1.12">Remote Repositories</a>
+<li><a href="#toc_1.13">tag</a>
+<li><a href="#toc_1.14">[[http://blog.jobbole.com/76843/|Git工作流指南]]</a>
+<li><a href="#toc_1.15">work with two computers</a>
+<li><a href="#toc_1.16">Advanced</a>
+<li><a href="#toc_1.17">Links</a>
 <ul>
-<li><a href="#toc_1.8.1">more...</a>
-<li><a href="#toc_1.8.2">图解Git</a>
-<li><a href="#toc_1.8.3">Git权威指南</a>
+<li><a href="#toc_1.17.1">Exercise on line</a>
+<li><a href="#toc_1.17.2">more...</a>
+<li><a href="#toc_1.17.3">图解Git</a>
+<li><a href="#toc_1.17.4">Git权威指南</a>
 </ul>
 </ul>
 <li><a href="#toc_2">github</a>
 <ul>
 <li><a href="#toc_2.1">ssh连接github.com的SSH服务</a>
-<ul>
-<li><a href="#toc_2.1.1">GotGitHub</a>
-</ul>
-<li><a href="#toc_2.2">generate SSH key: noneed type username and password everytime</a>
-<li><a href="#toc_2.3">SSH key passphrases???</a>
-<li><a href="#toc_2.4">github pages</a>
+<li><a href="#toc_2.2">GotGitHub</a>
+<li><a href="#toc_2.3">如何高效使用GitHub</a>
+<li><a href="#toc_2.4">generate SSH key: noneed type username and password everytime</a>
+<li><a href="#toc_2.5">SSH key passphrases???</a>
+<li><a href="#toc_2.6">github pages</a>
 </ul>
 <li><a href="#toc_3">GitHub:Gist</a>
 <li><a href="#toc_4">gitflow</a>
@@ -80,7 +89,7 @@
 <dt><strong>Install</strong></dt>
 </dl>
 <p>
-sudo apt-get install git git-core
+sudo apt-get install git
 </p>
 
 <dl>
@@ -90,7 +99,44 @@ sudo apt-get install git git-core
 git clone <a href="git://git.kernel.org/pug/scm/git/git.git">git://git.kernel.org/pug/scm/git/git.git</a>
 </p>
 
-<h2 id="toc_1.2">Create a local repository</h2>
+<h2 id="toc_1.2">Basic</h2>
+<ul>
+<li>
+  HEAD指向的就是当前分支, 通过git checkout name切换， HEAD指针也跟着指向name的分支
+
+<li>
+  Three State
+
+<ul>
+<li>
+  Modified
+
+<li>
+  Staged
+
+<li>
+  Repo
+
+</ul>
+</ul>
+
+<h2 id="toc_1.3">Help</h2>
+<ol>
+<li>
+git help git
+
+<li>
+git help &lt;command&gt;
+
+<li>
+git help -a
+
+<li>
+git help -g
+
+</ol>
+
+<h2 id="toc_1.4">Create a local repository and trace new file</h2>
 <ol>
 <li>
 mkdir my_app
@@ -99,88 +145,338 @@ mkdir my_app
 cd my_app
 
 <li>
-git init  // init current repository
+git init  // init a repository in current dir
 
 <li>
-git add . // add sources to repository in current dir
+git add test.txt // add new file to staged state
+
+<li>
+git add . // change Modified files and new files to staged state 
 
 <li>
 git commit -m "Add the original files"    // commit files to repo
 
+</ol>
+
+<h2 id="toc_1.5">Status and State</h2>
+<p>
+*工作区*： 就是你在电脑上看到的目录，比如目录下testgit里的文件(.git隐藏目录版本库除外)。或者以后需要再新建的目录文件等等都属于工作区范畴。
+<br>*版本库(Repository)*：工作区有一个隐藏目录.git,这个不属于工作区，这是版本库。
+<br>其中版本库里面存了很多东西，其中最重要的就是stage(暂存区)，还有Git为我们自动创建了第一个分支master,以及指向master的一个指针HEAD。 
+</p>
+
+<ol>
 <li>
-git show  // show status
+git status // show working tree status
 
 <li>
-git log   // show all changes we've committed so far
+git show  // show various types of objects
+
+<li>
+git log   // show commit log, changes we've committed so far,  从当前的版本开始到最远的commit log
+
+<li>
+git reflog  // show all committed logs, 与log的区别是， 只要commit过的log， 都会按时间顺序Show出来
+
+<li>
+git log --graph   // 查看分支合并图
+
+</ol>
+ 
+<h2 id="toc_1.6">Differences</h2>
+<ol>
+<li>
+git diff              // Changes between Modified and Staged 
+
+<li>
+git diff --cached     // Changes between Staged and last commit
+
+<li>
+git diff --staged     // same to --cached
+
+<li>
+git diff HEAD         // Changes between Modified and last commit
+
+<li>
+git diff HEAD <strong>==</strong> git diff + git diff --cached
 
 </ol>
 
-<h2 id="toc_1.3">Remote Repositories</h2>
+<h2 id="toc_1.7">Undo</h2>
+<ol>
+<li>
+git reset HEAD test.txt    // clear Staged content, or change Staged to Modified state
+
+<li>
+git checkout -- test.txt  // should have the file name,  give up changes since last stage
+
+<li>
+git reset --hard HEAD // give up all changes since the last commite
+
+<li>
+git reset HEAD test.txt + git checkout -- test.txt == git reset --hard HEAD
+
+</ol>
+
+<h2 id="toc_1.8">Version Revert</h2>
+<ol>
+<li>
+git reset --hard HEAD^    // revert to HEAD-1 commite
+
+<li>
+git reset --hard HEAD~n   // n &gt;= 2, revert to nth commite
+
+<li>
+git reset --hard &lt;commitID&gt;  // revert to the specifiled commit, commitID can be show by git log or git reflog(the first line) 
+
+</ol>
+
+<h2 id="toc_1.9">rm file</h2>
+<ol>
+<li>
+git rm test.txt   // git status 看到删除的状态在Staged
+
+<li>
+git reset --hard HEAD     // Commit前， 恢复删除的文件
+
+</ol>
+
+<ol>
+<li>
+rm test.txt       // git status 看到删除的状态在Modifiled
+
+<li>
+git checkout -- test.txt  // Commit前， 恢复删除的文件
+
+</ol>
+
+<ol>
+<li>
+git rm test.txt
+
+<li>
+git commit -m "rm test.txt    // 提交的删除操作
+
+<li>
+git reset --hard HEAD^        // 只能使用Version Revert才能恢复之前删除的文件
+
+</ol>
+
+<h2 id="toc_1.10">branch, merge, stash</h2>
+<ol>
+<li>
+git branch        //查看分支，会列出所有的分支，当前分支前面会添加一个星号
+
+<li>
+git branch dev    // 创建分支
+
+<li>
+git checkout dev  // 切换分支
+
+<li>
+git checkout -b dev   // –b参数表示创建并切换到分支dev, 上两个命令的组合
+
+<li>
+git branch -d dev     // 删除dev分支, 前提是该分支已经合并, 否则报错
+
+<li>
+git branch -D &lt;name&gt;  // 强行删除没有合并过的分支  
+
+</ol>
+
+<ol>
+<li>
+git merge dev     // 合并dev分支到当前分支
+
+<li>
+git merge –no-ff  -m “注释” dev   // 用”Fast forward”模式， 合并分支并删除分支后， 分支信息仍在
+
+</ol>
+
+<p>
+*分支策略*：
+<br>master主分支应该是非常稳定的，也就是用来发布新版本，一般情况下不允许在上面干活，干活一般情况下在新建的dev分支上干活，
+<br>干完后，比如上要发布，或者说dev分支代码稳定后可以合并到主分支master上来。
+</p>
+
+<p>
+<strong>bug分支</strong>:
+在开发中，会经常碰到bug问题，那么有了bug就需要修复，在Git中，分支是很强大的，每个bug都可以通过一个临时分支来修复，
+<br>修复完成后，合并分支，然后将临时的分支删除掉。 比如开发中接到一个404 bug，可以创建一个404分支来修复它，但如果
+<br>当前的dev分支上的工作只完成了一半， 还无法提交。Git提供了一个stash功能，可以把当前工作现场 ”隐藏起来”，等以后
+<br>恢复现场后继续工作。
+</p>
+<ol>
+<li>
+git stash     // 处于dev分支， 将当前的工作现场隐藏起来
+
+<li>
+git status    // 查看当前现场工作状态， 是空的了
+
+<li>
+git checkout -b issue-404     // 创建bug分支并切换到bug分支
+
+<li>
+......        // 修复bug并提交
+
+<li>
+git checkout master   //切换回master分支
+
+<li>
+git merge --no-ff -m "merge bug fix 404" issue-404    // 将bug分支merge到主分支
+
+<li>
+git branch -d issue-404   // 删除bug分支
+
+<li>
+git checkoug dev  //切换回dev分支， 继续干活
+
+<li>
+git stath list    //查看stach内容
+
+<li>
+git stach apply   //恢复dev现场
+
+<li>
+git stach drop    //删除保存的stach内容
+
+<li>
+git stach pop     //以上两条命令之和， 恢复并删除
+
+</ol>
+
+
+<h2 id="toc_1.11">rebase</h2>
+<ol>
+<li>
+<a href="http://gitbook.liuhui998.com/4_2.html">http://gitbook.liuhui998.com/4_2.html</a>
+
+<li>
+git rebase用于把一个分支的修改合并到当前分支, 但不同于git merge!!!
+
+<li>
+git checkout mywork       //切换到mywork分支
+
+<li>
+git rebase origin         //把"mywork"分支里的每个提交(commit)取消掉，并把它们临时保存为补丁(patch)(放到".git/rebase"中),然后把"mywork"分支更新 到最新的"origin"分支，最后把保存的这些补丁应用到"mywork"分支上。
+
+<li>
+git rebase --continue     //出现冲突， 解决后继续执行后面操作
+
+<li>
+git rebase --abort        //终止rebase的行动, 回到rebase之前的状态
+
+</ol>
+
+<p>
+*合并(merge)和用rebase所产生的历史的区别*：
+</p>
+
+<p>
+<br><img src="images/GitRebase.png" />
+</p>
+
+<h2 id="toc_1.12">Remote Repositories</h2>
 <ol>
 <li>
 Create a new empty GitHub repository
 
 <li>
-Put our local repo to the GitHub server, we'll need to add a remote repository<br>git remote add origin <a href="https://github.com/Ryan311/MyWiki.git">https://github.com/Ryan311/MyWiki.git</a>
+Put our local repo to the GitHub server, we'll need to add a remote repository
 
-<li>
-push our local changes to origin repo on Github<br>git push -u origin master   //-u tells Git to remember the para
-
-<li>
-Pulling Remotely  other people commit and we want to see the changes<br>git pull origin master
-
-<li>
-git push  // push everything to the remote repository
-
-</ol>
-
-<h2 id="toc_1.4">Differences</h2>
 <ol>
 <li>
-git diff HEAD
-
-<li>
-git diff --staged
+git remote add origin <a href="https://github.com/Ryan311/MyWiki.git">https://github.com/Ryan311/MyWiki.git</a>   //关联一个远程库
 
 </ol>
+<li>
+push our local changes to origin repo on Github
 
-<h2 id="toc_1.5">Other</h2>
 <ol>
 <li>
-git reset octofamily/octodog.txt
-
-<li>
-git checkout -- octocat.txt
-
-<li>
-git brahch clean_up
-
-<li>
-git checkout clean_up
-
-<li>
-git rm '*.txt'    //removing all the things
+git push -u origin master   //-u tells Git to remember the para , 第一次要用-u 以后不需要
 
 </ol>
+<li>
+Pulling Remotely  other people commit and we want to see the changes
 
-<h2 id="toc_1.6">ssh</h2>
 <ol>
 <li>
-  ssh-keygen
+git pull origin master
+
+</ol>
+<li>
+Push everything to the remote repository
+
+<ol>
+<li>
+git push  
+
+</ol>
+<li>
+git remote    // 查看远程库的信息
 
 <li>
-  GitHub中设置公钥
-    在GitHub中，依次点击Account settings（右上角倒数第二个图标） -&gt; SSH Keys -&gt; Add SSH Key，
-    将id_rsa.pub文件中的字符串复制进去，注意字符串中没有换行和空格。
-
-<li>
-  再次检查SSH连接情况：  ssh -T git@github.com
-    如果看到如下所示，则表示添加成功：
-    Hi Ryan311! You’ve successfully authenticated, but GitHub does not provide shell access.
+git remote -v // 查看远程库的详细信息
 
 </ol>
 
-<h2 id="toc_1.7">work with two computers</h2>
+<h2 id="toc_1.13">tag</h2>
+<p>
+发布一个版本时，我们通常先在版本库中打一个标签，这样，就唯一确定了打标签时刻的版本.
+<br>Git的标签虽然是版本库的快照，但其实它就是指向某个commit的指针（跟分支很像,但是分支可以移动，标签不能移动），所以，创建和删除标签都是瞬间完成的。
+</p>
+
+<ol>
+<li>
+git checkout master   // 切换到要打标签的分支上， 一般是master分支
+
+<li>
+git tag v1.0          // 打一个新标签， 默认标签是打在最新提交的commit上
+
+<li>
+git tag               // 查看标签
+
+<li>
+git tag name &lt;commitID&gt;   // 在指定某个commit上打标签
+
+<li>
+git show &lt;tagname&gt;    // 查看标签信息
+
+<li>
+git tag -a v0.1 -m "version 0.1 released" 3628164 //创建带有说明的标签， -a指定标签名， -m指定说明文字
+
+<li>
+git tag -d &lt;tagname&gt;  // 删除标签
+
+<li>
+git push origin &lt;tagname&gt;     // 将标签推送到远程
+
+<li>
+git push origin :refs/tags/&lt;tagname&gt;  // 先删除本地标签， 再用该命令删除远程的标签
+
+</ol>
+
+<h2 id="toc_1.14">[[<a href="http://blog.jobbole.com/76843/|Git工作流指南]]</h2>">http://blog.jobbole.com/76843/|Git工作流指南]]</h2></a>
+<ul>
+<li>
+  <a href="http://blog.jobbole.com/76847/">集中式工作流</a>     // 同Subversion
+
+<li>
+  [[<a href="http://blog.jobbole.com/76857/|功能分支工作流]]">http://blog.jobbole.com/76857/|功能分支工作流]]</a>   //核心思路是所有的功能开发应该在一个专门的分支，而不是在master分支上。
+
+<li>
+  [[<a href="http://blog.jobbole.com/76867/|Gitflow工作流]]">http://blog.jobbole.com/76867/|Gitflow工作流]]</a>    // 围绕项目发布的严格分支模型, 用于一个健壮的管理大型项目的框架
+
+<li>
+  [[<a href="http://blog.jobbole.com/76861/|Forking工作流]]">http://blog.jobbole.com/76861/|Forking工作流]]</a>
+
+<li>
+  [[<a href="http://blog.jobbole.com/76854/|Pull">http://blog.jobbole.com/76854/|Pull</a> Request工作流]]
+
+</ul>
+
+<h2 id="toc_1.15">work with two computers</h2>
 <ol>
 <li>
   Computer A (had the original git repo)
@@ -199,11 +495,30 @@ git rm '*.txt'    //removing all the things
 
 </ol>
 
-<h2 id="toc_1.8"><a href="http://try.github.io/levels/1/challenges/1">Exercise on line</a></h2>
-<h3 id="toc_1.8.1"><a href="http://josephj.com/entry.php?id=308">more...</a></h3>
-<h3 id="toc_1.8.2"><a href="http://marklodato.github.io/visual-git-guide/index-zh-cn.html#basic-usage">图解Git</a></h3>
-<h3 id="toc_1.8.3"><a href="http://www.worldhello.net/gotgit/">Git权威指南</a></h3>
+<h2 id="toc_1.16">Advanced</h2>
+<p>
+<a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137621280731812dec22ecc9b44f4b2ca1c680f181a5b000">http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/00137621280731812dec22ecc9b44f4b2ca1c680f181a5b000</a>
+</p>
+<ul>
+<li>
+  自定义Git
 
+<li>
+  忽略特殊文件
+
+<li>
+  配置别名
+
+<li>
+  搭建Git服务器
+
+</ul>
+
+<h2 id="toc_1.17">Links</h2>
+<h3 id="toc_1.17.1"><a href="http://try.github.io/levels/1/challenges/1">Exercise on line</a></h3>
+<h3 id="toc_1.17.2"><a href="http://josephj.com/entry.php?id=308">more...</a></h3>
+<h3 id="toc_1.17.3"><a href="http://marklodato.github.io/visual-git-guide/index-zh-cn.html#basic-usage">图解Git</a></h3>
+<h3 id="toc_1.17.4"><a href="http://www.worldhello.net/gotgit/">Git权威指南</a></h3>
 <hr />
 <h1 id="toc_2">github</h1>
 <h2 id="toc_2.1">ssh连接github.com的SSH服务</h2>
@@ -223,15 +538,33 @@ git rm '*.txt'    //removing all the things
 <li>
   $ssh -Tv git@github.com ==&gt; 以诊断模式登录
 
-</ul>
+<li>
+  GitHub中设置公钥
 
-<h3 id="toc_2.1.1"><a href="http://www.worldhello.net/doc/">GotGitHub</a></h3>
-<p>
-=== <a href="http://www.yangzhiping.com/tech/github.html">如何高效使用GitHub</a>
-</p>
-<h2 id="toc_2.2"><a href="https://help.github.com/articles/generating-ssh-keys">generate SSH key: noneed type username and password everytime</a></h2>
-<h2 id="toc_2.3"><a href="https://help.github.com/articles/working-with-ssh-key-passphrases">SSH key passphrases???</a></h2>
-<h2 id="toc_2.4"><a href="http://pages.github.com/">github pages</a></h2>
+<ul>
+<li>
+  在GitHub中，依次点击Account settings（右上角倒数第二个图标） -&gt; SSH Keys -&gt; Add SSH Key，
+
+<li>
+  将id_rsa.pub文件中的字符串复制进去，注意字符串中没有换行和空格。
+
+<li>
+  再次检查SSH连接情况：  ssh -T git@github.com
+
+<li>
+  如果看到如下所示，则表示添加成功：
+
+<li>
+  Hi Ryan311! You’ve successfully authenticated, but GitHub does not provide shell access.
+
+</ul>
+</ul>
+    
+<h2 id="toc_2.2"><a href="http://www.worldhello.net/doc/">GotGitHub</a></h2>
+<h2 id="toc_2.3"><a href="http://www.yangzhiping.com/tech/github.html">如何高效使用GitHub</a></h2>
+<h2 id="toc_2.4"><a href="https://help.github.com/articles/generating-ssh-keys">generate SSH key: noneed type username and password everytime</a></h2>
+<h2 id="toc_2.5"><a href="https://help.github.com/articles/working-with-ssh-key-passphrases">SSH key passphrases???</a></h2>
+<h2 id="toc_2.6"><a href="http://pages.github.com/">github pages</a></h2>
 <hr />
 <h1 id="toc_3">GitHub:Gist</h1>
 <ul>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
     <title>Useful Function</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -49,6 +49,7 @@
 <li><a href="#toc_1.2">代码注入</a>
 <li><a href="#toc_1.3">查找进程运行的基址</a>
 <li><a href="#toc_1.4">三个给进程提权的方法(转)</a>
+<li><a href="#toc_1.5">以Admin权限运行一个App</a>
 </ul>
 </ul>
 </div>
@@ -163,21 +164,26 @@
 </ul>
 
 <h2 id="toc_1.4">三个给进程提权的方法(转)</h2>
+<ul>
+<li>
+  MSDN:   <a href="https://msdn.microsoft.com/en-us/library/aa446619.aspx">Enabling and Disabling Privileges in C++</a>
+
+<li>
+  Example:    BtDevManager --&gt;  通过PID打开进程并获得进程的信息(CmdLine buffer), 这个过程需要提升进程的权限
 <pre>
 方法一：
 C/C++ code
-
 
     bool EnableDebugPrivilege()   
     {   
         HANDLE hToken;   
         LUID sedebugnameValue;   
         TOKEN_PRIVILEGES tkp;   
-        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &amp;hToken))
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &amp;hToken)) //得到进程的令牌句柄
         {   
             return   FALSE;   
         }   
-        if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &amp;sedebugnameValue))  
+        if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &amp;sedebugnameValue))  // 查询进程的权限 
         {   
             CloseHandle(hToken);   
             return false;   
@@ -185,7 +191,7 @@ C/C++ code
         tkp.PrivilegeCount = 1;   
         tkp.Privileges[0].Luid = sedebugnameValue;   
         tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;   
-        if (!AdjustTokenPrivileges(hToken, FALSE, &amp;tkp, sizeof(tkp), NULL, NULL)) 
+        if (!AdjustTokenPrivileges(hToken, FALSE, &amp;tkp, sizeof(tkp), NULL, NULL))   // 修改令牌权限
         {   
             CloseHandle(hToken);   
             return false;   
@@ -196,29 +202,28 @@ C/C++ code
 方法二：
 C/C++ code
 
-
     bool UpPrivilege()   
     {   
-        HANDLE hToken;                             //   handle   to   process   token   
-        TOKEN_PRIVILEGES tkp;               //   pointer   to   token   structure   
+        HANDLE hToken;                              //   handle   to   process   token   
+        TOKEN_PRIVILEGES tkp;                       //   pointer   to   token   structure   
         bool result = OpenProcessToken(GetCurrentProcess(),   
-            TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,     
-            &amp;hToken);   
+                                        TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,     
+                                        &amp;hToken);   
         if(!result)         //打开进程错误   
             return result;   
-        result   =   LookupPrivilegeValue(     NULL,     
-            SE_DEBUG_NAME,   
-            &amp;tkp.Privileges[0].Luid);   
+        result   =   LookupPrivilegeValue(  NULL,     
+                                            SE_DEBUG_NAME,   
+                                            &amp;tkp.Privileges[0].Luid);   
         if(!result)         //查看进程权限错误   
             return   result;   
         tkp.PrivilegeCount   =   1;     //   one   privilege   to   set   
         tkp.Privileges[0].Attributes   =   SE_PRIVILEGE_ENABLED;   
-        result   =   AdjustTokenPrivileges(   hToken,     
-            FALSE,     
-            &amp;tkp,     
-            sizeof(TOKEN_PRIVILEGES),   
-            (PTOKEN_PRIVILEGES)   NULL,     
-            (PDWORD)   NULL);   
+        result   =   AdjustTokenPrivileges( hToken,     
+                                            FALSE,     
+                                            &amp;tkp,     
+                                            sizeof(TOKEN_PRIVILEGES),   
+                                            (PTOKEN_PRIVILEGES) NULL,     
+                                            (PDWORD)NULL);   
         return   result;   
     }
 
@@ -271,13 +276,90 @@ C/C++ code
         tp.Privileges[0].Attributes = (bEnable) ? SE_PRIVILEGE_ENABLED : 0;
         
         AdjustTokenPrivileges(hToken,FALSE,&amp;tp,NULL,NULL,NULL);
-        
         CloseHandle(hToken);
-        
         return (GetLastError() == ERROR_SUCCESS);
-        
     }
 </pre>
+
+</ul>
+
+<h2 id="toc_1.5">以Admin权限运行一个App</h2>
+<ul>
+<li>
+  Example:    BTDevManager --&gt; 在后台程式中运行regsvr32来注册Dll
+<pre>
+void RunAppWithAdmin(TCHAR *csCmdLine)
+{
+	BTDEVMGR_DBG((_T("+++")));
+	HANDLE hToken = NULL;
+	HANDLE hTokenDup = NULL;
+	BOOL bSuccess = TRUE;
+	do 
+	{
+		if(OpenProcessToken(GetCurrentProcess(),TOKEN_ALL_ACCESS,&amp;hToken))
+		{
+			if(DuplicateTokenEx(hToken, TOKEN_ALL_ACCESS,NULL, SecurityIdentification, TokenPrimary, &amp;hTokenDup))
+			{
+				DWORD dwSessionId = WTSGetActiveConsoleSessionId();
+				if(!SetTokenInformation(hTokenDup,TokenSessionId,&amp;dwSessionId,sizeof(DWORD)))
+				{
+					BTDEVMGR_DBG((TEXT("SetTokenInformation error ！error code：%d\n"),GetLastError()));
+					bSuccess = FALSE;
+					break;
+				}
+
+				STARTUPINFO si;
+				PROCESS_INFORMATION pi;
+				ZeroMemory(&amp;si,sizeof(STARTUPINFO));
+				ZeroMemory(&amp;pi,sizeof(PROCESS_INFORMATION));
+				si.cb = sizeof(STARTUPINFO);
+				si.lpDesktop = _T("WinSta0\\Default");
+				si.wShowWindow = SW_HIDE;
+				si.dwFlags  =   STARTF_USESHOWWINDOW /*|STARTF_USESTDHANDLES*/;
+
+				LPVOID pEnv = NULL;
+				DWORD dwCreationFlag = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT;
+				if(!CreateEnvironmentBlock(&amp;pEnv,hTokenDup,FALSE))
+				{
+					BTDEVMGR_DBG((TEXT("CreateEnvironmentBlock error ！error code：%d\n"),GetLastError()));
+					bSuccess = FALSE;
+					break;
+				}
+
+				if(!CreateProcessAsUser(hTokenDup,_T("regsvr32.exe"),csCmdLine,NULL,NULL,FALSE,dwCreationFlag,pEnv,NULL,&amp;si,&amp;pi))
+				{
+					BTDEVMGR_DBG((TEXT("CreateProcessAsUser error ！error code：%d\n"),GetLastError()));
+					bSuccess = FALSE;
+					break;
+				}
+
+				if(pEnv)
+				{
+					DestroyEnvironmentBlock(pEnv);
+				}
+			}
+			else
+			{
+				BTDEVMGR_DBG((TEXT("DuplicateTokenEx error ！error code：%d\n"),GetLastError()));
+				bSuccess = FALSE;
+				break;
+			}
+		}
+		else
+		{
+			BTDEVMGR_DBG((TEXT("cannot get administror！error code：%d\n"),GetLastError()));
+			bSuccess = FALSE;
+			break;
+		}
+	}while(0);
+
+	if(hTokenDup != NULL &amp;&amp; hTokenDup != INVALID_HANDLE_VALUE)
+		CloseHandle(hTokenDup);
+	if(hToken != NULL &amp;&amp; hToken != INVALID_HANDLE_VALUE)
+		CloseHandle(hToken);
+</pre>
+
+</ul>
 
 
    <hr />

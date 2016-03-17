@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>Public and Private Symbols</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">Including TMF information in public PDB files</a>
+<li><a href="#toc_0.2">PDBCopy</a>
+<li><a href="#toc_0.3">SymChk</a>
+</ul>
+</ul>
+</div>
+
+<p>
+<a href="http://blogs.msdn.com/b/usbcoreblog/archive/2013/06/29/wpp-blog-post.aspx#Including_TMF_information">http://blogs.msdn.com/b/usbcoreblog/archive/2013/06/29/wpp-blog-post.aspx#Including_TMF_information</a>
+<a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff553493">https://msdn.microsoft.com/en-us/library/windows/hardware/ff553493</a>
+</p>
+
+<p>
+There are two types of symbol files (PDB): private PDBs and public PDBs. 
+<br>A private PDB is intended for internal use whereas a public PDB is used by the consumers of your binary.
+</p>
+
+<p>
+Before Windows 8, it was not possible to include formatting information (contained in TMF files) in public PDBs. 
+As a workaround, the TMF files had to be updated and uploaded frequently so that they were in-sync with the associated symbol files. 
+</p>
+
+<p>
+In Windows 8, the build and other WPP utilities have been enhanced to include trace messages in public PDBs. 
+You can use the symbol file to capture WPP trace messages without worrying about out-of-sync TMF and symbol files.
+</p>
+
+<h2 id="toc_0.1">Including TMF information in public PDB files</h2>
+
+
+<h2 id="toc_0.2">PDBCopy</h2>
+<p>
+<a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff553365%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff553365%28v=vs.85%29.aspx</a>
+The PDBCopy tool (pdbcopy.exe) is a command-line tool that removes private symbol information from a symbol file. 
+<br>It can also remove selected information from the public symbol table.
+</p>
+
+<p>
+&gt; pdbcopy RtkBtfilter.pdb PublicBtFilter.pdb -p
+Remove private symbols from full symbol files and publicBtFilter contains only public symbols
+</p>
+
+<h2 id="toc_0.3">SymChk</h2>
+<p>
+<a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff558844%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff558844%28v=vs.85%29.aspx</a>
+SymChk (the Microsoft Symbol Checker tool), Symchk.exe, is a program that compares executable files to symbol files to verify that the correct symbols are available.
+</p>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

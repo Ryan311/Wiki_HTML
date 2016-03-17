@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>scrapy</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Install</a>
+<li><a href="#toc_2">tutorial</a>
+<li><a href="#toc_3">Basic</a>
+<ul>
+<li><a href="#toc_3.1">新建爬虫项目</a>
+<li><a href="#toc_3.2">Scrapy主要包括了以下组件：</a>
+<li><a href="#toc_3.3">XPath Selector</a>
+<li><a href="#toc_3.4">Scrapy Shell</a>
+<li><a href="#toc_3.5">Spiders</a>
+<li><a href="#toc_3.6">Command</a>
+<li><a href="#toc_3.7">如何防止被ban之策略大集合</a>
+</ul>
+<li><a href="#toc_4">My Projects</a>
+<li><a href="#toc_5">XPath</a>
+</ul>
+</div>
+
+<p>
+<a href="http://scrapy.org/">http://scrapy.org/</a>
+<br> DOC:   <a href="http://scrapy-chs.readthedocs.org/zh_CN/latest/intro/tutorial.html">http://scrapy-chs.readthedocs.org/zh_CN/latest/intro/tutorial.html</a>
+<br> Scrapy核心架构与代码运行分析:  <a href="http://blog.csdn.net/u012150179/article/details/34441655">http://blog.csdn.net/u012150179/article/details/34441655</a>
+<br> Test WebSite:  [[<a href="http://www.17500.cn/ssq/all.php|乐彩网 -">http://www.17500.cn/ssq/all.php|乐彩网 -</a> 双色球开奖历史数据]]
+</p>
+
+<h1 id="toc_1">Install</h1>
+<ul>
+<li>
+  sudo pip install scrapy
+
+</ul>
+
+<h1 id="toc_2">tutorial</h1>
+<ul>
+<li>
+  Scrapy研究探索  <a href="http://blog.csdn.net/u012150179/article/details/32343635">http://blog.csdn.net/u012150179/article/details/32343635</a>
+
+<li>
+  Scrapy安装、爬虫入门教程、爬虫实例  <a href="http://www.cnblogs.com/Shirlies/p/4536880.html">http://www.cnblogs.com/Shirlies/p/4536880.html</a>
+
+<li>
+  python爬虫----（scrapy框架提高（1），自定义Request爬取）    <a href="http://my.oschina.net/lpe234/blog/342741">http://my.oschina.net/lpe234/blog/342741</a>
+
+<li>
+  Douban movies search: <a href="http://www.cnblogs.com/Shirlies/p/4536880.html">http://www.cnblogs.com/Shirlies/p/4536880.html</a>
+
+<li>
+  自动爬取网页之（CrawlSpider）: <a href="http://blog.csdn.net/u012150179/article/details/34913315">http://blog.csdn.net/u012150179/article/details/34913315</a>
+
+</ul>
+ 
+<h1 id="toc_3">Basic</h1>
+
+<h2 id="toc_3.1">新建爬虫项目</h2>
+<p>
+新建项目 (Project)：新建一个新的爬虫项目
+scrapy startproject tutorial  
+</p>
+<blockquote>
+在tutorial文件夹下的文件作用：
+scrapy.cfg：项目的配置文件
+tutorial/：项目的Python模块，将会从这里引用代码
+tutorial/items.py：项目的items文件
+tutorial/pipelines.py：项目的pipelines文件
+tutorial/settings.py：项目的设置文件
+tutorial/spiders/：存储爬虫的目录
+</blockquote>
+    
+<ul>
+<li>
+  明确目标（Items）：明确你想要抓取的目标
+
+<li>
+  制作爬虫（Spider）：制作爬虫开始爬取网页
+
+<li>
+  存储内容（Pipeline）：设计管道存储爬取内容
+
+</ul>
+
+
+<h2 id="toc_3.2">Scrapy主要包括了以下组件：</h2>
+<ul>
+<li>
+  引擎，用来处理整个系统的数据流处理，触发事务。
+
+<li>
+  调度器，用来接受引擎发过来的请求，压入队列中，并在引擎再次请求的时候返回。
+
+<li>
+  下载器，用于下载网页内容，并将网页内容返回给蜘蛛。
+
+<li>
+  蜘蛛，蜘蛛是主要干活的，用它来制订特定域名或网页的解析规则。
+
+<li>
+  项目管道，负责处理有蜘蛛从网页中抽取的项目，他的主要任务是清晰、验证和存储数据。当页面被蜘蛛解析后，将被发送到项目管道，并经过几个特定的次序处理数据。
+
+<li>
+  下载器中间件，位于Scrapy引擎和下载器之间的钩子框架，主要是处理Scrapy引擎与下载器之间的请求及响应。
+
+<li>
+  蜘蛛中间件，介于Scrapy引擎和蜘蛛之间的钩子框架，主要工作是处理蜘蛛的响应输入和请求输出。
+
+<li>
+  调度中间件，介于Scrapy引擎和调度之间的中间件，从Scrapy引擎发送到调度的请求和响应。
+
+</ul>
+<p>
+<img src="images/scrapy.png" />
+</p>
+
+<h2 id="toc_3.3">XPath Selector</h2>
+<p>
+Scrapy comes with its own mechanism for extracting data. They’re called XPath selectors (or just “selectors”, for short) 
+<br>because they “select” certain parts of the HTML document specified by XPath expressions.
+<br>XPath is a language for selecting nodes in XML documents, which can also be used with HTML.
+</p>
+
+<pre>
+    from scrapy.selector import Selector
+
+    sel = Selector(response)
+    sites = sel.xpath('//ul[@class="directory-url"]/li')
+    
+    sel.xpath("//h1").extract()
+    sel.xpath("//p/text()").extract_unquoted()
+</pre>
+
+
+<h2 id="toc_3.4">Scrapy Shell</h2>
+<ul>
+<li>
+  Launch the shell:    scrapy shell &lt;url&gt;
+
+<li>
+  Using the shell
+
+<ul>
+<li>
+  shelp()
+
+<li>
+  fetch(request_or_url):  fetch a new response from the given request or URL and update all related objects accordingly.
+
+<li>
+  view(response):  open the given response in your local web browser
+
+</ul>
+<li>
+  Available Scrapy objects
+
+<ul>
+<li>
+  spider
+
+<li>
+  request
+
+<li>
+  response
+
+<li>
+  settings
+
+</ul>
+</ul>
+
+<h2 id="toc_3.5">Spiders</h2>
+<p>
+Spiders，它是所有爬虫的基类，对于它的设计原则是只爬取start_url列表中的网页，而从爬取的网页中获取link并继续爬取的工作CrawlSpider类更适合。
+<br>CrawlSpider是Spider的派生类,与Spider类的最大不同是多了一个rules参数，其作用是定义提取动作。在rules中包含一个或多个Rule对象，Rule类与CrawlSpider类都位于scrapy.contrib.spiders模块中。
+</p>
+
+<h2 id="toc_3.6">Command</h2>
+<p>
+在项目的根目录， 可以使用的命令
+</p>
+<ul>
+<li>
+  scrapy list --&gt; 列出当前项目中所有可用的spider
+
+<li>
+  scrapy edit &lt;spider&gt;    --&gt; 使用EDITOR中设定的编辑器编辑给定的Spider
+
+<li>
+  scrapy fetch &lt;url&gt;  --&gt; 使用Scrapy下载器(downloader)下载给定的URL，并将获取到的内容送到标准输出。
+
+<li>
+  scrapy view &lt;url&gt;   --&gt; 在浏览器中打开给定的URL，并以Scrapy spider获取到的形式展现
+
+<li>
+  scrapy shell &lt;url&gt;  --&gt; 以给定的URL(如果给出)或者空(没有给出URL)启动Scrapy shell
+
+<li>
+  scrapy parse &lt;url&gt; [options] --&gt; 获取给定的URL并使用相应的spider分析处理。如果您提供 --callback 选项，则使用spider的该方法处理，否则使用 parse
+
+<li>
+  scrapy settings [options]   --&gt; 获取Scrapy的设定
+
+<ul>
+<li>
+  $ scrapy settings --get BOT_NAME
+
+<li>
+  $ scrapy settings --get DOWNLOAD_DELAY
+
+</ul>
+<li>
+  
+
+</ul>
+
+
+<h2 id="toc_3.7">如何防止被ban之策略大集合</h2>
+<ul>
+<li>
+  <a href="http://blog.csdn.net/u012150179/article/details/35774323">http://blog.csdn.net/u012150179/article/details/35774323</a>
+
+<li>
+  策略一：设置download_delay
+
+<li>
+  策略二：禁止cookies
+
+<li>
+  策略三：使用user agent池
+
+<li>
+  策略四：使用IP池
+
+<li>
+  策略五：分布式爬取
+
+</ul>
+
+<h1 id="toc_4">My Projects</h1>
+<ul>
+<li>
+  doubleBall2
+
+<li>
+  w3school
+
+</ul>
+
+<h1 id="toc_5">XPath</h1>
+<ul>
+<li>
+  <a href="http://www.runoob.com/xpath/xpath-tutorial.html">http://www.runoob.com/xpath/xpath-tutorial.html</a>
+
+<li>
+  XPath是一门在XML文档中查找信息的语言。
+
+<li>
+  XPath是XSLT中的主要元素。
+
+<li>
+  XQuery和XPointer均构建于XPath表达式之上。
+
+<li>
+  XPath 是一个 W3C 标准
+
+<li>
+  XPath 包含一个标准函数库
+
+<li>
+  在XPath中，有七种类型的节点：元素、属性、文本、命名空间、处理指令、注释以及文档（根）节点。XML 文档是被作为节点树来对待的。树的根被称为文档节点或者根节点。
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

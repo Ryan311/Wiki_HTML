@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <title>collections</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">nametuple</a>
+<li><a href="#toc_0.2">deque</a>
+<li><a href="#toc_0.3">Counter</a>
+<li><a href="#toc_0.4">OrderedDict</a>
+<li><a href="#toc_0.5">defaultdict</a>
+</ul>
+</ul>
+</div>
+
+<p>
+This module implements specialized container datatypes providing alternatives to Python’s general purpose built-in containers, dict, list, set, and tuple
+</p>
+
+<table>
+<tr>
+<td>
+namedtuple
+</td>
+<td>
+factory function for creating tuple subclasses with named fields
+</td>
+<td>
+New in version 2.6.
+</td>
+</tr>
+<tr>
+<td>
+deque
+</td>
+<td>
+list-like container with fast appends and pops on either end
+</td>
+<td>
+New in version 2.4.
+</td>
+</tr>
+<tr>
+<td>
+Counter
+</td>
+<td>
+dict subclass for counting hashable objects
+</td>
+<td>
+New in version 2.7.
+</td>
+</tr>
+<tr>
+<td>
+OrderedDict
+</td>
+<td>
+dict subclass that remembers the order entries were added
+</td>
+<td>
+New in version 2.7.
+</td>
+</tr>
+<tr>
+<td>
+defaultdict
+</td>
+<td>
+dict subclass that calls a factory function to supply missing values
+</td>
+<td>
+New in version 2.5.
+</td>
+</tr>
+</table>
+
+<h2 id="toc_0.1">nametuple</h2>
+<h2 id="toc_0.2">deque</h2>
+<h2 id="toc_0.3">Counter</h2>
+<p>
+A counter tool is provided to support convenient and rapid tallies
+</p>
+<pre>
+    &gt;&gt;&gt; # Tally occurrences of words in a list
+    &gt;&gt;&gt; cnt = Counter()
+    &gt;&gt;&gt; for word in ['red', 'blue', 'red', 'green', 'blue', 'blue']:
+    ...     cnt[word] += 1
+    &gt;&gt;&gt; cnt
+    Counter({'blue': 3, 'red': 2, 'green': 1})
+
+    &gt;&gt;&gt; # Find the ten most common words in Hamlet
+    &gt;&gt;&gt; import re
+    &gt;&gt;&gt; words = re.findall(r'\w+', open('hamlet.txt').read().lower())
+    &gt;&gt;&gt; Counter(words).most_common(10)
+    [('the', 1143), ('and', 966), ('to', 762), ('of', 669), ('i', 631),
+     ('you', 554),  ('a', 546), ('my', 514), ('hamlet', 471), ('in', 451)]
+</pre>
+<h2 id="toc_0.4">OrderedDict</h2>
+<h2 id="toc_0.5">defaultdict</h2>
+<p>
+Returns a new dictionary-like object. defaultdict is a subclass of the built-in dict class
+</p>
+<pre //Using list as the default_factory>
+    &gt;&gt;&gt; s = [('yellow', 1), ('blue', 2), ('yellow', 3), ('blue', 4), ('red', 1)]
+    &gt;&gt;&gt; d = defaultdict(list)
+    &gt;&gt;&gt; for k, v in s:
+    ...     d[k].append(v)
+    ...
+    &gt;&gt;&gt; d.items()
+    [('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
+
+    ///
+    &gt;&gt;&gt; d = {}
+    &gt;&gt;&gt; for k, v in s:
+    ...     d.setdefault(k, []).append(v)
+    ...
+    &gt;&gt;&gt; d.items()
+    [('blue', [2, 4]), ('red', [1]), ('yellow', [1, 3])]
+</pre>
+
+<pre //Setting the default_factory to int makes the defaultdict useful for counting>
+    &gt;&gt;&gt; s = 'mississippi'
+    &gt;&gt;&gt; d = defaultdict(int)
+    &gt;&gt;&gt; for k in s:
+    ...     d[k] += 1
+    ...
+    &gt;&gt;&gt; d.items()
+    [('i', 4), ('p', 2), ('s', 4), ('m', 1)]
+</pre>
+
+<pre // Setting the default_factory to set makes the defaultdict useful for building a dictionary of sets:>
+    &gt;&gt;&gt; s = [('red', 1), ('blue', 2), ('red', 3), ('blue', 4), ('red', 1), ('blue', 4)]
+    &gt;&gt;&gt; d = defaultdict(set)
+    &gt;&gt;&gt; for k, v in s:
+    ...     d[k].add(v)
+    ...
+    &gt;&gt;&gt; d.items()
+    [('blue', set([2, 4])), ('red', set([1, 3]))]
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -47,6 +47,7 @@
 <li><a href="#toc_0.2">注册表注入DLL</a>
 <li><a href="#toc_0.3">Hook</a>
 <li><a href="#toc_0.4">SetWinEventHook</a>
+<li><a href="#toc_0.5">监视系统中的进程</a>
 </ul>
 </ul>
 </div>
@@ -267,6 +268,87 @@
   MSDN    <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd373640%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/desktop/dd373640%28v=vs.85%29.aspx</a>
 
 </ul>
+
+
+<h2 id="toc_0.5">监视系统中的进程</h2>
+<ul>
+<li>
+  监视进程的创建并获得其启动时的命令行参数， 共有三种方法：
+
+<ul>
+<li>
+  通过CreateRemoteThread得到cmd line  <a href="CommandLine.cpp.html">CommandLine.cpp</a>
+
+<ul>
+<li>
+  具体实现步骤：
+            1、通过 GetProcAddress 取得 GetCommandLineA(kernel32.dll) 的地址。
+            2、用 CreateRemoteThread 启动远程线程，使远程进程执行 GetCommandLineA 。
+            3、用 WaitForSingleObject 等待远程线程结束。
+            4、用 GetExitCodeThread 取得远程线程退出代码，其实就是远程进程中 GetCommandLineA 函数的返回值，这是远程进程命令行的首地址。
+            5、通过 GetProcAddress 取得 lstrlenA 的地址。
+            6、用 CreateRemoteThread 启动远程线程，使远程进程执行 lstrlenA 。
+            7、用 WaitForSingleObject 等待远程线程结束。
+            8、用 GetExitCodeThread 取得远程线程退出代码，其实就是远程进程中 lstrlenA 函数的返回值，这是远程进程命令行的文本长度。
+            9、使用 ReadProcessMemory 把远程进程的命令行读取出来。
+
+</ul>
+</ul>
+</ul>
+        
+<ul>
+<li>
+  通过NtQueryInformationProcess获得进程信息， 从而得到cmd line  <a href="NTProcessInfo.cpp.html">NTProcessInfo.cpp</a> <a href="NTProcessInfo.h.html">NTProcessInfo.h</a>
+
+<ul>
+<li>
+  <a href="http://www.codeproject.com/Articles/19685/Get-Process-Info-with-NtQueryInformationProcess">http://www.codeproject.com/Articles/19685/Get-Process-Info-with-NtQueryInformationProcess</a> 
+
+<li>
+  ntdll.dll中的NtQueryInformationProcess   未文档化的函数
+
+<li>
+  ReadProcessMemory
+
+</ul>
+</ul>
+         
+<ul>
+<li>
+  在Driver中监测程序的创建和退出     <a href="ProcessMonitor.cpp.html">ProcessMonitor.cpp</a>
+
+<ul>
+<li>
+  利用PsSetCreateProcessNotifyRoutineEx注册回调函数， 当有进程创建或退出时会调用回调函数
+
+<li>
+  CreateProcessNotifyEx该回调函数的第三个参数PPS_CREATE_NOTIFY_INFO， 包含进程的相关信息， ID， CmdLine， ImageFileName等
+
+<li>
+  Driver必须要用/integryCheck进行Link， 且要签名， 否则PsSetCreateProcessNotifyRoutineEx注册失败
+
+<li>
+  Print格式控制
+
+<ul>
+<li>
+  %s, %ls 	NULL终止的ANSI字符串 	char*
+
+<li>
+  %S, %ws 	NULL终止的宽字符串 	    wchar_t*
+
+<li>
+  %Z 	        ANSI_STRING字符串 	    ANSI_STRING
+
+<li>
+  %wZ 	    UNICODE_STRING字符串 	UNICODE_STRING
+
+</ul>
+</ul>
+</ul>
+<li>
+  检查已存在的进程， 用[[Tool help Library]]
+
 
 
    <hr />

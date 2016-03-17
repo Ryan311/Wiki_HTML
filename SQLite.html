@@ -41,12 +41,34 @@
 </nav>
 <div class="container content-body">
     
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">SQLite</a>
+<ul>
+<li><a href="#toc_0.1.1">C</a>
+<li><a href="#toc_0.1.2">R</a>
+<li><a href="#toc_0.1.3">D</a>
+<li><a href="#toc_0.1.4">U</a>
+<li><a href="#toc_0.1.5">Destroying and Altering Tables</a>
+<li><a href="#toc_0.1.6">Transactions</a>
+<li><a href="#toc_0.1.7">Exporting Data from CIP</a>
+<li><a href="#toc_0.1.8">Importing Data from outside file</a>
+<li><a href="#toc_0.1.9">Index</a>
+<li><a href="#toc_0.1.10">View</a>
+<li><a href="#toc_0.1.11">Triggers</a>
+<li><a href="#toc_0.1.12">patterm match</a>
+<li><a href="#toc_0.1.13">Limiting and Ordering</a>
+<li><a href="#toc_0.1.14">Grouping</a>
+<li><a href="#toc_0.1.15">Joining Tables</a>
+<li><a href="#toc_0.1.16">Getting Database information</a>
+<li><a href="#toc_0.1.17">Python Lib: sqlite3 DB API 2.0 Interface for SQLite</a>
+<li><a href="#toc_0.1.18">VDBE</a>
+</ul>
+</ul>
+</ul>
+</div>
+
 <h2 id="toc_0.1">SQLite</h2>
-<h3 id="toc_0.1.1">Install on Ubuntu</h3>
-<blockquote>
-<strong>&gt;sudo apt-get install sqlite3</strong>
-</blockquote>
-    
 <ul>
 <li>
   CLP
@@ -71,7 +93,7 @@ sqlite&gt;select rowid,x,typeof(x) from domain
 </ul>
 
 
-<h3 id="toc_0.1.2">C</h3>
+<h3 id="toc_0.1.1">C</h3>
 <ul>
 <li>
   Create One Table
@@ -151,7 +173,7 @@ $sqlite3 -echo ex3.db &lt; ex3.sql
 There are two different forms of the INSERT command: explicit and implicit
 </p>
 
-<h3 id="toc_0.1.3">R</h3>
+<h3 id="toc_0.1.2">R</h3>
 <ul>
 <li>
   Selecting Data
@@ -226,7 +248,7 @@ $sqlite3 -column -header ex3.db &lt; ex6.sql
 ......
 </pre>
 
-<h3 id="toc_0.1.4">D</h3>
+<h3 id="toc_0.1.3">D</h3>
 <ul>
 <li>
   Deleting Data
@@ -274,7 +296,7 @@ SELECT * FROM person_pet;
 
 </ul>
 
-<h3 id="toc_0.1.5">U</h3>
+<h3 id="toc_0.1.4">U</h3>
 <ul>
 <li>
 Updating Data
@@ -347,7 +369,7 @@ SELECT * FROM person;
 
 </ul>
 
-<h3 id="toc_0.1.6">Destroying and Altering Tables</h3>
+<h3 id="toc_0.1.5">Destroying and Altering Tables</h3>
 <pre>
 ex11.sql
 /* Only drop table if it exists. */
@@ -376,7 +398,7 @@ ALTER TABLE peoples RENAME TO person;
 DROP TABLE person;
 </pre>
 
-<h3 id="toc_0.1.7">Transactions</h3>
+<h3 id="toc_0.1.6">Transactions</h3>
 <p>
 Transactions are issued with three commands: <strong>begin</strong>, <strong>commit</strong>, and <strong>rollback</strong>
 </p>
@@ -397,7 +419,7 @@ the ROLLBACK conflict resolution algorithm.
 END TRANSACTION is an alias for COMMIT.
 </pre>
 
-<h3 id="toc_0.1.8">Exporting Data from CIP</h3>
+<h3 id="toc_0.1.7">Exporting Data from CIP</h3>
 <p>
 Export database objects to SQL format using the .dump command
 </p>
@@ -407,7 +429,7 @@ sqlite&gt; .dump                       Export objects
 sqlite&gt; .output stdout              redirect back to screen,default
 </pre>
 
-<h3 id="toc_0.1.9">Importing Data from outside file</h3>
+<h3 id="toc_0.1.8">Importing Data from outside file</h3>
 <pre>
 sqlite&gt; drop table test;
 sqlite&gt; drop view schema;
@@ -415,7 +437,7 @@ sqlite&gt; .read file.sql
 
 sqlite&gt; .import [file][table]   file that is not sql
 </pre>
-<h3 id="toc_0.1.10">Index</h3>
+<h3 id="toc_0.1.9">Index</h3>
 <ul>
 <li>
   Indexes are a construct designed to speed up queries under certain conditions. Using B-tree indexes, but also increase the size of the database.
@@ -425,7 +447,7 @@ sqlite&gt; .import [file][table]   file that is not sql
 
 </ul>
 
-<h3 id="toc_0.1.11">View</h3>
+<h3 id="toc_0.1.10">View</h3>
 <ul>
 <li>
   <strong>Views are virtual tables</strong>, their contents are derived from the results of queries on other tables.
@@ -435,7 +457,7 @@ sqlite&gt; .import [file][table]   file that is not sql
 
 </ul>
 
-<h3 id="toc_0.1.12">Triggers</h3>
+<h3 id="toc_0.1.11">Triggers</h3>
 <p>
 Triggers execute specific SQL commands when specific database events transpire on specific tables
 </p>
@@ -475,7 +497,7 @@ Other tools:
 
 </ul>
 
-<h3 id="toc_0.1.13">patterm match</h3>
+<h3 id="toc_0.1.12">patterm match</h3>
 <ul>
 <li>
   like    used for matching string values against patterns
@@ -496,7 +518,7 @@ id  name
 
 </ul>
 
-<h3 id="toc_0.1.14">Limiting and Ordering</h3>
+<h3 id="toc_0.1.13">Limiting and Ordering</h3>
 <ul>
 <li>
   limit  specifies the maximum number of records to return
@@ -510,13 +532,13 @@ order by type_id desc, name limit 10;
 
 </ul>
 
-<h3 id="toc_0.1.15">Grouping</h3>
+<h3 id="toc_0.1.14">Grouping</h3>
 <pre>
 /* 用于统计 */
 sqlite&gt; select type_id from foods group by type_id;
 </pre>
 
-<h3 id="toc_0.1.16">Joining Tables</h3>
+<h3 id="toc_0.1.15">Joining Tables</h3>
 <pre>
 sqlite&gt; select foods.name, food_types.name
             from foods, food_types
@@ -537,7 +559,7 @@ sqlite&gt; select foods.name, food_types.name
 
 </ul>
 
-<h3 id="toc_0.1.17">Getting Database information</h3>
+<h3 id="toc_0.1.16">Getting Database information</h3>
 <p>
 You can obtain database information using the database schema pragmas, defined as follows:
 </p>
@@ -564,7 +586,7 @@ sqlite&gt; pragma table_info(foods);
 </ul>
 
 
-<h3 id="toc_0.1.18"><a href="http://docs.python.org/2/library/sqlite3.html">Python Lib: sqlite3 DB API 2.0 Interface for SQLite</a></h3>
+<h3 id="toc_0.1.17"><a href="http://docs.python.org/2/library/sqlite3.html">Python Lib: sqlite3 DB API 2.0 Interface for SQLite</a></h3>
 <ul>
 <li>
   Module functions and constants
@@ -611,7 +633,7 @@ sqlite&gt; pragma table_info(foods);
      con.close()
 </pre>
 
-<h3 id="toc_0.1.19">VDBE</h3>
+<h3 id="toc_0.1.18">VDBE</h3>
 <pre>
 $ sqlite3 test_database_1
 sqlite&gt; CREATE TABLE examp(one text, two int);
