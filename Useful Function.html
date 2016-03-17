@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Useful Function</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Windwos 黑客基础</a>
+<ul>
+<li><a href="#toc_1.1">获取其他进程的HANDLE</a>
+<li><a href="#toc_1.2">代码注入</a>
+<li><a href="#toc_1.3">查找进程运行的基址</a>
+<li><a href="#toc_1.4">三个给进程提权的方法(转)</a>
+</ul>
+</ul>
+</div>
+
+<h1 id="toc_1"><a href="http://www.cnblogs.com/linyilong3/p/3140694.html">Windwos 黑客基础</a></h1>
+<h2 id="toc_1.1">获取其他进程的HANDLE</h2>
+<ul>
+<li>
+  如果我们要操作其他的进程，首先需要的肯定是要能够在自己的程序中拿到其他进程的标识符，在windows下为我们提供了OpenProcess这个函数
+<pre>
+        HANDLE OpenProcess(DWORD dwDesiredAccess,BOOL bInheritHandle,DWORD dwProcessId)
+            dwDesireAccess是操作权限，在本章节中设置为PROCESS_ALL_ACCESS
+            bInheritHandle,表示所得到的进程句柄是否可以被继承
+            dwProcessID，这个是最重要的，就是进程的ID
+</pre>
+
+<li>
+  方法1：通过任务管理器查看进程的ID， 再调用上述函数得到进程的Handle
+
+<li>
+  方法2：WINDOWS提供了一个API来让我们找到一个进程的窗口句柄，即FindWindows，同时，我们可以通过GetWindowThreadProcessID，我们只要传入通过FindWindow找到的HWND，然后传给GetWindowThreadProcessID就可以找到该进程的ID
+<pre>
+        HANDLE OpenProcessByID(const DWORD id)
+        {
+            return OpenProcess(PROCESS_ALL_ACCESS,FALSE,id);
+        }
+        
+        HANDLE OpenProcessByWindowName(const char *name)
+        {
+            HWND hWnd = FindWindow(NULL,name);
+            if (hWnd != NULL)
+            {
+                DWORD ThreadID = -1;
+                DWORD ProcessID = -1;
+                ThreadID = GetWindowThreadProcessId(hWnd,&amp;ProcessID);
+
+                return OpenProcessByID(ProcessID);
+            }
+            return INVALID_HANDLE_VALUE;
+        }
+</pre>
+
+<li>
+  方法3：在Windows下，我们可以通过枚举系统所有进程的名称，然后根据进程的名称一个个地去比较来找到对应的进程ID
+
+<ul>
+<li>
+  CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,0);
+
+</ul>
+</ul>
+
+<ul>
+<li>
+  GitHub  hacker-tutorial
+
+</ul>
+
+<h2 id="toc_1.2">代码注入</h2>
+<ul>
+<li>
+  CreateRemoteThread的功能就是在指定的进程创建一个线程，这个线程运行我们指定的函数
+<pre>
+        HANDLE WINAPI CreateRemoteThread(
+          _In_   HANDLE hProcess,
+          _In_   LPSECURITY_ATTRIBUTES lpThreadAttributes,
+          _In_   SIZE_T dwStackSize,
+          _In_   LPTHREAD_START_ROUTINE lpStartAddress,
+          _In_   LPVOID lpParameter,
+          _In_   DWORD dwCreationFlags,
+          _Out_  LPDWORD lpThreadId
+        );
+</pre>
+
+<li>
+  在指定进程中分配内存， 写内存
+<pre>
+        LPVOID WINAPI VirtualAllocEx(
+          _In_      HANDLE hProcess,
+          _In_opt_  LPVOID lpAddress,
+          _In_      SIZE_T dwSize,
+          _In_      DWORD flAllocationType,
+          _In_      DWORD flProtect
+        );
+
+        BOOL WINAPI WriteProcessMemory(
+          _In_   HANDLE hProcess,
+          _In_   LPVOID lpBaseAddress,
+          _In_   LPCVOID lpBuffer,
+          _In_   SIZE_T nSize,
+          _Out_  SIZE_T *lpNumberOfBytesWritten
+        );
+
+</pre>
+
+<li>
+  Sample Code  <a href="http://www.cnblogs.com/linyilong3/p/3140694.html">http://www.cnblogs.com/linyilong3/p/3140694.html</a>
+
+</ul>
+
+<h2 id="toc_1.3">查找进程运行的基址</h2>
+<ul>
+<li>
+  通过GetModuleHandle，我们可以获取一个进程的基址，直接传入一个NULL就可以直接拿到该进程的基址，但是这种方法我们只能拿到自己进程的基址.
+
+<li>
+  查找其它进程的运行基址， CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,ProcessID)，这样的话，第一个DLL将会是我们要查找的DLL
+
+<li>
+  psapi库里面也有提供一些进程状态的API，其中EnumProcessModules的库就可以枚举对应进程加载的所有模块，枚举的第一个就是我们要查看进程对应的地址
+
+</ul>
+
+<h2 id="toc_1.4">三个给进程提权的方法(转)</h2>
+<pre>
+方法一：
+C/C++ code
+
+
+    bool EnableDebugPrivilege()   
+    {   
+        HANDLE hToken;   
+        LUID sedebugnameValue;   
+        TOKEN_PRIVILEGES tkp;   
+        if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &amp;hToken))
+        {   
+            return   FALSE;   
+        }   
+        if (!LookupPrivilegeValue(NULL, SE_DEBUG_NAME, &amp;sedebugnameValue))  
+        {   
+            CloseHandle(hToken);   
+            return false;   
+        }   
+        tkp.PrivilegeCount = 1;   
+        tkp.Privileges[0].Luid = sedebugnameValue;   
+        tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;   
+        if (!AdjustTokenPrivileges(hToken, FALSE, &amp;tkp, sizeof(tkp), NULL, NULL)) 
+        {   
+            CloseHandle(hToken);   
+            return false;   
+        }   
+        return true;   
+    }
+
+方法二：
+C/C++ code
+
+
+    bool UpPrivilege()   
+    {   
+        HANDLE hToken;                             //   handle   to   process   token   
+        TOKEN_PRIVILEGES tkp;               //   pointer   to   token   structure   
+        bool result = OpenProcessToken(GetCurrentProcess(),   
+            TOKEN_ADJUST_PRIVILEGES|TOKEN_QUERY,     
+            &amp;hToken);   
+        if(!result)         //打开进程错误   
+            return result;   
+        result   =   LookupPrivilegeValue(     NULL,     
+            SE_DEBUG_NAME,   
+            &amp;tkp.Privileges[0].Luid);   
+        if(!result)         //查看进程权限错误   
+            return   result;   
+        tkp.PrivilegeCount   =   1;     //   one   privilege   to   set   
+        tkp.Privileges[0].Attributes   =   SE_PRIVILEGE_ENABLED;   
+        result   =   AdjustTokenPrivileges(   hToken,     
+            FALSE,     
+            &amp;tkp,     
+            sizeof(TOKEN_PRIVILEGES),   
+            (PTOKEN_PRIVILEGES)   NULL,     
+            (PDWORD)   NULL);   
+        return   result;   
+    }
+
+方法三：
+C/C++ code
+
+    #define SE_CREATE_TOKEN_NAME              TEXT("SeCreateTokenPrivilege")
+    #define SE_ASSIGNPRIMARYTOKEN_NAME        TEXT("SeAssignPrimaryTokenPrivilege")
+    #define SE_LOCK_MEMORY_NAME               TEXT("SeLockMemoryPrivilege")
+    #define SE_INCREASE_QUOTA_NAME            TEXT("SeIncreaseQuotaPrivilege")
+    #define SE_UNSOLICITED_INPUT_NAME         TEXT("SeUnsolicitedInputPrivilege")
+    #define SE_MACHINE_ACCOUNT_NAME           TEXT("SeMachineAccountPrivilege")
+    #define SE_TCB_NAME                       TEXT("SeTcbPrivilege")
+    #define SE_SECURITY_NAME                  TEXT("SeSecurityPrivilege")
+    #define SE_TAKE_OWNERSHIP_NAME            TEXT("SeTakeOwnershipPrivilege")
+    #define SE_LOAD_DRIVER_NAME               TEXT("SeLoadDriverPrivilege")
+    #define SE_SYSTEM_PROFILE_NAME            TEXT("SeSystemProfilePrivilege")
+    #define SE_SYSTEMTIME_NAME                TEXT("SeSystemtimePrivilege")
+    #define SE_PROF_SINGLE_PROCESS_NAME       TEXT("SeProfileSingleProcessPrivilege")
+    #define SE_INC_BASE_PRIORITY_NAME         TEXT("SeIncreaseBasePriorityPrivilege")
+    #define SE_CREATE_PAGEFILE_NAME           TEXT("SeCreatePagefilePrivilege")
+    #define SE_CREATE_PERMANENT_NAME          TEXT("SeCreatePermanentPrivilege")
+    #define SE_BACKUP_NAME                    TEXT("SeBackupPrivilege")
+    #define SE_RESTORE_NAME                   TEXT("SeRestorePrivilege")
+    #define SE_SHUTDOWN_NAME                  TEXT("SeShutdownPrivilege")
+    #define SE_DEBUG_NAME                     TEXT("SeDebugPrivilege")
+    #define SE_AUDIT_NAME                     TEXT("SeAuditPrivilege")
+    #define SE_SYSTEM_ENVIRONMENT_NAME        TEXT("SeSystemEnvironmentPrivilege")
+    #define SE_CHANGE_NOTIFY_NAME             TEXT("SeChangeNotifyPrivilege")
+    #define SE_REMOTE_SHUTDOWN_NAME           TEXT("SeRemoteShutdownPrivilege")
+    #define SE_UNDOCK_NAME                    TEXT("SeUndockPrivilege")
+    #define SE_SYNC_AGENT_NAME                TEXT("SeSyncAgentPrivilege")
+    #define SE_ENABLE_DELEGATION_NAME         TEXT("SeEnableDelegationPrivilege")
+    #define SE_MANAGE_VOLUME_NAME             TEXT("SeManageVolumePrivilege")
+
+    BOOL EnablePrivilege(LPCTSTR lpszPrivilegeName,BOOL bEnable)
+    {
+        HANDLE hToken;
+        TOKEN_PRIVILEGES tp;
+        LUID luid;
+        
+        if(!OpenProcessToken(GetCurrentProcess(),TOKEN_ADJUST_PRIVILEGES |
+            TOKEN_QUERY | TOKEN_READ,&amp;hToken))
+            return FALSE;
+        if(!LookupPrivilegeValue(NULL, lpszPrivilegeName, &amp;luid))
+            return TRUE;
+        
+        tp.PrivilegeCount = 1;
+        tp.Privileges[0].Luid = luid;
+        tp.Privileges[0].Attributes = (bEnable) ? SE_PRIVILEGE_ENABLED : 0;
+        
+        AdjustTokenPrivileges(hToken,FALSE,&amp;tp,NULL,NULL,NULL);
+        
+        CloseHandle(hToken);
+        
+        return (GetLastError() == ERROR_SUCCESS);
+        
+    }
+</pre>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

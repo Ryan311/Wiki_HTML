@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Windows Strings</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Comparison with C Run-time String</a>
+</ul>
+</div>
+
+<p>
+MSDN:
+<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646979%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/desktop/ms646979%28v=vs.85%29.aspx</a>
+</p>
+
+<h1 id="toc_1">Comparison with C Run-time String</h1>
+<p>
+String Function Comparison
+<table>
+<tr>
+<td>
+CRT String Function
+</td>
+<td>
+strcat
+</td>
+<td>
+strcpy
+</td>
+<td>
+strlen
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+Windows String Function
+</td>
+<td>
+lstrcat
+</td>
+<td>
+lstrcpy
+</td>
+<td>
+lstrlen
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+StrSafe Function
+</td>
+<td>
+StringCchCat
+</td>
+<td>
+StringCchCopy
+</td>
+<td>
+StringCchLength
+</td>
+</tr>
+<tr>
+<td>
+&lt;Strsafe.h&gt;
+</td>
+<td>
+StringCchCatEx
+</td>
+<td>
+StringCchCopyEx
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+StringCbCat
+</td>
+<td>
+StringCbCopy
+</td>
+<td>
+StringCchLength
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+StringCbCatEx
+</td>
+<td>
+StringCbCopyEx
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+StrSafe in Kernel
+</td>
+<td>
+RtlStringCchCat
+</td>
+<td>
+RtlStringCchCopy
+</td>
+<td>
+RtlStringCchLength
+</td>
+</tr>
+<tr>
+<td>
+&lt;ntstrsafe.h&gt;
+</td>
+<td>
+RtlStringCchCatEx
+</td>
+<td>
+RtlStringCchCopyEx
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+#define NTSTRSAFE_LIB
+</td>
+<td>
+RtlStringCbCat
+</td>
+<td>
+RtlStringCbCopy
+</td>
+<td>
+RtlStringCchLength
+</td>
+</tr>
+<tr>
+<td>
+&nbsp;
+</td>
+<td>
+RtlStringCbCatEx
+</td>
+<td>
+RtlStringCbCopyEx
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+</p>
+
+<p>
+Features about safe string
+</p>
+<ul>
+<li>
+  每个函数以目标缓冲区所占的字节大小作为其一个输入参数，因此可以保证在写入时不会超出缓冲区末端。
+
+<li>
+  每个函数的输出字符串均以NULL结尾（null-terminate），即使该函数可能会对正确的结果进行截断。
+
+<li>
+  所有函数均有返回值，类型为NTSTATUS，只有返回STATUS_SUCCESS时，操作结果才正确。
+
+<li>
+  每个函数均有两种类型的版本，__按字节或者按字符数__。例如，StringCbCatW和StringCchCatW。
+
+<li>
+  每个函数均有支持双字节的unicode字符（以W作为后缀）和单字节的ANSI字符（以A作为后缀）的版本。例如：StringCbCatW和StringCbCatA。
+
+<li>
+  大部分函数有提供扩展版本的函数（以Ex作为后缀），例如，StringCbCatW和StringCbCatExW。
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>System Architecture</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Windows内核模式组件</a>
+<li><a href="#toc_2">Windows客户机和服务器版本差异 </a>
+<li><a href="#toc_3">Windows总体架构</a>
+<ul>
+<li><a href="#toc_3.1">环境子系统 </a>
+<li><a href="#toc_3.2">Ntdll.dll</a>
+<li><a href="#toc_3.3">Windows执行体 </a>
+<li><a href="#toc_3.4">内核</a>
+<li><a href="#toc_3.5">系统进程</a>
+</ul>
+</ul>
+</div>
+
+<h1 id="toc_1">Windows内核模式组件</h1>
+<table>
+<tr>
+<td>
+Ntoskrnl.exe
+</td>
+<td>
+执行体和内核
+</td>
+</tr>
+<tr>
+<td>
+Ntkrnlpa.exe(仅用于32位系统)
+</td>
+<td>
+执行体和内核， 支持物理地址扩展(PAE)， 使用32位系统可寻址多达64GB物理内存
+</td>
+</tr>
+<tr>
+<td>
+Hal.dll
+</td>
+<td>
+硬件抽象层 
+</td>
+</tr>
+<tr>
+<td>
+Win32k.sys
+</td>
+<td>
+Windwos子系统的内核模式部分
+</td>
+</tr>
+<tr>
+<td>
+Ntdll.dll
+</td>
+<td>
+内部支持函数， 以及执行体函数的系统服务分发存根
+</td>
+</tr>
+<tr>
+<td>
+Kernel32.dll, Advapi32.dll
+</td>
+<td>
+Windwos的核心子系统
+</td>
+</tr>
+<tr>
+<td>
+User32.dll, Gdi32.dll
+</td>
+<td>
+Windwos的核心子系统
+</td>
+</tr>
+</table>
+
+<h1 id="toc_2">Windows客户机和服务器版本差异 </h1>
+<ul>
+<li>
+  核心文件都是相同的， 只是不同的版本会做不同的优化处理
+
+<li>
+  在[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\ProductOptions]中ProductType表示本机是服务器or客户机
+
+<li>
+  用户模式下调用GetVersionEx， 设备驱动程序中调用RtGetVersion得到上面的值
+
+<li>
+  判断当前运行的是哪个版本的Windows系统， 用户模式调用VerifyVersionInfo, 设备驱动程序调用RtVerifyVersionInfo
+
+<li>
+  Version Helper functions    <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dn424972%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/desktop/dn424972%28v=vs.85%29.aspx</a>
+
+</ul>
+
+<h1 id="toc_3">Windows总体架构</h1>
+<p>
+<img src="images/Architecture.png" />
+</p>
+
+<h2 id="toc_3.1">环境子系统 </h2>
+<ul>
+<li>
+  环境子系统将基本的Windows执行体系统的某个子集暴露给应用程序， 每个子系统都提供对Windows原生服务的一个不同子集的访问能力。
+
+<li>
+  每个可执行映像(.exe)都被绑定到一个(且唯一)的子系统上， 映像运行时， 负责创建进程的代码会检查该映像头部的子系统类型代码。VC++中， link的/SUBSYSTEM修饰每个可以指定该类型
+
+<li>
+  用户应用程序并不直接调用Windows的系统服务， 而是通过一个或者多个子系统DLL来进行
+
+</ul>
+
+<table>
+<tr>
+<td>
+Windows子系统 
+</td>
+<td>
+实现Windows API函数， 基础子系统 
+</td>
+</tr>
+<tr>
+<td>
+SUA子系统(Subsystem for UNIX-based Application
+</td>
+<td>
+实现SUA API函数， 调用Windows子系统完成IO
+</td>
+</tr>
+<tr>
+<td>
+POSIX子系统 
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+
+<ul>
+<li>
+  应用程序调用子系统时， 可能会发生下述三件事件之一：
+
+<ul>
+<li>
+  该函数完全由该子系统DLL实现， 在用户模式下运行， 如GetCurrentProcess()
+
+<li>
+  该函数要求调用Windows执行体一次或多次， 如ReadFile和WriteFile函数
+
+<li>
+  该函数要求在环境子系统进程中完成某些工作
+
+</ul>
+</ul>
+    
+<ul>
+<li>
+  子系统是由会话管理器(Session Manager, Smss.exe)进程启动起来的， 启动信息保存在[HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Subsystems]中
+
+</ul>
+
+<ul>
+<li>
+  Windows子系统组成
+
+<ul>
+<li>
+  对于每个会话， 环境子系统进程(csrss.exe)都有一个实例
+
+<li>
+  内核模式设备驱动程序(Win32k.sys)
+
+<li>
+  控制台宿主进程(Conhost.exe)， 提供对控制台(字符环境)应用程序的支持
+
+<li>
+  <strong>子系统DLL(Kernel32.dll， Advapi32.dll, User32.dll, Gdi32.dll)</strong> ， 将已文档化的Windows API函数转译成Ntoskrnl.exe和Win32k.sys中恰当的且绝大多数未文档化的内核模式系统服务调用。
+
+<li>
+  图形设备驱动程序， 与硬件相关的图形显示器驱动程序、打印机驱动程序和视频微端口驱动程序
+
+</ul>
+</ul>
+
+<h2 id="toc_3.2">Ntdll.dll</h2>
+<ul>
+<li>
+  Ntdll.dll是一个特殊的系统支持库， 主要用于子系统DLL， 包含两种类型的函数：
+
+<ul>
+<li>
+  系统服务分发存根(stub), 它们会调用Windows执行体的系统服务
+
+<li>
+  内部支持函数， 供子系统、子系统DLL以及其它的原生映像文件使用
+
+</ul>
+</ul>
+
+<h2 id="toc_3.3">Windows执行体 </h2>
+<ul>
+<li>
+  Windows执行体是Ntoskrnl.exe中的上层(内核是其下层)
+
+<li>
+  执行体包含以下类型的函数：
+
+<ul>
+<li>
+  可以用户模式下调用的导出函数， 称为系统服务并通过Ntdll被导出。
+
+<li>
+  可通过DeviceIoControl函数来调用的设备驱动程序函数。
+
+<li>
+  只能在内核模式下调用的导出函数， 在WDK中文档化
+
+<li>
+  在内核模式下调用， 但未在WDK中文档化在导出函数
+
+<li>
+  定义为全局符号但是未导出的函数
+
+<li>
+  未定义全局符号， 而是在一个模块内部的函数
+
+</ul>
+<li>
+  执行体包含以下主要组件：
+
+<ul>
+<li>
+  配置管理器
+
+<li>
+  进程管理器
+
+<li>
+  安装引用管理器
+
+<li>
+  I/O管理器
+
+<li>
+  即插即用管理器
+
+<li>
+  电源管理器
+
+<li>
+  内存管理器
+
+<li>
+  逻辑预取器
+
+<li>
+  Windows驱动程序模型的WMI例程
+
+</ul>
+</ul>
+
+<h2 id="toc_3.4">内核</h2>
+<ul>
+<li>
+  内核是Ntoskrnl.exe中的一组函数以及对于硬件体系架构的低层支持(比如中断和异常分发)构成的。
+
+<li>
+  内核提供了一组定义明确的、可预知的操作系统低层原语和实现了操作系统的基本机制。
+
+<li>
+  它几乎将所有的策略决定都留给了执行体， 唯一的例外是线程调试和分发， 是由内核自己来实现的
+
+<li>
+  内核实现了一组简单的对象， 称为内核对象(kernel object), 帮助内核控制好中心处理过程， 并且支持执行体对象的创建工作。
+
+<li>
+  内核对象种类：
+
+<ul>
+<li>
+  控制对象(control object) 建立了有关控制各种操作系统功能的语义， 包括APC对象、DPC对象、及IO管理器使用的一些对象(中断对象)
+
+<li>
+  分发器对象(dispatcher object) 融合了同步的能力， 可以改变或者影响线程的调度， 包括内核线程、互斥体、事件、内核事件对、信号量、定时器等。执行体利用内核函数来创建和维护内核对象实例， 并且构建更加复杂的、提供给用户模式的对象。
+
+</ul>
+</ul>
+
+<h2 id="toc_3.5">系统进程</h2>
+<ul>
+<li>
+  以下系统进程会出现在每一个Windows系统中
+
+<ul>
+<li>
+  Idle进程        为每个CPU包含一个对应的线程， 战胜空闲的CPU时间
+
+<li>
+  System进程      包含大多数的内核模式系统线程
+
+<li>
+  会话管理器      Smss.exe
+
+<li>
+  本地会话管理器  Lsm.exe
+
+<li>
+  Windows子系统   Csrss.exe
+
+<li>
+  会话0初始化     Wininit.exe
+
+<li>
+  登录进程        Winlogon.exe
+
+<li>
+  服务控制管理器  Services.exe
+
+<li>
+  本地安全认证服务器  Lsass.exe
+
+</ul>
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

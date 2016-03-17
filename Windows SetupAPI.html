@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Windows SetupAPI</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_0.1">通过Device Interface class查看设备并打开</a>
+</ul>
+</ul>
+</div>
+
+<p>
+msdn:   <a href="https://msdn.microsoft.com/en-us/library/windows/hardware/ff550855%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/hardware/ff550855%28v=vs.85%29.aspx</a>
+</p>
+
+<h2 id="toc_0.1">通过Device Interface class查看设备并打开</h2>
+<ul>
+<li>
+  SetupDiGetClassDevs
+
+<ul>
+<li>
+  Each device is associated with an SP_DEVINFO_DATA structure. 
+
+<li>
+  You can retrieve a handle (HDEVINFO) to a device information set that contains all installed devices in a particular class. 
+<pre>
+        The following are some examples of how to use the SetupDiGetClassDevs function.
+        Example 1: Build a list of all devices in the system, including devices that are not currently present.
+            Handle = SetupDiGetClassDevs(NULL, NULL, NULL, DIGCF_ALLCLASSES);
+
+        Example 2: Build a list of all devices that are present in the system.
+            Handle = SetupDiGetClassDevs(NULL, NULL, NULL, DIGCF_ALLCLASSES | DIGCF_PRESENT);
+
+        Example 3: Build a list of all devices that are present in the system that are from the network adapter device setup class.
+            Handle = SetupDiGetClassDevs(&amp;GUID_DEVCLASS_NET, NULL, NULL, DIGCF_PRESENT);
+
+        Example 4: Build a list of all devices that are present in the system that have enabled an interface from the storage volume device interface class.
+            Handle = SetupDiGetClassDevs(&amp;GUID_DEVINTERFACE_VOLUME, NULL, NULL, DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
+</pre>
+
+</ul>
+<li>
+  SetupDiDestroyDeviceInfoList
+
+<ul>
+<li>
+   free all SP_DEVINFO_DATA structures in a device information set
+
+</ul>
+<li>
+  Example
+<pre>
+    //
+    // guid是Device Interface Class， 每个LE设备配对后， LEEnum枚举一个PDO， 加载PDO后会为该设备提供一下Device Interface
+    // Device Interface Name为   BTHLEDevice#{GUID}_BDADDR_#****** 
+    //
+    HANDLE OpenLeInterface(ULONGLONG ullBtAddr, GUID guid)
+    {
+        HANDLE hOut = INVALID_HANDLE_VALUE;
+        HRESULT hr = E_FAIL;
+        
+        //
+        // Create a device information set composed of all present devices associated with device interface GUID 
+        //
+        HDEVINFO hDevInfo = SetupDiGetClassDevs(&amp;guid, NULL, NULL, DIGCF_PRESENT|DIGCF_INTERFACEDEVICE);
+        ULONG iDevIndex = 0;
+        while(1){
+            SP_DEVICE_INTERFACE_DATA deviceInfoData;
+            deviceInfoData.cbSize = sizeof (SP_DEVICE_INTERFACE_DATA);
+            //  enumerate the device interfaces in a device information set
+            if(SetupDiEnumDeviceInterfaces(hDevInfo, 0, &amp;guid, iDevIndex, &amp;deviceInfoData))
+            {
+                DWORD cbRequired = 0;
+                //
+                // get required buffer size
+                //
+                SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                    &amp;deviceInfoData,
+                    0,
+                    0,
+                    &amp;cbRequired,
+                    0);
+                if (ERROR_INSUFFICIENT_BUFFER == GetLastError())
+                {
+                    PSP_DEVICE_INTERFACE_DETAIL_DATA pdidd = (PSP_DEVICE_INTERFACE_DETAIL_DATA)LocalAlloc(LPTR, cbRequired);
+
+                    if (pdidd)
+                    {
+                        pdidd-&gt;cbSize = sizeof(*pdidd);
+                        //
+                        // get the interface name
+                        //
+                        if (SetupDiGetDeviceInterfaceDetail(hDevInfo,
+                            &amp;deviceInfoData,
+                            pdidd,
+                            cbRequired,
+                            &amp;cbRequired,
+                            0))
+                        {
+                            //CString csDev(_T("668E28F99733"));
+                            //csDev.Format(_T("%I64x"), ullBtAddr);
+                            CString csDevicePath = pdidd-&gt;DevicePath;
+                            //csDev.MakeLower();
+                            //csDevicePath.MakeLower();
+                            //if (csDevicePath.Find(csDev) != -1)
+                            {
+                                hOut= 
+                                    CreateFile(pdidd-&gt;DevicePath,   //A NULL-terminated string that contains the device interface path
+                                    GENERIC_READ | GENERIC_WRITE,
+                                    FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                    NULL,
+                                    OPEN_EXISTING,
+                                    FILE_ATTRIBUTE_NORMAL,
+                                    NULL);
+                                LocalFree(pdidd);
+                                break;
+                            }
+                            
+                        }
+                        LocalFree(pdidd);
+                    }
+                }	 
+            }
+            else if(GetLastError() == ERROR_NO_MORE_ITEMS) //No more items
+            {
+                break;
+            }
+            iDevIndex++;
+        }
+        SetupDiDestroyDeviceInfoList(hDevInfo);
+        return hOut; 
+    }
+</pre>
+
+<li>
+  Finds the Device instance of the DevNode with the matching DriverName.
+<pre>
+    /*****************************************************************************
+
+      DriverNameToDeviceInst()
+
+      Finds the Device instance of the DevNode with the matching DriverName.
+      Returns FALSE if the matching DevNode is not found and TRUE if found
+
+    *****************************************************************************/
+    BOOL 
+    DriverNameToDeviceInst(
+        _In_reads_bytes_(cbDriverName) PCHAR DriverName,
+        _In_ size_t cbDriverName,
+        _Out_ HDEVINFO *pDevInfo,
+        _Out_writes_bytes_(sizeof(SP_DEVINFO_DATA)) PSP_DEVINFO_DATA pDevInfoData
+        )
+    {
+        HDEVINFO         deviceInfo = INVALID_HANDLE_VALUE;
+        BOOL             status = TRUE;
+        ULONG            deviceIndex;
+        SP_DEVINFO_DATA  deviceInfoData;
+        BOOL             bResult = FALSE;
+        PCHAR            pDriverName = NULL;
+        PSTR             buf = NULL;
+        BOOL             done = FALSE;
+
+        if (pDevInfo == NULL)
+        {
+            return FALSE;
+        }
+
+        if (pDevInfoData == NULL)
+        {
+            return FALSE;
+        }
+
+        memset(pDevInfoData, 0, sizeof(SP_DEVINFO_DATA));
+
+        *pDevInfo = INVALID_HANDLE_VALUE;
+
+        // Use local string to guarantee zero termination
+        pDriverName = (PCHAR) ALLOC((DWORD) cbDriverName + 1);
+        if (NULL == pDriverName)
+        {
+            status = FALSE;
+            goto Done;
+        }
+        StringCbCopyN(pDriverName, cbDriverName + 1, DriverName, cbDriverName);
+
+        //
+        // We cannot walk the device tree with CM_Get_Sibling etc. unless we assume
+        // the device tree will stabilize. Any devnode removal (even outside of USB)
+        // would force us to retry. Instead we use Setup API to snapshot all
+        // devices.
+        //
+
+        // Examine all present devices to see if any match the given DriverName
+        //
+        deviceInfo = SetupDiGetClassDevs(NULL,
+                NULL,
+                NULL,
+                DIGCF_ALLCLASSES | DIGCF_PRESENT);
+
+        if (deviceInfo == INVALID_HANDLE_VALUE)
+        {
+            status = FALSE;
+            goto Done;
+        }
+
+        deviceIndex = 0;
+        deviceInfoData.cbSize = sizeof(deviceInfoData);
+
+        while (done == FALSE)
+        {
+            //
+            // Get devinst of the next device
+            //
+            status = SetupDiEnumDeviceInfo(deviceInfo,
+                                           deviceIndex,
+                                           &amp;deviceInfoData);
+            deviceIndex++;
+            if (!status)
+            {
+                //
+                // This could be an error, or indication that all devices have been
+                // processed. Either way the desired device was not found.
+                //
+                done = TRUE;
+                break;
+            }
+
+            //
+            // Get the DriverName value
+            //
+            bResult = GetDeviceProperty(deviceInfo,
+                                        &amp;deviceInfoData,
+                                        SPDRP_DRIVER,
+                                        &amp;buf);
+            
+            // If the DriverName value matches, return the DeviceInstance
+            //
+            if (bResult == TRUE &amp;&amp; buf != NULL &amp;&amp; _stricmp(pDriverName, buf) == 0)
+            {
+                done = TRUE;
+                *pDevInfo = deviceInfo;
+                CopyMemory(pDevInfoData, &amp;deviceInfoData, sizeof(deviceInfoData));
+                FREE(buf);
+                break;
+            }
+            if(buf != NULL)
+            {
+                FREE(buf);
+                buf = NULL;
+            }
+        }
+
+    Done:
+        if (bResult == FALSE)
+        {
+            if (deviceInfo != INVALID_HANDLE_VALUE)
+            {
+                SetupDiDestroyDeviceInfoList(deviceInfo);
+            }
+        }
+        if (pDriverName != NULL)
+        {
+            FREE(pDriverName);
+        }
+        return status;
+    }
+</pre>
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>unittest</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Basic</a>
+<ul>
+<li><a href="#toc_1.1">静态方法 </a>
+</ul>
+</ul>
+</div>
+
+<p>
+Python Doc: <a href="https://docs.python.org/2.7/library/unittest.html?highlight=unittest#module-unittest">https://docs.python.org/2.7/library/unittest.html?highlight=unittest#module-unittest</a>
+</p>
+
+<h1 id="toc_1">Basic</h1>
+<p>
+在Python中进行单元测试需要用到自动单元测试框架PyUnit，Python2.1及其以后的版本都将PyUnit作为一个标准模块
+</p>
+
+<p>
+PyUnit测试用例TestCase:
+软件测试中最基本的组成单元式测试用例（test case），PyUnit使用TestCase类来表示测试用例，并要求所有用于执行测试的类都必须从该类继承。
+TestCase子类实现的测试代码应该是自包含的（self contained），即测试用例既可以单独运行，也可以和其它测试用例构成集合共同运行。
+TestCase类中常用的函数或方法有：
+</p>
+<ul>
+<li>
+  setUp：进行测试前的初始化工作。
+
+<li>
+  tearDown：执行测试后的清除工作。
+
+<li>
+  failedinfo：表示不成立打印信息faliedinfo，为可选参数。
+
+<li>
+  self.assertEqual(value1, value2, failedinfo)：会无条件的导致测试失败，不推荐使用。
+
+<li>
+  self.assertTrue(, failedinfo)：断言value1 == value2。
+
+<li>
+  self.assertFalse(, failedinfo)：断言value为真。
+
+<li>
+  self.assertRaises(ValueError, self.widget.resize, -1, -1)：断言肯定发生异常，如果没发生异常，则为测试失败。参数1为异常，参数2为抛出异常的调用对象，其余参数为传递给可调用对象的参数。
+
+</ul>
+<p>
+PyUnit测试框架在运行一个测试用例时，TestCase子类定义的setUp()、runTest()和tearDown()方法被依次执行，最简单的测试用例只需要覆盖runTest()方法来执行特定的测试代码就可以了。
+</p>
+
+
+<h2 id="toc_1.1">静态方法 </h2>
+<p>
+一个测试用例只对软件模块中一个方法进行测试，采用覆盖runTest()方法来构造测试用例，这在PyUnit中称之为静态方法，举例说明如下：
+</p>
+<pre "class = python">
+    #static.py
+    from widget import Widget
+    import unittest
+    #执行测试的类
+    class WidgetTestCase(unittest.TestCase):
+        def runTest(self):
+            widget = Widget()
+            self.assertEqual(widget.getSize(), (40, 40))
+    #测试
+    if __name__ == "__main__":
+        testCase = WidgetTestCase()
+        testCase.runTest()
+</pre>
+<blockquote>
+如果采用静态方法，Python程序员就不得不为每个要测试的方法编写一个测试类，该类通过覆盖runTest()方法来执行测试，并在每个测试类中生成一个待测试的对象，这样会非常繁琐与笨拙。
+</blockquote>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

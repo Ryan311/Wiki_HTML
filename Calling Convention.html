@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Calling Convention</title>
+    <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
+    <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
+    <link rel="Stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/js/wiki.js"></script>
+    <script type="text/javascript" src="static/js/shCore.js"></script>
+    <script type="text/javascript" src="static/js/shBrushPython.js"></script>
+    <script type="text/javascript" src="static/js/shBrushCpp.js"></script>
+    <script type="text/javascript" src="static/js/shBrushErlang.js"></script>
+    <script type="text/javascript" src="static/js/shBrushBash.js"></script>
+    <script type="text/javascript" src="static/js/shBrushRuby.js"></script>
+    <script type="text/javascript" src="static/js/shBrushSql.js"></script>
+    <script type="text/javascript" src="static/js/shBrushJScript.js"></script>
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+ <div class="container">
+    <div class="navbar-header">
+<button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+	<span class="sr-only"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+	<a class="navbar-brand" href="main.html">Rick's wiki</a>
+    </div>
+    <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	    <li><a href="main.html">Home</a></li>
+	    <li><a href="TODO.html">TODO</a></li>
+	</ul>
+    </div>
+ </div>
+</nav>
+<div class="container content-body">
+    
+<div class="toc">
+<ul>
+<li><a href="#toc_1">Calling Convention</a>
+<li><a href="#toc_2">Function Modifier</a>
+<li><a href="#toc_3">查看函数的名字修饰 </a>
+</ul>
+</div>
+
+<h1 id="toc_1">Calling Convention</h1>
+<p>
+Calling Convention是指程序在函数调用时传递参数和获取返回值所采用的方法：通过寄存器、或通过栈、或者是两者的混合。
+C 语言有 __cdecl、__stdcall、__fastcall、naked、__pascal。
+C++ 语言有 __cdecl、__stdcall、__fastcall、naked、__pascal、__thiscall，比 C 语言多出一种 __thiscall 调用方式
+VC中默认调用是 __cdecl 方式，Windows API 使用 __stdcall 调用方式，在DLL导出函数中，为了跟Windows API保持一致，建议使用 __stdcall 方式。
+</p>
+
+<ul>
+<li>
+  __cdecl (C Default Calling Convention)：
+    <br>
+    1&gt;  压栈顺序: 函参数按从右到左的顺序传递，放于栈中
+    <br>
+    2&gt;  参数栈维护: 栈的清空由主调函数完成
+    <br>
+    3&gt;  函数修饰名约定: 在生成的汇编代码中，函数名以下划线 _ 开头
+    <br>
+    4&gt;  编译选项:/Gd    C的默认选项， 对于变参函数，如printf，只能用这种方式
+
+</ul>
+
+<ul>
+<li>
+  __stdcall(standard Calling Convertion): (Pascal方式清理C方式压栈，通常用于Win32 Api中) 
+    <br>
+    1)  压栈顺序: 函数参数从右到左的压栈顺序
+    <br>
+    2)  参数栈维护: 被调用函数把参数弹出栈(在退出时清空堆栈)
+    <br>
+    3)  函数修饰名约定: VC将函数编译后会在函数名前面加上下划线前缀，在函数名后加上"@"和参数的字节数
+    <br>
+    ex. VC: int f(void *p) (编译后)-&gt; _f@4(在外部汇编语言里可以用这个名字引用这个函数) 
+    <br>
+    4&gt;  编译选项:/Gz        Windows程序默认选项
+    5&gt;  在Windows.h中定义的宏,  <em>CALLBACK</em>, <em>WINAPI</em> 都是指的该选项
+
+</ul>
+
+<ul>
+<li>
+  __fastcall (fast Call Convertion, 快速调用约定,通过寄存器来传送参数)
+    <br>
+    1)  压栈顺序:用ECX和EDX传送前两个双字（DWORD）或更小的参数，剩下的参数仍旧自右向左压栈传送
+    <br>
+    2)  参数栈维护:被调用函数在返回前清理传送参数的内存栈
+    <br>
+    3)  函数修饰名约定:VC将函数编译后会在函数名前面加上"@"前缀，在函数名后加上"@"和参数的字节数 
+    <br>
+    4&gt;  编译选项:/Gr        一般不用 
+
+</ul>
+
+<ul>
+<li>
+  __thiscall (本身调用,仅用于“C++”成员函数)
+    <br>
+    1)  压栈顺序: this指针存放于CX/ECX寄存器中，参数从右到左的压栈顺序
+    <br>
+    2)  <strong>__thiscall不是关键词，因此不能被程序员指定</strong>
+
+</ul>
+
+
+<h1 id="toc_2">Function Modifier</h1>
+<p>
+C和C++对应不同的调用约定，产生的修饰符也各不相同
+<table>
+<tr>
+<td>
+Call Convention
+</td>
+<td>
+Modifier:  C or extern "C"
+</td>
+<td>
+C Example: void test(int n)
+</td>
+<td>
+Modifier: .cpp, .cxx
+</td>
+<td>
+C++ Example: void test(int n)
+</td>
+</tr>
+<tr>
+<td>
+__cdecl
+</td>
+<td>
+_functionname
+</td>
+<td>
+_test
+</td>
+<td>
+?functionname@YA...@Z
+</td>
+<td>
+?test@YAXH@Z
+</td>
+</tr>
+<tr>
+<td>
+__stdcall
+</td>
+<td>
+_functionname@number
+</td>
+<td>
+_test@1
+</td>
+<td>
+?functionname@YG...@Z
+</td>
+<td>
+?test@YGXH@Z
+</td>
+</tr>
+<tr>
+<td>
+__fastcall
+</td>
+<td>
+@functionname@number
+</td>
+<td>
+@test@1
+</td>
+<td>
+?functionname@YI...@Z
+</td>
+<td>
+?test@YIXH@Z
+</td>
+</tr>
+<tr>
+<td>
+__thiscall
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+&nbsp;
+</td>
+<td>
+?functionname@className@@...@Z
+</td>
+<td>
+&nbsp;
+</td>
+</tr>
+</table>
+</p>
+
+<p>
+1. 对于C++编译器， 普通非类成员函数修饰符的...表示参数表， 它的拼写有些复杂, 拼写代码如下：
+<table>
+<tr>
+<td>
+X
+</td>
+<td>
+void
+</td>
+</tr>
+<tr>
+<td>
+D
+</td>
+<td>
+char
+</td>
+</tr>
+<tr>
+<td>
+E
+</td>
+<td>
+unsigned char
+</td>
+</tr>
+<tr>
+<td>
+F
+</td>
+<td>
+short
+</td>
+</tr>
+<tr>
+<td>
+H
+</td>
+<td>
+int
+</td>
+</tr>
+<tr>
+<td>
+I
+</td>
+<td>
+unsigned int
+</td>
+</tr>
+<tr>
+<td>
+J
+</td>
+<td>
+long
+</td>
+</tr>
+<tr>
+<td>
+K
+</td>
+<td>
+unsigned long（DWORD） 
+</td>
+</tr>
+<tr>
+<td>
+M
+</td>
+<td>
+float
+</td>
+</tr>
+<tr>
+<td>
+N
+</td>
+<td>
+double
+</td>
+</tr>
+<tr>
+<td>
+_N
+</td>
+<td>
+bool
+</td>
+</tr>
+<tr>
+<td>
+U
+</td>
+<td>
+struct
+</td>
+</tr>
+<tr>
+<td>
+PA
+</td>
+<td>
+pointer
+</td>
+</tr>
+<tr>
+<td>
+PB
+</td>
+<td>
+const pointer
+</td>
+</tr>
+</table>
+如果相同类型的指针连续出现，以“0”代替，一个“0”代表一次重复
+<br> U表示结构类型，通常后跟结构体的类型名，用“@@”表示结构类型名的结束
+<br> 参数表后以“@Z”标识整个名字的结束，如果该函数无参数，则以“Z”标识结束
+</p>
+
+<p>
+<br>
+2. C++中类成员函数修饰符
+<br>函数名字和参数表之间插入以“@”字符引导的类名；
+<br>参数表的开始，公有(public)成员函数的标识是“@@QAE”, 保护(protected)成员函数的标识是“@@IAE”, 私有(private)成员函数的标识是“@@AAE”，
+<br>如果函数声明使用了const关键字，则相应的标识应分别为“@@QBE”，“@@IBE”和“@@ABE”。
+<br>如果参数类型是类实例的引用，则使用“AAV1”，对于const类型的引用，则使用“ABV1”。
+</p>
+
+<h1 id="toc_3">查看函数的名字修饰 </h1>
+<ul>
+<li>
+  编译输出列表
+
+<li>
+  dumpbin
+
+</ul>
+
+
+   <hr />
+   <div id="disqus_thread"></div>
+    <script type="text/javascript">
+        var disqus_shortname = 'rickhuang'; // required: replace example with your forum shortname
+
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+</body>
+</html>

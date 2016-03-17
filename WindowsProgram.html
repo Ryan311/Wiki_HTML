@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=cp936">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>WindowsProgram</title>
     <link rel="stylesheet" type="text/css" href="css/shCoreDefault.css"/>
     <link rel="Stylesheet" type="text/css" href="static/css/wiki.css">
@@ -46,13 +46,19 @@
 <li><a href="#toc_1">Basic</a>
 <li><a href="#toc_2">topic</a>
 <ul>
-<li><a href="#toc_2.1">Driver-Driver and Driver-Application Communication</a>
+<li><a href="#toc_2.1">Useful Function</a>
 <li><a href="#toc_2.2">Windows Driver</a>
-<li><a href="#toc_2.3">Windows API</a>
-<li><a href="#toc_2.4">Windows Service</a>
-<li><a href="#toc_2.5">Windows Hook</a>
-<li><a href="#toc_2.6">Tool help Library</a>
-<li><a href="#toc_2.7">Samples</a>
+<li><a href="#toc_2.3">Driver Debug</a>
+<li><a href="#toc_2.4">Windows API</a>
+<li><a href="#toc_2.5">Windows Service</a>
+<li><a href="#toc_2.6">Windows Hook</a>
+<li><a href="#toc_2.7">Tool help Library</a>
+<li><a href="#toc_2.8">Windows Shell</a>
+<li><a href="#toc_2.9">Windows SetupAPI</a>
+<li><a href="#toc_2.10">Windows Strings</a>
+<li><a href="#toc_2.11">Windows Version</a>
+<li><a href="#toc_2.12">Bluetooth API</a>
+<li><a href="#toc_2.13">Device Notification</a>
 </ul>
 </ul>
 </div>
@@ -62,114 +68,67 @@
 <li>
   CWnd与HWND的区别与转换
 <pre>
-        一、区别
-            HWND是句柄，CWnd是MFC窗体类,CWnd中包含HWND句柄成员对象是m_hWnd.
-            HWND是Windows系统中对所有窗口的一种标识，即窗口句柄。这是一个SDK概念。  
-            CWnd是MFC类库中所有窗口类的基类。微软在MFC中将所有窗口的通用操作都封装到了这个类中，如：ShowWindow等等，同时它也封装了窗口句柄即m_hWnd成员。
+一、区别
+    HWND是句柄，CWnd是MFC窗体类,CWnd中包含HWND句柄成员对象是m_hWnd.
+    HWND是Windows系统中对所有窗口的一种标识，即窗口句柄。这是一个SDK概念。  
+    CWnd是MFC类库中所有窗口类的基类。微软在MFC中将所有窗口的通用操作都封装到了这个类中，
+    如：ShowWindow等等，同时它也封装了窗口句柄即m_hWnd成员。
 
-        二、如何得到窗口对象指针CWnd * pCWnd
-            1,在窗体里，直接用 this-&gt;，//this就是本窗体的窗口对象指针
-            2,主窗体的类对象指针：AfxGetApp()-&gt;m_pMainWnd-&gt;,  //AfxGetApp()-&gt;m_pMainWnd就是主窗体的窗口对象指针
-            3,pCWnd=GetDlgItem(ID_EDIT_NAME);//GetDlgItem 函数可以得到某个控件的窗口对象指针
+二、如何得到窗口对象指针CWnd * pCWnd
+    1,在窗体里，直接用 this-&gt;，//this就是本窗体的窗口对象指针
+    2,主窗体的类对象指针：AfxGetApp()-&gt;m_pMainWnd-&gt;,  //AfxGetApp()-&gt;m_pMainWnd就是主窗体的窗口对象指针
+    3,pCWnd=GetDlgItem(ID_EDIT_NAME);//GetDlgItem 函数可以得到某个控件的窗口对象指针
 </pre>
 
 <li>
   句柄和ID
 <pre>
-        句柄是窗口资源的标识，它标识资源在系统中所占用的内存块，应用程序通过窗口句柄对窗口进行操作。
-        窗口ID是窗口在应用程序中的唯一标识，通过窗口ID可以获取窗口句柄。
+句柄是窗口资源的标识，它标识资源在系统中所占用的内存块，应用程序通过窗口句柄对窗口进行操作。
+窗口ID是窗口在应用程序中的唯一标识，通过窗口ID可以获取窗口句柄。
+</pre>
+
+<li>
+  Public Symbols and Private Symbols   
+<pre>
+Typically, symbol files can include any or all of the following symbols:
+*   The names and addresses of all functions
+*   All data type, structure, and class definitions
+*   The names, data types, and addresses of global variables
+*   The names, data types, addresses, and scopes of local variables
+*   The line numbers in the source code that correspond to each binary instruction
+
+Some program developers might feel uncomfortable sharing all this information with their customers. 
+BinPlace can be used to reduce the amount of symbols in a symbol file.
+
+Public Symbols:
+    Some basic symbols, such as function names and global variables, are needed for even the most rudimentary debugging. 
+    These are called public symbols. 
+
+Private Symbols:
+    Symbols such as data structure names, global variables visible in only one object file, local variables, 
+    and line number information are not always required for debugging, 
+    although they are useful for a more in-depth debugging session. These are called private symbols.
+
+A symbol file that contains both private and public symbols is called a full symbol file. A symbol file that contains 
+public symbols alone is called a stripped symbol file. 
 </pre>
 
 </ul>
 
 <h1 id="toc_2">topic</h1>
-<h2 id="toc_2.1"><a href="http://blogs.msdn.com/b/iliast/archive/2007/10/06/driver-driver-and-driver-application-communication.aspx">Driver-Driver and Driver-Application Communication</a></h2>
+<h2 id="toc_2.1"><a href="Useful Function.html">Useful Function</a></h2>
 <h2 id="toc_2.2"><a href="Windows Driver.html">Windows Driver</a></h2>
-<h2 id="toc_2.3"><a href="Windows API.html">Windows API</a></h2>
-<h2 id="toc_2.4"><a href="Windows Service.html">Windows Service</a></h2>
-<h2 id="toc_2.5"><a href="Windows Hook.html">Windows Hook</a></h2>
-<h2 id="toc_2.6"><a href="Tool help Library.html">Tool help Library</a></h2>
-<h2 id="toc_2.7">Samples</h2>
-<ul>
-<li>
-  监视进程的创建并获得其启动时的命令行参数， 共有三种方法：
-
-<ul>
-<li>
-  通过CreateRemoteThread得到cmd line  <a href="CommandLine.cpp.html">CommandLine.cpp</a>
-
-<ul>
-<li>
-  具体实现步骤：
-            1、通过 GetProcAddress 取得 GetCommandLineA(kernel32.dll) 的地址。
-            2、用 CreateRemoteThread 启动远程线程，使远程进程执行 GetCommandLineA 。
-            3、用 WaitForSingleObject 等待远程线程结束。
-            4、用 GetExitCodeThread 取得远程线程退出代码，其实就是远程进程中 GetCommandLineA 函数的返回值，这是远程进程命令行的首地址。
-            5、通过 GetProcAddress 取得 lstrlenA 的地址。
-            6、用 CreateRemoteThread 启动远程线程，使远程进程执行 lstrlenA 。
-            7、用 WaitForSingleObject 等待远程线程结束。
-            8、用 GetExitCodeThread 取得远程线程退出代码，其实就是远程进程中 lstrlenA 函数的返回值，这是远程进程命令行的文本长度。
-            9、使用 ReadProcessMemory 把远程进程的命令行读取出来。
-
-</ul>
-</ul>
-</ul>
-        
-<ul>
-<li>
-  通过NtQueryInformationProcess获得进程信息， 从而得到cmd line  <a href="NTProcessInfo.cpp.html">NTProcessInfo.cpp</a> <a href="NTProcessInfo.h.html">NTProcessInfo.h</a>
-
-<ul>
-<li>
-  <a href="http://www.codeproject.com/Articles/19685/Get-Process-Info-with-NtQueryInformationProcess">http://www.codeproject.com/Articles/19685/Get-Process-Info-with-NtQueryInformationProcess</a> 
-
-<li>
-  ntdll.dll中的NtQueryInformationProcess   未文档化的函数
-
-<li>
-  ReadProcessMemory
-
-</ul>
-</ul>
-         
-<ul>
-<li>
-  在Driver中监测程序的创建和退出     <a href="ProcessMonitor.cpp.html">ProcessMonitor.cpp</a>
-
-<ul>
-<li>
-  利用PsSetCreateProcessNotifyRoutineEx注册回调函数， 当有进程创建或退出时会调用回调函数
-
-<li>
-  CreateProcessNotifyEx该回调函数的第三个参数PPS_CREATE_NOTIFY_INFO， 包含进程的相关信息， ID， CmdLine， ImageFileName等
-
-<li>
-  Driver必须要用/integryCheck进行Link， 且要签名， 否则PsSetCreateProcessNotifyRoutineEx注册失败
-
-<li>
-  Print格式控制
-
-<ul>
-<li>
-  %s, %ls 	NULL终止的ANSI字符串 	char*
-
-<li>
-  %S, %ws 	NULL终止的宽字符串 	    wchar_t*
-
-<li>
-  %Z 	        ANSI_STRING字符串 	    ANSI_STRING
-
-<li>
-  %wZ 	    UNICODE_STRING字符串 	UNICODE_STRING
-
-</ul>
-</ul>
-</ul>
-    
-<ul>
-<li>
-
-</ul>
+<h2 id="toc_2.3"><a href="Driver Debug.html">Driver Debug</a></h2>
+<h2 id="toc_2.4"><a href="Windows API.html">Windows API</a></h2>
+<h2 id="toc_2.5"><a href="Windows Service.html">Windows Service</a></h2>
+<h2 id="toc_2.6"><a href="Windows Hook.html">Windows Hook</a></h2>
+<h2 id="toc_2.7"><a href="Tool help Library.html">Tool help Library</a></h2>
+<h2 id="toc_2.8"><a href="Windows Shell.html">Windows Shell</a></h2>
+<h2 id="toc_2.9"><a href="Windows SetupAPI.html">Windows SetupAPI</a></h2>
+<h2 id="toc_2.10"><a href="Windows Strings.html">Windows Strings</a></h2>
+<h2 id="toc_2.11"><a href="Windows Version.html">Windows Version</a></h2>
+<h2 id="toc_2.12"><a href="Bluetooth API.html">Bluetooth API</a></h2>
+<h2 id="toc_2.13"><a href="Device Notification.html">Device Notification</a></h2>
 
 
    <hr />
